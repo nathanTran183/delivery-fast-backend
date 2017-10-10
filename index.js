@@ -1,0 +1,11 @@
+const http = require('http');
+const app = require('./config/express'); // The express app we just created
+const config = require('./config/index');
+
+const port = parseInt(config.port, 10) || 8000;
+app.set('port', port);
+
+const server = http.createServer(app);
+server.listen(port,function(){
+    console.log('Server start on port ' + port);
+});
