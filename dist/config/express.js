@@ -1,10 +1,12 @@
-const express = require('express');
-const logger = require('morgan');
-const bodyParser = require('body-parser');
-const routes = require('../server/routes');
+'use strict';
+
+var express = require('express');
+var logger = require('morgan');
+var bodyParser = require('body-parser');
+var routes = require('../routes/index');
 
 // Set up the express app
-const app = express();
+var app = express();
 
 // Log requests to the console.
 app.use(logger('dev'));
@@ -17,6 +19,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 /*app.get('*', (req, res) => res.status(200).send({
   message: 'Welcome to the beginning of nothingness.',
 }));*/
-app.use('/api', routes)
+app.use('/api', routes);
 
 module.exports = app;

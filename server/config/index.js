@@ -1,5 +1,5 @@
 import DotENV from 'dotenv';
-import DBConfig from '../server/config/db-config.json';
+import DBConfig from './db-config.json';
 
 DotENV.config();
 const db = DBConfig[process.env.NODE_ENV];

@@ -4,7 +4,7 @@
 const User = require('../models').User;
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
-const config = require('../../config');
+const config = require('../config');
 
 module.exports = {
     /*create(req, res) {
