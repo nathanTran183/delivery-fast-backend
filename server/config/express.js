@@ -20,7 +20,7 @@ app.get('/', (req, res) => res.status(200).send({
   message: 'Welcome to the beginning of nothingness.',
 }));
 app.get('/port', (req, res) => res.status(200).send({
-    message: process.env.PORT
+    message: process.env.EXPIRE_TIME
 }))
 app.use('/api', routes)
 

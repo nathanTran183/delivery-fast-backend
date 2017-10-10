@@ -31,7 +31,7 @@ app.get('/', function (req, res) {
 });
 app.get('/port', function (req, res) {
   return res.status(200).send({
-    message: process.env.PORT
+    message: process.env.EXPIRE_TIME
   });
 });
 app.use('/api', routes);
