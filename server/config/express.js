@@ -19,9 +19,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/', (req, res) => res.status(200).send({
   message: 'Welcome to the beginning of nothingness.',
 }));
-app.get('/port', (req, res) => res.status(200).send({
+app.get('/port', (req, res) => res.send({
     message: process.env.EXPIRE_TIME
-}))
-app.use('/api', routes)
+}));
+
+app.use('/api', routes);
 
 module.exports = app;
