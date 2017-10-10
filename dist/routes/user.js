@@ -11,7 +11,7 @@ var config = require('../config/index');
 
 router.post('/signup', usersController.signUp);
 router.post('/signin', usersController.signIn);
-router.patch('/updateInfo', expressJwt({ secret: config.jwtSecret }), usersController.updateInfo);
-router.get('/profile', expressJwt({ secret: config.jwtSecret }), usersController.viewProfile);
+router.patch('/updateInfo', expressJwt({ secret: "config.jwtSecret" }), usersController.updateInfo);
+router.get('/profile', expressJwt({ secret: "config.jwtSecret" }), usersController.viewProfile);
 
 module.exports = router;

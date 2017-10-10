@@ -2,6 +2,8 @@ const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const routes = require('../routes/index');
+import DotENV from 'dotenv';
+DotENV.config();
 
 // Set up the express app
 const app = express();
