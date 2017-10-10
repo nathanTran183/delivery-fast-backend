@@ -21,6 +21,11 @@ app.get('/', function (req, res) {
     message: 'Welcome to the beginning of nothingness.'
   });
 });
+app.get('/port', function (req, res) {
+  return res.status(200).send({
+    message: process.env.PORT
+  });
+});
 app.use('/api', routes);
 
 module.exports = app;
