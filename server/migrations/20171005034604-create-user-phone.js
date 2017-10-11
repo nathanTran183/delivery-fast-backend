@@ -4,9 +4,9 @@ module.exports = {
         return queryInterface.createTable('UserPhones', {
             id: {
                 allowNull: false,
-                autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.UUID,
+                defaultValue: Sequelize.UUIDV1,
             },
             phone_number: {
                 type: Sequelize.STRING,

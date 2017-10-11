@@ -110,13 +110,16 @@ module.exports = {
             .all({
                 include: [{
                     model: UserPhone,
-                    as: 'userPhone',
+                    as: 'userPhones',
                 }],
                 offset: req.query.offset || 0,
                 limit: req.query.limit || 10
             })
             .then(users => res.status(200).send(users))
-            .catch(error => res.status(400).send(error));
+            .catch(error => {
+                console.log(error)
+                res.status(400).send(error)
+            });
     },
 
     get(req, res) {
@@ -124,7 +127,7 @@ module.exports = {
             .findById(req.params.userId, {
                 include: [{
                     model: UserPhone,
-                    as: 'userPhone',
+                    as: 'userPhones',
                 }],
             })
             .then(user => {

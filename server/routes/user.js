@@ -8,6 +8,13 @@ const userPhonesController = require('../controllers').userphones;
 const router = express.Router();
 const config = require('../config/index');
 
+
+//Phone number
+router.get('/phoneNumber', expressJwt({ secret: config.jwtSecret }),userPhonesController.list);
+router.post('/addPhone', expressJwt({ secret: config.jwtSecret }), userPhonesController.add);
+router.put('/updatePhone/:phoneId', expressJwt({ secret: config.jwtSecret }), userPhonesController.update);
+router.delete('/deletePhone/:phoneId', expressJwt({ secret: config.jwtSecret }), userPhonesController.delete);
+
 //Basic information
 router.post('/signup', usersController.signUp);
 router.post('/signin', usersController.signIn);
@@ -17,11 +24,7 @@ router.get('/', usersController.list);
 router.get('/:userId', usersController.get);
 router.put('/:userId', usersController.update); //only update user status
 
-//Phone number
-router.get('phoneNumber', userPhonesController.list);
-router.post('addPhone', userPhonesController.add);
-router.put('updatePhone', userPhonesController.update);
-router.delete('deletePhone', userPhonesController.delete);
+
 
 //Address
 /*router.get('address', userAddressController.list);
