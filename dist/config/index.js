@@ -11,6 +11,7 @@ var _dbConfig2 = _interopRequireDefault(_dbConfig);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _dotenv2.default.config();
+
 var db = _dbConfig2.default[process.env.NODE_ENV];
 
 module.exports = {

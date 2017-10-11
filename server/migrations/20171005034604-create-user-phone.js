@@ -24,6 +24,14 @@ module.exports = {
                     as: 'user_id',
                 },
             },
+            createdAt: {
+                allowNull: false,
+                type: Sequelize.DATE
+            },
+            updatedAt: {
+                allowNull: false,
+                type: Sequelize.DATE
+            }
         });
     },
     down: function (queryInterface, Sequelize) {

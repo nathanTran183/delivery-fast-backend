@@ -14,10 +14,7 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "delivery_fast_production",
-    "host": "127.0.0.1",
+    "use_env_variable": "postgres://clygteshnsflqc:7148f548dd8baa5b58872373965db0c7d8bea27e026868d2571c4a58b46e072e@ec2-54-235-90-125.compute-1.amazonaws.com:5432/d88jdnpavms588",
     "dialect": "postgres"
   }
 }

@@ -1,10 +1,14 @@
 const fs = require('fs');
 const path = require('path');
+
 const Sequelize = require('sequelize');
 const basename = path.basename(module.filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(`${__dirname}/../config/db-config.json`)[env];
 const db = {};
+
+const DotENV = require('dotenv');
+DotENV.config();
+const env = process.env.NODE_ENV || 'production';
+const config = require(`${__dirname}/../config/db-config.json`)[env];
 
 let sequelize;
 if (config.use_env_variable) {

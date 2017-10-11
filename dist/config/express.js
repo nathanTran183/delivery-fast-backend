@@ -30,10 +30,11 @@ app.get('/', function (req, res) {
   });
 });
 app.get('/port', function (req, res) {
-  return res.status(200).send({
+  return res.send({
     message: process.env.EXPIRE_TIME
   });
 });
+
 app.use('/api', routes);
 
 module.exports = app;

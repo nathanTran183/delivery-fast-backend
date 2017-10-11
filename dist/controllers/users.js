@@ -34,7 +34,6 @@ module.exports = {
                 id_token: token
             });
         }).catch(function (error) {
-            console.log(error);
             return res.status(400).json(error);
         });
     },
@@ -44,7 +43,7 @@ module.exports = {
                 $or: [{ username: req.body.username }, { email: req.body.username }]
             }
         }).then(function (account) {
-            account.comparePassword(req.body.password, function (err, result) {
+            if (account != null) account.comparePassword(req.body.password, function (err, result) {
                 if (err) return res.json(err);
                 if (result == true) {
                     var token = jwt.sign({
@@ -60,11 +59,10 @@ module.exports = {
                         id_token: token
                     });
                 } else {
-                    var _err = new Error('Password is not correct!');
-                    console.log(_err);
-                    return res.status(400).json(_err);
+                    console.log(err);
+                    return res.status(400).json({ message: 'Password is not correct!' });
                 }
-            });
+            });else return res.status(400).json({ message: 'Username or Email doesn\'t existed' });
         }).catch(function (err) {
             console.log(err);
             return res.status(400).json(err);
