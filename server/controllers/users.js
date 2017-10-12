@@ -71,16 +71,11 @@ module.exports = {
         User
             .findById(user.id)
             .then((user) => {
-                console.log(user);
                 user
                     .update(req.body)
                     .then(savedUser => {
                         return res.json({
-                            profile: {
-                                id: savedUser.id,
-                                username: savedUser.username,
-                                email: savedUser.email,
-                            }
+                            profile: savedUser
                         })
                     })
                     .catch(e => res.status(400).json(e))

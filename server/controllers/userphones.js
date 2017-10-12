@@ -40,7 +40,10 @@ module.exports = {
                             }
                         })
                         .then(userPhones => {
-                            let userPhone = UserPhone.build({phone_number: req.body.phone_number, user_id: req.user.id});
+                            let userPhone = UserPhone.build({
+                                phone_number: req.body.phone_number,
+                                user_id: req.user.id
+                            });
                             if (!userPhones) {
                                 userPhone.role = true;
                             }
@@ -58,39 +61,31 @@ module.exports = {
             .catch(error => res.status(400).send(error))
     },
 
-    update(req, res) {
-        //check number existed
+    setPrimary(req, res) {
         UserPhone
-            .find({
-                where: {
-                    phone_number: req.body.phone_number
-                }
-            })
-            .then(phones => {
-                if (!phones) {
-                    UserPhone
-                        .findAll({
-                            where: {
-                                user_id: req.user.id
-                            }
-                        })
-                        .then(userPhones => {
-                            let userPhone = UserPhone.build({phone_number: req.body.phone_number});
-                            if (!userPhones) {
-                                userPhone.role = true;
-                            }
-                            else userPhone.role = false;
-                            userPhone
-                                .save()
-                                .then(phoneSaved => res.status(200).json(phoneSaved))
-                                .catch(err => res.status(400).json(err))
+            .find({user_id: req.user.id, role: true})
+            .then(phone => {
+                if (phone)
+                    phone
+                        .update({role: false})
+                        .then()
+                        .catch(err => res.status(400).json(err));
+                UserPhone
+                    .findById(req.params.phoneId)
+                    .then(userPhone => {
+                        if (!userPhone)
+                            return res.status(404).json({message: 'Phone number not found!'});
+                        userPhone
+                            .update({                                role: true                            })
+                            .then(phoneSaved => res.status(200).json(phoneSaved))
+                            .catch(err => res.status(400).json(err))
 
-                        })
-                        .catch(err => res.status(400).json(err))
-                }
-                else return res.status(400).json({message: 'This phone number has been existed'})
+                    })
+                    .catch(err => res.status(400).json(err))
             })
-            .catch(error => res.status(400).send(error))
+
+            .catch(err => res.status(400).json(err));
+
     },
 
     delete(req, res) {
@@ -107,12 +102,11 @@ module.exports = {
                         message: 'Phone Not Found',
                     });
                 }
-                if(phone.role == true){
-                    return res.status(404).send({
+                if (phone.role == true) {
+                    return res.status(400).send({
                         message: 'Primary Phone cannot be deleted!',
                     });
                 }
-
                 return phone
                     .destroy()
                     .then(() => res.status(204).send())

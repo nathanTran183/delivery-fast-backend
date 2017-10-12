@@ -12,7 +12,7 @@ const config = require('../config/index');
 //Phone number
 router.get('/phoneNumber', expressJwt({ secret: config.jwtSecret }),userPhonesController.list);
 router.post('/addPhone', expressJwt({ secret: config.jwtSecret }), userPhonesController.add);
-router.put('/updatePhone/:phoneId', expressJwt({ secret: config.jwtSecret }), userPhonesController.update);
+router.put('/setPrimary/:phoneId', expressJwt({ secret: config.jwtSecret }), userPhonesController.setPrimary);
 router.delete('/deletePhone/:phoneId', expressJwt({ secret: config.jwtSecret }), userPhonesController.delete);
 
 //Basic information
