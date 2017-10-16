@@ -15,7 +15,7 @@ module.exports = {
             .then(savedAccount => {
                 const token = jwt.sign({
                     id: savedAccount.id,
-                    role: 'user',
+                    role: 'User',
                     expiresIn: config.expireTime
                 }, config.jwtSecret);
                 return res.status(200).json({
@@ -56,6 +56,7 @@ module.exports = {
                         if (result == true) {
                             const token = jwt.sign({
                                 id: account.id,
+                                role: 'User',
                                 expiresIn: config.expireTime
                             }, config.jwtSecret);
                             return res.json({

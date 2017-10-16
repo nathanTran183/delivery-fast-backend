@@ -1,4 +1,6 @@
 'use strict';
+const bcrypt = require('bcrypt');
+
 module.exports = function(sequelize, DataTypes) {
   var Employee = sequelize.define('Employee', {
       id: {
@@ -39,7 +41,9 @@ module.exports = function(sequelize, DataTypes) {
               args: true,
               msg: "Phone number has been existed!"
           },
-          isNumeric: true,
+          validate: {
+              isNumeric: true,
+          }
       },
       first_name: {
           type: DataTypes.STRING,
@@ -51,20 +55,20 @@ module.exports = function(sequelize, DataTypes) {
       },
       gender: {
           type: DataTypes.BOOLEAN,
-          allowNull: false
+          allowNull: false,
       },
       date_of_birth: {
           type: DataTypes.DATEONLY,
-          allowNull: false
+          allowNull: false,
       },
       role:{
           type: DataTypes.ENUM('Admin', 'Staff', 'DeliMan'),
-          allowNull: false
+          allowNull: false,
       },
       status: {
           type: DataTypes.ENUM('Active', 'Busy', 'Deactivated'),
           defaultValue: 'Active',
-          allowNull: false
+          allowNull: false,
       }
 
   }, {

@@ -3,6 +3,7 @@
  */
 const Employee = require('../models').Employee;
 const config = require('../config');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
 
