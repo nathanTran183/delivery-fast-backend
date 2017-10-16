@@ -11,7 +11,10 @@ module.exports = function (sequelize, DataTypes) {
         username: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
+            unique: {
+                args: true,
+                msg: "Username has been existed!"
+            },
         },
         password: {
             type: DataTypes.STRING(255),
@@ -20,7 +23,16 @@ module.exports = function (sequelize, DataTypes) {
         email: {
             type: DataTypes.STRING(50),
             allowNull: false,
-            unique: true,
+            unique: {
+                args: true,
+                msg: "Email has been existed!"
+            },
+            validate: {
+                isEmail: {
+                    args: true,
+                    msg: "Wrong email format"
+                },
+            }
         },
         first_name: DataTypes.STRING,
         last_name: DataTypes.STRING,
@@ -46,24 +58,47 @@ module.exports = function (sequelize, DataTypes) {
                     if (err) return cb(err);
                     cb(null, isMatch);
                 });
-            }
-        }
+            },
+            toJSON: function () {
+                let values = Object.assign({}, this.get());
+                delete values.password;
+                return values;
+            },
+        },
+        privateColumns: ['password']
     });
 
     User.beforeCreate((user, options) => {
-        return bcrypt.hash(user.password, 10)
-            .then(hash => {
-                user.password = hash;
-            })
-            .catch(err => {
-                throw new Error();
-            });
+        if (user.changed('password')) {
+            return bcrypt.hash(user.password, 10)
+                .then(hash => {
+                    user.password = hash;
+                })
+                .catch(err => {
+                    throw new Error();
+                });
+        }
+    });
+    User.beforeUpdate((user, options) => {
+        if (user.changed('password')) {
+            return bcrypt.hash(user.password, 10)
+                .then(hash => {
+                    user.password = hash;
+                })
+                .catch(err => {
+                    throw new Error();
+                });
+        }
     });
     User.associate = (models) => {
         User.hasMany(models.UserPhone, {
             foreignKey: 'user_id',
             as: 'userPhones',
         });
+        User.hasMany(models.UserAddress, {
+            foreignKey: 'user_id',
+            as: 'userAddress',
+        })
     };
 
     return User;

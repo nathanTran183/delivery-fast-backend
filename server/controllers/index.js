@@ -3,8 +3,11 @@
  */
 const users = require('./users');
 const userphones = require('./userphones');
-
+const useraddress = require('./useraddress');
+const employees = require('./employees');
 module.exports = {
     users,
-    userphones
+    userphones,
+    useraddress,
+    employees,
 };

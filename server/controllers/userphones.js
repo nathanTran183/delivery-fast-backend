@@ -2,13 +2,11 @@
  * Created by nathan on 11/10/2017.
  */
 const UserPhone = require('../models').UserPhone;
-const httpStatus = require('http-status');
 const config = require('../config');
 
 module.exports = {
     list(req, res) {
         let user = req.user;
-        console.log('here');
         UserPhone
             .find({
                 where: {
@@ -16,7 +14,13 @@ module.exports = {
                 }
             })
             .then(phones => {
-                return res.status(200).json(phones)
+                return res.json({
+                    status: true,
+                    message: `Get phone numbers of ${user.username}`,
+                    data: {
+                        phones: phones
+                    }
+                })
             })
             .catch(error => {
                 res.status(400).send(error)
@@ -50,13 +54,21 @@ module.exports = {
                             else userPhone.role = false;
                             userPhone
                                 .save()
-                                .then(phoneSaved => res.status(200).json(phoneSaved))
+                                .then(phoneSaved => res.status(200).json({
+                                    status: true,
+                                    message: 'Add new phone number successfully!',
+                                    data: {
+                                        phone: phoneSaved
+                                    }
+                                }))
                                 .catch(err => res.status(400).json(err))
 
                         })
                         .catch(err => res.status(400).json(err))
                 }
-                else return res.status(400).json({message: 'This phone number has been existed'})
+                else return res.status(400).json({
+                    status: false,
+                    message: 'This phone number has been existed'})
             })
             .catch(error => res.status(400).send(error))
     },
@@ -76,7 +88,7 @@ module.exports = {
                         if (!userPhone)
                             return res.status(404).json({message: 'Phone number not found!'});
                         userPhone
-                            .update({                                role: true                            })
+                            .update({role: true})
                             .then(phoneSaved => res.status(200).json(phoneSaved))
                             .catch(err => res.status(400).json(err))
 
@@ -98,18 +110,23 @@ module.exports = {
             })
             .then(phone => {
                 if (!phone) {
-                    return res.status(404).send({
+                    return res.json({
+                        status: false,
                         message: 'Phone Not Found',
                     });
                 }
                 if (phone.role == true) {
-                    return res.status(400).send({
+                    return res.json({
+                        status: false,
                         message: 'Primary Phone cannot be deleted!',
                     });
                 }
                 return phone
                     .destroy()
-                    .then(() => res.status(204).send())
+                    .then(() => res.json({
+                        status: true,
+                        message: 'Delete phone number successfully'
+                    }))
                     .catch(error => res.status(400).send(error));
             })
             .catch(error => res.status(400).send(error));
