@@ -1,14 +1,25 @@
 'use strict';
 module.exports = function (sequelize, DataTypes) {
-    var UserAddress = sequelize.define('UserAddress', {
+    var Store = sequelize.define('Store', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
             primaryKey: true,
         },
-        address: {
-            type: DataTypes.STRING
+        name: {
+            type:DataTypes.STRING,
+            allowNull: false
         },
+        address: {
+            type:DataTypes.STRING,
+            allowNull: false,
+        },
+        phone_number: {
+            type:DataTypes.STRING,
+            allowNull: false
+        },
+        opening_time: DataTypes.STRING,
+        closing_time: DataTypes.STRING,
         latitude: {
             type: DataTypes.FLOAT,
             allowNull: true,
@@ -21,6 +32,11 @@ module.exports = function (sequelize, DataTypes) {
             defaultValue: null,
             validate: {min: -180, max: 180}
         },
+        status: {
+            type:DataTypes.BOOLEAN,
+            defaultValue: true,
+            allowNull: false
+        }
     }, {
         classMethods: {
             associate: function (models) {
@@ -35,11 +51,11 @@ module.exports = function (sequelize, DataTypes) {
             }
         }
     });
-    UserAddress.associate = (models) => {
-        UserAddress.belongsTo(models.User, {
-            foreignKey: 'user_id',
-            onDelete: 'CASCADE',
+    Store.associate = (models) => {
+        Store.belongsToMany(models.StoreType, {
+            through: models.StoreType_Store,
+            as: 'storeTypes',
         });
     };
-    return UserAddress;
+    return Store;
 };

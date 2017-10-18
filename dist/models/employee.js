@@ -3,14 +3,14 @@
 var bcrypt = require('bcrypt');
 
 module.exports = function (sequelize, DataTypes) {
-    var User = sequelize.define('User', {
+    var Employee = sequelize.define('Employee', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
             primaryKey: true
         },
         username: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(50),
             allowNull: false,
             unique: {
                 args: true,
@@ -35,18 +35,43 @@ module.exports = function (sequelize, DataTypes) {
                 }
             }
         },
-        first_name: DataTypes.STRING,
-        last_name: DataTypes.STRING,
-        gender: DataTypes.BOOLEAN,
-        date_of_birth: DataTypes.DATEONLY,
-        status: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true
+        phone_number: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: {
+                args: true,
+                msg: "Phone number has been existed!"
+            },
+            validate: {
+                isNumeric: true
+            }
         },
-        point: {
-            type: DataTypes.BIGINT,
-            defaultValue: 0
+        first_name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        last_name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        gender: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        date_of_birth: {
+            type: DataTypes.DATEONLY,
+            allowNull: false
+        },
+        role: {
+            type: DataTypes.ENUM('Admin', 'Staff', 'DeliMan'),
+            allowNull: false
+        },
+        status: {
+            type: DataTypes.ENUM('Active', 'Busy', 'Deactivated'),
+            defaultValue: 'Active',
+            allowNull: false
         }
+
     }, {
         classMethods: {
             associate: function associate(models) {
@@ -68,35 +93,25 @@ module.exports = function (sequelize, DataTypes) {
         },
         privateColumns: ['password']
     });
-
-    User.beforeCreate(function (user, options) {
-        if (user.changed('password')) {
-            return bcrypt.hash(user.password, 10).then(function (hash) {
-                user.password = hash;
+    Employee.beforeCreate(function (employee, options) {
+        employee.username = employee.username.toLowerCase();
+        employee.email = employee.email.toLowerCase();
+        if (employee.changed('password')) {
+            return bcrypt.hash(employee.password, 10).then(function (hash) {
+                employee.password = hash;
             }).catch(function (err) {
                 throw new Error();
             });
         }
     });
-    User.beforeUpdate(function (user, options) {
-        if (user.changed('password')) {
-            return bcrypt.hash(user.password, 10).then(function (hash) {
-                user.password = hash;
+    Employee.beforeUpdate(function (employee, options) {
+        if (employee.changed('password')) {
+            return bcrypt.hash(employee.password, 10).then(function (hash) {
+                employee.password = hash;
             }).catch(function (err) {
                 throw new Error();
             });
         }
     });
-    User.associate = function (models) {
-        User.hasMany(models.UserPhone, {
-            foreignKey: 'user_id',
-            as: 'userPhones'
-        });
-        User.hasMany(models.UserAddress, {
-            foreignKey: 'user_id',
-            as: 'userAddress'
-        });
-    };
-
-    return User;
+    return Employee;
 };

@@ -6,6 +6,7 @@ const UserPhone = require('../models').UserPhone;
 const UserAddress = require('../models').UserAddress;
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
+const Response = require('../helpers/response');
 const config = require('../config');
 
 module.exports = {
@@ -18,24 +19,18 @@ module.exports = {
                     role: 'User',
                     expiresIn: config.expireTime
                 }, config.jwtSecret);
-                return res.status(200).json({
-                    status: true,
-                    message: "Signup successfully!",
-                    data: {
-                        id_token: token,
-                        user: {
-                            id: savedAccount.id,
-                            username: savedAccount.username,
-                            email: savedAccount.email
-                        }
+                let data = {
+                    id_token: token,
+                    user: {
+                        id: savedAccount.id,
+                        username: savedAccount.username,
+                        email: savedAccount.email
                     }
-                })
+                };
+                return res.status(200).json(Response.returnSuccess("Signup successfully!", data));
             })
             .catch(error => {
-                return res.json({
-                    status: false,
-                    message: error.message,
-                });
+                return res.json(Response.returnError(error.message, error.code));
             });
     },
 
@@ -47,47 +42,35 @@ module.exports = {
                 }
             })
             .then(account => {
-                if (account != null)
+                if (account != null){
+                    if(account.status == false){
+                        return res.json(Response.returnError("This account has been deactivated!", httpStatus.UNAUTHORIZED))
+                    }
                     account.comparePassword(req.body.password, (err, result) => {
-                        if (err) return res.json({
-                            status: false,
-                            message: err
-                        });
+                        if (err) return res.json(Response.returnError(err.message, err.code));
                         if (result == true) {
                             const token = jwt.sign({
                                 id: account.id,
                                 role: 'User',
                                 expiresIn: config.expireTime
                             }, config.jwtSecret);
-                            return res.json({
-                                status: true,
-                                message: "Signin successfully!",
-                                data: {
-                                    user: {
-                                        id: account.id,
-                                        username: account.username,
-                                        email: account.email,
-                                    },
-                                    id_token: token
-                                }
-                            });
+                            let data = {
+                                user: {
+                                    id: account.id,
+                                    username: account.username,
+                                    email: account.email,
+                                },
+                                id_token: token
+                            };
+                            return res.json(Response.returnSuccess("Signin successfully!", data));
                         } else {
-                            return res.json({
-                                status: false,
-                                message: 'Password is not correct!'
-                            });
+                            return res.json(Response.returnError('Password is not correct!', httpStatus.BAD_REQUEST));
                         }
-                    })
-                else return res.json({
-                    status: false,
-                    message: 'Username or Email doesn\'t existed'
-                });
+                    })}
+                else return res.json(Response.returnError('Username or Email doesn\'t existed', httpStatus.NOT_FOUND));
             })
             .catch(err => {
-                return res.json({
-                    status: false,
-                    message: err.message
-                });
+                return res.json(Response.returnError(err.message, err.code));
             })
     },
 
@@ -99,24 +82,18 @@ module.exports = {
                 user
                     .update(req.body)
                     .then(savedUser => {
-                        return res.json({
-                            status: true,
-                            data: {
-                                user: savedUser
-                            }
-                        })
+                        let data = {
+                            user: savedUser
+                        };
+                        return res.json(Response.returnSuccess("Update user info successfully!", data));
                     })
-                    .catch(e => res.json({
-                        status: false,
-                        message: e.message
-                    }))
+                    .catch(err => res.json(Response.returnError(err.message, err.code)))
             })
-            .catch(e => res.status(400).json(e));
+            .catch(err => res.json(Response.returnError(err.message, err.code)));
     },
 
     viewProfile(req, res) {
         let user = req.user;
-        console.log(user);
         User
             .findById(user.id, {
                 include: [
@@ -130,15 +107,16 @@ module.exports = {
                     }
                 ]
             })
-            .then((user) => {
-                return res.json({
-                    status: true,
-                    data: {
-                        user: user
-                    }
-                })
+            .then(user => {
+                if (!user) {
+                    return res.json(Response.returnError("User not found!", httpStatus.NOT_FOUND));
+                }
+                let data = {
+                    user: user
+                };
+                return res.json(Response.returnSuccess("Retrieve user info successfully!", data));
             })
-            .catch(e => res.status(400).json(e));
+            .catch(err => res.json(Response.returnError(err.message, err.code)));
     },
 
     list(req, res) {
@@ -157,15 +135,9 @@ module.exports = {
                 offset: req.query.offset || 0,
                 limit: req.query.limit || 10
             })
-            .then(users => res.json({
-                status: true,
-                message: "get list of users successfully",
-                data: {
-                    users: users
-                }
-            }))
+            .then(users => res.json(Response.returnSuccess("Get list of users successfully", {users: users})))
             .catch(error => {
-                res.status(400).send(error)
+                res.send(Response.returnError(error.message, error.code))
             });
     },
 
@@ -184,14 +156,11 @@ module.exports = {
             })
             .then(user => {
                 if (!user) {
-                    return res.json({
-                        status: false,
-                        message: 'User Not Found',
-                    });
+                    return res.json(Response.returnError('User Not Found', httpStatus.NOT_FOUND));
                 }
-                return res.status(200).json(user);
+                return res.status(200).json(Response.returnSuccess("Retrieve user successfully!", user));
             })
-            .catch(error => res.status(400).send(error));
+            .catch(error => res.send(Response.returnError(error.message, error.code)));
     },
 
     update(req, res) {
@@ -199,27 +168,21 @@ module.exports = {
             .findById(req.params.userId)
             .then(user => {
                 if (!user) {
-                    return res.json({
-                        status: false,
-                        message: 'User Not Found'
-                    });
+                    return res.json(Response.returnError('User Not Found', httpStatus.NOT_FOUND));
                 }
                 user
                     .update({status: req.body.status})
                     .then(savedUser => {
-                        return res.json({
-                            status: true,
-                            message: "Update user successfully!",
-                            data: {
-                                user: savedUser
-                            }
-                        })
+                        return res.json(Response.returnSuccess("Update user successfully!", {user: savedUser}));
                     })
-                    .catch(e => res.json({
-                        status: false,
-                        message: e.message
-                    }))
+                    .catch(err => res.json(Response.returnError(err.message, err.code)))
             })
-            .catch(error => res.status(400).send(error));
+            .catch(error => res.send(Response.returnError(error.message, error.code)));
+    },
+
+    test(req, res) {
+        let date = new Date('1994-12-06T17:00:00.000Z');
+        let dateReturn = date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate();
+        return res.json({date: dateReturn});
     }
 };

@@ -1,16 +1,27 @@
 'use strict';
 module.exports = {
     up: function (queryInterface, Sequelize) {
-        return queryInterface.createTable('UserAddresses', {
+        return queryInterface.createTable('Stores', {
             id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV1,
             },
-            address: {
-                type: Sequelize.STRING
+            name: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
+            address: {
+                type: Sequelize.STRING,
+                allowNull: false,
+            },
+            phone_number: {
+                type: Sequelize.STRING,
+                allowNull: false
+            },
+            opening_time: Sequelize.STRING,
+            closing_time: Sequelize.STRING,
             latitude: {
                 type: Sequelize.FLOAT,
                 allowNull: true,
@@ -23,14 +34,10 @@ module.exports = {
                 defaultValue: null,
                 validate: {min: -180, max: 180}
             },
-            user_id: {
-                type: Sequelize.UUID,
-                onDelete: 'CASCADE',
-                references: {
-                    model: 'Users',
-                    key: 'id',
-                    as: 'user_id',
-                },
+            status: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: true,
+                allowNull: false
             },
             createdAt: {
                 allowNull: false,
@@ -43,6 +50,6 @@ module.exports = {
         });
     },
     down: function (queryInterface, Sequelize) {
-        return queryInterface.dropTable('UserAddresses');
+        return queryInterface.dropTable('Stores');
     }
 };

@@ -5,9 +5,13 @@ const users = require('./users');
 const userphones = require('./userphones');
 const useraddress = require('./useraddress');
 const employees = require('./employees');
+const stores = require('./stores');
+const storetypes = require('./storetypes');
 module.exports = {
     users,
     userphones,
     useraddress,
     employees,
+    stores,
+    storetypes
 };

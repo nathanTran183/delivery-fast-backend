@@ -2,19 +2,27 @@
 
 module.exports = {
     up: function up(queryInterface, Sequelize) {
-        return queryInterface.createTable('UserPhones', {
+        return queryInterface.createTable('UserAddresses', {
             id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV1
             },
-            phone_number: {
-                type: Sequelize.STRING,
-                isNumeric: true
+            address: {
+                type: Sequelize.STRING
             },
-            role: {
-                type: Sequelize.BOOLEAN
+            latitude: {
+                type: Sequelize.FLOAT,
+                allowNull: true,
+                defaultValue: null,
+                validate: { min: -90, max: 90 }
+            },
+            longitude: {
+                type: Sequelize.FLOAT,
+                allowNull: true,
+                defaultValue: null,
+                validate: { min: -180, max: 180 }
             },
             user_id: {
                 type: Sequelize.UUID,
@@ -36,6 +44,6 @@ module.exports = {
         });
     },
     down: function down(queryInterface, Sequelize) {
-        return queryInterface.dropTable('UserPhones');
+        return queryInterface.dropTable('UserAddresses');
     }
 };

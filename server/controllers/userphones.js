@@ -2,28 +2,25 @@
  * Created by nathan on 11/10/2017.
  */
 const UserPhone = require('../models').UserPhone;
+const httpStatus = require('http-status');
+const Response = require('../helpers/response');
 const config = require('../config');
 
 module.exports = {
     list(req, res) {
         let user = req.user;
         UserPhone
-            .find({
+            .all({
                 where: {
                     user_id: user.id
                 }
             })
             .then(phones => {
-                return res.json({
-                    status: true,
-                    message: `Get phone numbers of ${user.username}`,
-                    data: {
-                        phones: phones
-                    }
-                })
+                console.log(phones)
+                return res.json(Response.returnSuccess(`Get phone numbers of user`, {phones: phones}))
             })
             .catch(error => {
-                res.status(400).send(error)
+                res.json(Response.returnError(error.message, error.code))
             })
     },
 
@@ -35,7 +32,6 @@ module.exports = {
                 }
             })
             .then(phones => {
-                console.log(req.user.id);
                 if (!phones) {
                     UserPhone
                         .find({
@@ -54,23 +50,15 @@ module.exports = {
                             else userPhone.role = false;
                             userPhone
                                 .save()
-                                .then(phoneSaved => res.status(200).json({
-                                    status: true,
-                                    message: 'Add new phone number successfully!',
-                                    data: {
-                                        phone: phoneSaved
-                                    }
-                                }))
-                                .catch(err => res.status(400).json(err))
+                                .then(phoneSaved => res.status(200).json(Response.returnSuccess('Add new phone number successfully!', {phone: phoneSaved})))
+                                .catch(err => res.json(Response.returnError(err.message, err.code)))
 
                         })
-                        .catch(err => res.status(400).json(err))
+                        .catch(err => res.json(Response.returnError(err.message, err.code)))
                 }
-                else return res.status(400).json({
-                    status: false,
-                    message: 'This phone number has been existed'})
+                else return res.json(Response.returnError('This phone number has been existed', httpStatus.BAD_REQUEST))
             })
-            .catch(error => res.status(400).send(error))
+            .catch(error => res.json(Response.returnError(error.message, error.code)))
     },
 
     setPrimary(req, res) {
@@ -81,22 +69,22 @@ module.exports = {
                     phone
                         .update({role: false})
                         .then()
-                        .catch(err => res.status(400).json(err));
+                        .catch(err => res.json(Response.returnError(err.message, err.code)));
                 UserPhone
                     .findById(req.params.phoneId)
                     .then(userPhone => {
                         if (!userPhone)
-                            return res.status(404).json({message: 'Phone number not found!'});
+                            return res.json(Response.returnError('Phone number not found!', httpStatus.NOT_FOUND));
                         userPhone
                             .update({role: true})
-                            .then(phoneSaved => res.status(200).json(phoneSaved))
-                            .catch(err => res.status(400).json(err))
+                            .then(phoneSaved => res.json(Response.returnSuccess("Set phone number becoming Primary successfully!", {phone: phoneSaved})))
+                            .catch(err => res.json(Response.returnError(err.message, err.code)))
 
                     })
-                    .catch(err => res.status(400).json(err))
+                    .catch(err => res.json(Response.returnError(err.message, err.code)))
             })
 
-            .catch(err => res.status(400).json(err));
+            .catch(err => res.json(Response.returnError(err.message, err.code)));
 
     },
 
@@ -110,25 +98,16 @@ module.exports = {
             })
             .then(phone => {
                 if (!phone) {
-                    return res.json({
-                        status: false,
-                        message: 'Phone Not Found',
-                    });
+                    return res.json(Response.returnError('Phone Not Found', httpStatus.NOT_FOUND));
                 }
                 if (phone.role == true) {
-                    return res.json({
-                        status: false,
-                        message: 'Primary Phone cannot be deleted!',
-                    });
+                    return res.json(Response.returnError('Primary Phone cannot be deleted!', httpStatus.BAD_REQUEST));
                 }
                 return phone
                     .destroy()
-                    .then(() => res.json({
-                        status: true,
-                        message: 'Delete phone number successfully'
-                    }))
-                    .catch(error => res.status(400).send(error));
+                    .then(() => res.json(Response.returnSuccess('Delete phone number successfully', {})))
+                    .catch(error => res.json(Response.returnError(error.message,error.code)));
             })
-            .catch(error => res.status(400).send(error));
+            .catch(error => res.json(Response.returnError(error.message,error.code)));
     },
 }

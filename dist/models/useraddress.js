@@ -1,10 +1,11 @@
 'use strict';
+
 module.exports = function (sequelize, DataTypes) {
     var UserAddress = sequelize.define('UserAddress', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
-            primaryKey: true,
+            primaryKey: true
         },
         address: {
             type: DataTypes.STRING
@@ -13,32 +14,32 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.FLOAT,
             allowNull: true,
             defaultValue: null,
-            validate: {min: -90, max: 90}
+            validate: { min: -90, max: 90 }
         },
         longitude: {
             type: DataTypes.FLOAT,
             allowNull: true,
             defaultValue: null,
-            validate: {min: -180, max: 180}
-        },
+            validate: { min: -180, max: 180 }
+        }
     }, {
         classMethods: {
-            associate: function (models) {
+            associate: function associate(models) {
                 // associations can be defined here
             }
         },
         validate: {
-            bothCoordsOrNone() {
-                if ((this.latitude === null) !== (this.longitude === null)) {
-                    throw new Error('Require either both latitude and longitude or neither')
+            bothCoordsOrNone: function bothCoordsOrNone() {
+                if (this.latitude === null !== (this.longitude === null)) {
+                    throw new Error('Require either both latitude and longitude or neither');
                 }
             }
         }
     });
-    UserAddress.associate = (models) => {
+    UserAddress.associate = function (models) {
         UserAddress.belongsTo(models.User, {
             foreignKey: 'user_id',
-            onDelete: 'CASCADE',
+            onDelete: 'CASCADE'
         });
     };
     return UserAddress;

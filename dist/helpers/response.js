@@ -1,6 +1,7 @@
-module.exports = {
+"use strict";
 
-    returnSuccess(message, data) {
+module.exports = {
+    returnSuccess: function returnSuccess(message, data) {
         return {
             status: true,
             message: message,
@@ -8,14 +9,15 @@ module.exports = {
         };
     },
 
-	// returnSuccess(message) {
-	// 	return {
-	// 	    status: true,
-	// 		message: message
-	// 	};
-	// },
 
-    returnError(message, code) {
+    // returnSuccess(message) {
+    // 	return {
+    // 	    status: true,
+    // 		message: message
+    // 	};
+    // },
+
+    returnError: function returnError(message, code) {
         return {
             status: false,
             error: {
@@ -24,5 +26,4 @@ module.exports = {
             }
         };
     }
-
 };

@@ -3,7 +3,9 @@
  */
 const Employee = require('../models').Employee;
 const config = require('../config');
+const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
+const Response = require('../helpers/response');
 
 module.exports = {
 
@@ -17,41 +19,26 @@ module.exports = {
             .then(account => {
                 if (account != null)
                     account.comparePassword(req.body.password, (err, result) => {
-                        if (err) return res.json({
-                            status: false,
-                            message: err
-                        });
+                        if (err) return res.json(Response.returnError(err.message, httpStatus.BAD_REQUEST));
                         if (result == true) {
                             const token = jwt.sign({
                                 id: account.id,
                                 role: account.role,
                                 expiresIn: config.expireTime
                             }, config.jwtSecret);
-                            return res.json({
-                                status: true,
-                                message: "Signin successfully!",
-                                data: {
-                                    user: account,
-                                    id_token: token
-                                }
-                            });
+                            let data = {
+                                user: account,
+                                id_token: token
+                            }
+                            return res.json(Response.returnSuccess("Signin successfully!", data));
                         } else {
-                            return res.json({
-                                status: false,
-                                message: 'Password is not correct!'
-                            });
+                            return res.json(Response.returnError('Password is not correct!', httpStatus.BAD_REQUEST));
                         }
                     })
-                else return res.json({
-                    status: false,
-                    message: 'Username or Email doesn\'t existed'
-                });
+                else return res.json(Response.returnError('Username or Email doesn\'t existed', httpStatus.NOT_FOUND));
             })
             .catch(err => {
-                return res.json({
-                    status: false,
-                    message: err.message
-                });
+                return res.json(Response.returnError(err.message, err.code));
             })
     },
 
@@ -63,20 +50,14 @@ module.exports = {
                 user
                     .update(req.body)
                     .then(savedUser => {
-                        return res.json({
-                            status: true,
-                            message: "Update information successfully",
-                            data: {
-                                user: savedUser
-                            }
-                        })
+                        let data = {
+                            user: savedUser
+                        }
+                        return res.json(Response.returnSuccess("Update information successfully", data));
                     })
-                    .catch(e => res.json({
-                        status: false,
-                        message: e.message
-                    }))
+                    .catch(err => res.json(Response.returnError(err.message, err.code)))
             })
-            .catch(e => res.status(400).json(e));
+            .catch(err => res.json(Response.returnError(err.message, err.code)));
     },
 
     viewProfile(req, res) {
@@ -85,34 +66,33 @@ module.exports = {
             .findById(employee.id)
             .then((employee) => {
                 if (!employee) {
-                    return res.json({
-                        status: false,
-                        message: 'Employee Not Found',
-                    });
+                    return res.json(Response.returnError('Employee Not Found', httpStatus.NOT_FOUND));
                 }
-                return res.json({
-                    status: true,
-                    message: "Retrieve employee information successfully!",
-                    data: {
-                        employee: employee
-                    }
-                })
+                let data = {
+                    employee: employee
+                };
+                return res.json(Response.returnSuccess("Retrieve employee information successfully!", data));
             })
-            .catch(e => res.status(400).json(e));
+            .catch(err => res.json(Response.returnError(err.message, err.code)));
     },
 
     list(req, res) {
         Employee
-            .all()
-            .then(employees => res.json({
-                status: true,
-                message: "get list of employees successfully",
-                data: {
-                    employees: employees
+            .all({
+                where: {
+                    role: {
+                        $ne: 'Admin'
+                    }
                 }
-            }))
+            })
+            .then(employees => {
+                let data = {
+                    employees: employees
+                };
+                return res.json(Response.returnSuccess("get list of employees successfully", data));
+            })
             .catch(error => {
-                res.status(400).send(error)
+                res.json(Response.returnError(error.message, error.code))
             });
     },
 
@@ -121,67 +101,46 @@ module.exports = {
             .findById(req.params.employeeId)
             .then(employee => {
                 if (!employee) {
-                    return res.json({
-                        status: false,
-                        message: 'Employee Not Found',
-                    });
+                    return res.json(Response.returnError('Employee Not Found', httpStatus.NOT_FOUND));
                 }
-                return res.status(200).json({
-                    status: true,
-                    message: "Retrieve employee successfully!",
-                    data: {
-                        employee: employee
-                    }
-                });
+                let data = {
+                    employee: employee
+                };
+                return res.status(200).json(Response.returnSuccess("Retrieve employee successfully!", data));
             })
-            .catch(error => res.status(400).send(error));
+            .catch(error => res.json(Response.returnError(error.message, error.code)));
     },
 
     create(req, res) {
         Employee
             .create(req.body)
             .then(employee => {
-                return res.json({
-                    status: true,
-                    message: "Create employee successfully!",
-                    data: {
-                        employee: employee
-                    }
-                })
+                let data = {
+                    employee: employee
+                };
+                return res.json(Response.returnSuccess("Create employee successfully!", data));
             })
-            .catch(err => res.json({
-                status: false,
-                message: err.message
-            }))
+            .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
 
     update(req, res) {
         Employee
             .findById(req.params.employeeId)
             .then(employee => {
-                if(!employee){
-                    return res.json({
-                        status: false,
-                        message: "Employee not found!"
-                    })
+                if (!employee) {
+                    return res.json(Response.returnError("Employee not found!", httpStatus.NOT_FOUND))
                 } else {
                     employee
                         .update(req.body)
                         .then(employee => {
-                            return res.json({
-                                status: true,
-                                message: "Update employee successfully!",
-                                data: {
-                                    employee: employee
-                                }
-                            })
+                            let data = {
+                                employee: employee
+                            };
+                            return res.json(Response.returnSuccess("Update employee successfully!", data))
                         })
-                        .catch(err => res.json({
-                            status: false,
-                            message: err.message
-                        }))
+                        .catch(err => res.json(Response.returnError(err.message, err.code)))
                 }
             })
-            .catch(err => res.status(400).json(err))
+            .catch(err => res.json(Response.returnError(err.message, err.code)))
     }
 }
