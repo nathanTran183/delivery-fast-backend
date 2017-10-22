@@ -8,18 +8,11 @@ module.exports = {
         };
     },
 
-	// returnSuccess(message) {
-	// 	return {
-	// 	    status: true,
-	// 		message: message
-	// 	};
-	// },
-
     returnError(message, code) {
         return {
             status: false,
+            message: message,
             error: {
-                message: message,
                 code: code
             }
         };

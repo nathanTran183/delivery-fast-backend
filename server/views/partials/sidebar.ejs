@@ -1,0 +1,100 @@
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar" style="height: auto;">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="bower_components/AdminLTE/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p><% 
+                if(session.user!=null){%>
+                    <%=session.user.username%>
+                <%}%></p>
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+               
+            </div>
+        </div>
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu" style="line-height: 80%">
+            <li class="header">MAIN NAVIGATION</li>
+            <%
+            if(session.user!=null)
+            if (session.user.role==1) { %>
+            <li>
+                <a href="/account">
+                    <i class="glyphicon glyphicon-user"></i>
+                    <span>Accounts</span>
+                </a>
+            </li>
+            <% } %>
+
+            <li>
+                <a href="#">
+                    <i class="glyphicon glyphicon-tasks"></i> <span>Task</span>
+                </a>
+            </li>
+            <li class="active">
+                <li>
+                    <a href="/overviewTasks">
+                        <i class="fa fa-circle-o" style="margin-left: 10%"></i>
+                        <span>Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/pendingTasks">
+                        <i class="fa fa-circle-o" style="margin-left: 10%"></i>
+                        <span>Pending Tasks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/createNewTask">
+                        <i class="fa fa-circle-o" style="margin-left: 10%"></i>
+                        <span>Add task</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/user">
+                        <i class="glyphicon glyphicon-user"></i>
+                        <span>Users</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="glyphicon glyphicon-usd"></i>
+                        <span>Payments</span>
+                    </a>
+                </li>
+                <li>                    
+                    <a href="/pendingPayments">
+                        <i class="fa fa-circle-o" style="margin-left: 10%"></i>
+                        <span>Pending</span>
+                    </a>
+                </li>
+                <li><a href="/archivedPayments">
+                    <i class="fa fa-circle-o" style="margin-left: 10%"></i>
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="glyphicon glyphicon-envelope"></i>
+                    <span>Messaging</span>
+                </a>
+            </li>
+            <li>
+                <a href="/inbox">
+                    <i class="fa fa-circle-o" style="margin-left: 10%"></i>
+                    <span>Overview</span>
+                </a>
+            </li>
+            <li>
+                <a href="/notifications">
+                    <i class="fa fa-circle-o" style="margin-left: 10%"></i>
+                    <span>New Message</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

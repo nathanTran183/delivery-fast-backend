@@ -55,6 +55,7 @@ module.exports = function (sequelize, DataTypes) {
         Store.belongsToMany(models.StoreType, {
             through: models.StoreType_Store,
             as: 'storeTypes',
+            foreignKey: 'store_id',
         });
     };
     return Store;
