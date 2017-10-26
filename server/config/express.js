@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(Path.resolve(__dirname, '..', 'publics'), {maxAge: 31557600000}));
 app.set('view engine', 'ejs');
 app.set('views', Path.join(__dirname, '../views'));
+console.log(__dirname);
 app.use('/bower_components', express.static(Path.join(__dirname,"../../bower_components")));
 app.use(cookieParser());
 
@@ -57,7 +58,6 @@ app.use(flash());
 
 // config express-validator
 app.use(expressValidator());  //required for Express-Validator
-
 
 
 // Setup a default catch-all route that sends back a welcome message in JSON format.

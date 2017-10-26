@@ -444,19 +444,27 @@
 }
 
 /* author: Quang */
-.profile .panel-profile {
-    margin: 50px auto;
-    width: 500px;
-    background-color: white;
-    box-shadow: 0 -2px 2px 0 rgba(0,0,0,0.2),0 6px 5px 0 rgba(0,0,0,0.3);
-}
-.profile .panel-profile #panel-change-password {
+/*.profile .panel-profile {*/
+    /*!*margin: 50px auto;*!*/
+    /*width: 500px;*/
+    /*background-color: white;*/
+    /*box-shadow: 0 -2px 2px 0 rgba(0,0,0,0.2),0 6px 5px 0 rgba(0,0,0,0.3);*/
+/*}*/
+.profile  #panel-change-password {
     margin: 10px 0 10px 0;
     padding: 10px 0 0 0;
     background-color: white;
-    border: 1px dashed black;
+    border: 1px solid #3c8dbc;
+	border-radius: 3px;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 }
 
+.profile .panel-profile {
+	margin: 50px auto;
+	width: 500px;
+	background-color: white;
+	box-shadow: 0 -2px 2px 0 rgba(0,0,0,0.2),0 6px 5px 0 rgba(0,0,0,0.3);
+}
 .overviewUser {
     background-color: white;
 }

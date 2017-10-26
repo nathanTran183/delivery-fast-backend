@@ -51,32 +51,24 @@ module.exports = {
     },
 
     async isAdminWeb(req, res, next) {
-        if (req.user) {
-            if (req.user.role === 'Admin') {
+        let employee = req.session.user;
+        if (employee) {
+            if (employee.status == 'Deactivated') {
+                req.flash('reason_fail', "Your account has been deactivated!");
+                req.session.user = null;
+                res.redirect('/signIn');
+            }
+            if (employee.role == 'Admin') {
                 next();
             } else {
-                return res.json(Response.returnError("Only Admin can access this route!", HTTPStatus.UNAUTHORIZED));
+                req.flash('notAuthorized', "Users cannot access the route!");
+                req.session.user = null;
+                res.redirect('/signIn');
             }
+        } else {
+            req.flash('reason_fail', "You need to login with not user account first!");
+            res.redirect('/signIn');
         }
-        else return res.json(Response.returnError("Should login with Admin account!", HTTPStatus.UNAUTHORIZED))
-    },
-
-    async isUserWeb(req, res, next) {
-        if (req.user) {
-            User
-                .findById(req.user.id)
-                .then(user => {
-                    if (!user) return res.json(Response.returnError('User not found!', HTTPStatus.NOT_FOUND));
-                    if (user.status == false) return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                    if (req.user.role === 'User') {
-                        next();
-                    } else {
-                        return res.json(Response.returnError("Only users can access the route!", HTTPStatus.UNAUTHORIZED));
-                    }
-                })
-                .catch(err => res.json(Response.returnError(err.message, err.code)))
-        }
-        else return res.json(Response.returnError("Should login with user account!", HTTPStatus.UNAUTHORIZED))
     },
 
     async notUserWeb(req, res, next) {
@@ -87,7 +79,7 @@ module.exports = {
                 req.session.user = null;
                 res.redirect('/signIn');
             }
-            if (employee.role !== 'User') {
+            if (employee.role == 'Admin' || employee.role == 'Staff') {
                 next();
             } else {
                 req.flash('notAuthorized', "Users cannot access the route!");

@@ -3,9 +3,6 @@
  */
 const Employee = require('../../models/index').Employee;
 const config = require('../../config/index');
-const httpStatus = require('http-status');
-const jwt = require('jsonwebtoken');
-const Response = require('../../helpers/response');
 
 module.exports = {
 
@@ -15,6 +12,7 @@ module.exports = {
 
     postSignIn(req, res, next) {
         // check validation
+        req.assert('username', 'Username/Email is required').notEmpty();
         req.assert('password', 'A valid password (length between 6 to 48) is required').len(6, 48);  //Validate password
         var errors = req.validationErrors();
         if (errors) {   //Display errors to user
@@ -26,12 +24,12 @@ module.exports = {
         Employee
             .findOne({
                 where: {
-                    $or: [{username: req.body.username}, {email: req.body.username}, {phone_number: req.body.phone_number}]
+                    $or: [{username: req.body.username}, {email: req.body.username}]
                 }
             })
             .then(account => {
                 if (account != null) {
-                    if(account.status == false) {
+                    if (account.status == false) {
                         req.flash('reason_fail', 'Your account has been deactivated!');
                         res.redirect('/signIn');
                         return;
@@ -40,11 +38,13 @@ module.exports = {
                     account.comparePassword(req.body.password, (err, result) => {
                         if (err) return next({status: 500, body: err});
                         if (result == true) {
-                            if (req.body.rememberme ) {
+                            if (req.body.rememberme) {
                                 req.session.cookie.maxAge = 2592000000;
                             } else {
                                 req.session.cookie.expires = false;
                             }
+                            let date = new Date(account.date_of_birth);
+                            account.date_of_birth = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
                             req.session.user = account;
                             res.redirect('/profile');
                         } else {
@@ -66,7 +66,6 @@ module.exports = {
     },
 
     logout (req, res, next) {
-        req.session.privilegeAdmin = null;
         req.session.user = null;
         res.redirect('/signIn');
     },
@@ -75,44 +74,126 @@ module.exports = {
         res.render('user/profile');
     },
 
+    changePassword: function (req, res, next) {
+        // get parameters
+        var old_password = req.body.old_password;
+        var new_password = req.body.new_password;
+        var confirm_new_password = req.body.confirm_new_password;
+
+        // check validation
+        req.assert('old_password', 'A valid current password (length between 6 to 48) is required').len(6, 48);  //Validate old password
+        req.assert('new_password', 'A valid new password (length between 6 to 48) is required').len(6, 48);  //Validate new password
+        req.assert('confirm_new_password', 'A valid confirm new password (length between 6 to 48) is required').len(6, 48);  //Validate confirm new password
+        var errors = req.validationErrors();
+        if (confirm_new_password !== new_password) {
+            if (errors.length > 0) {
+                errors.push({'msg': 'Confirm new password is not match with new password'});
+            } else {
+                errors = [{'msg': 'Confirm new password is not match with new password'}];
+            }
+        }
+        if (errors) {   //Display errors to user
+            req.flash('errors', errors);
+            res.redirect('/profile');
+            return;
+        }
+
+        Employee
+            .findOne({'username': req.session.user.username})
+            .then(user => {
+                if (!user) {
+                    req.flash('reason_fail', 'Time out! Please login');
+                    res.redirect('/login');
+                    return;
+                }
+                user.comparePassword(old_password, (err, result) => {
+                    if (err) return next({status: 500, body: err});
+                    if (result == true) {
+                        user.password = new_password;
+                        user
+                            .save()
+                            .then(savedUser => {
+                                req.flash('success', 'Password has been changed!');
+                                res.redirect('/profile');
+                            })
+                            .catch(err => next({status: 500, body: err}))
+                    } else {
+                        req.flash('reason_fail', 'Password is not correct!');
+                        res.redirect('/profile');
+                        return;
+                    }
+                })
+            })
+            .catch(err => next({status: 500, body: err}))
+    },
+
     // forgotPassword (req, res,next){
     //     res.render('user/forgotPassword');
     // },
 
-    updateInfo(req, res) {
-        let user = req.user;
+    updateInfo: async function (req, res)  {
+        // check validation
+        req.assert('first_name', 'First name is required').notEmpty();
+        req.assert('last_name', 'Last name is required').notEmpty();
+        req.assert('phone_number', 'Phone number is required').len(6, 48);
+        var errors = req.validationErrors();
         Employee
-            .findById(user.id)
-            .then((user) => {
-                user
-                    .update(req.body)
-                    .then(savedUser => {
-                        let data = {
-                            user: savedUser
-                        }
-                        return res.json(Response.returnSuccess("Update information successfully", data));
-                    })
-                    .catch(err => res.json(Response.returnError(err.message, err.code)))
-            })
-            .catch(err => res.json(Response.returnError(err.message, err.code)));
-    },
-
-
-
-    viewProfile(req, res) {
-        let employee = req.user;
-        Employee
-            .findById(employee.id)
-            .then((employee) => {
-                if (!employee) {
-                    return res.json(Response.returnError('Employee Not Found', httpStatus.NOT_FOUND));
+            .find({phone_number: req.body.phone_number})
+            .then(employee => {
+                if(employee){
+                    if (errors.length > 0) {
+                        errors.push({msg: "Phone number is matched!"})
+                    } else {
+                        errors = [{msg: "Phone number is matched!"}]
+                    }
+                    //
                 }
-                let data = {
-                    employee: employee
-                };
-                return res.json(Response.returnSuccess("Retrieve employee information successfully!", data));
             })
-            .catch(err => res.json(Response.returnError(err.message, err.code)));
+            .catch(err => {
+                console.log(err);
+                return res.json({status: 500, body: err})
+            })
+        let date = new Date(req.body.date_of_birth);
+        if(date == "Invalid Date") {
+            if (errors.length > 0) {
+                errors.push({msg: "Invalid date format!"})
+            } else {
+                errors = [{msg: "Invalid date format!"}]
+            }
+        } else req.body.date_of_birth = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+        if (errors) {   //Display errors to user
+            req.flash('errors', errors);
+            return res.redirect('/profile');
+        }
+
+        try {
+            const employee = await Employee.findById(req.session.user.id);
+            if (employee) {
+                const updatedUser = await Employee.update(req.body, {
+                    where: {
+                        id: employee.id
+                    },
+                    returning: true
+                });
+                if (updatedUser[1]) {
+                    req.session.user = updatedUser[1][0].dataValues;
+                    req.session.user.date_of_birth = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();;
+                    // console.log(updatedUser[1][0].dataValues);
+                    req.flash('success', 'User information has been updated!');
+                    return res.redirect('/profile');
+                } else {
+                    req.flash('errors', 'No record is updated!');
+                    return res.redirect('/profile');
+                }
+
+            } else {
+                req.flash('errors', 'Employee is not found!');
+                return res.redirect('/profile');
+            }
+        } catch (e) {
+            console.log(e);
+            return res.json(e);
+        }
     },
 
     list(req, res) {

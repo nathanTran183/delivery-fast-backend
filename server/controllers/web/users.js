@@ -12,24 +12,13 @@ const config = require('../../config/index');
 module.exports = {
 
     list(req, res) {
-        return User
-            .all({
-                include: [
-                    {
-                        model: UserPhone,
-                        as: 'userPhones',
-                    },
-                    {
-                        model: UserAddress,
-                        as: 'userAddress',
-                    }
-                ],
-                offset: req.query.offset || 0,
-                limit: req.query.limit || 10
+        User
+            .all()
+            .then(users => {
+                return res.render('user/index', {users: users});
             })
-            .then(users => res.json(Response.returnSuccess("Get list of users successfully", {users: users})))
             .catch(error => {
-                res.send(Response.returnError(error.message, error.code))
+                return res.json(error);
             });
     },
 
@@ -48,9 +37,10 @@ module.exports = {
             })
             .then(user => {
                 if (!user) {
-                    return res.json(Response.returnError('User Not Found', httpStatus.NOT_FOUND));
+                    req.flash('reason-fail', 'User not found!');
+                    res.redirect('back');
                 }
-                return res.status(200).json(Response.returnSuccess("Retrieve user successfully!", user));
+                return res.render('user/detail', {user: user});
             })
             .catch(error => res.send(Response.returnError(error.message, error.code)));
     },
@@ -60,16 +50,19 @@ module.exports = {
             .findById(req.params.userId)
             .then(user => {
                 if (!user) {
-                    return res.json(Response.returnError('User Not Found', httpStatus.NOT_FOUND));
+                    req.flash('reason-fail', 'User not found!');
+                    res.redirect('back');
                 }
+                user.status = user.status == true ? false : true;
                 user
-                    .update({status: req.body.status})
+                    .save()
                     .then(savedUser => {
-                        return res.json(Response.returnSuccess("Update user successfully!", {user: savedUser}));
+                        req.flash('success', 'User status has been change!');
+                        res.redirect('back');
                     })
                     .catch(err => res.json(Response.returnError(err.message, err.code)))
             })
-            .catch(error => res.send(Response.returnError(error.message, error.code)));
+            .catch(error => res.json(Response.returnError(error.message, error.code)));
     },
 
 
