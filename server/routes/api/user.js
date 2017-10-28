@@ -18,7 +18,7 @@ router.get('/profile', [expressJwt({secret: config.jwtSecret}), passport.isUserA
 
 //Phone number
 router.get('/phoneNumber', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], userPhonesController.list);
-router.post('/phoneNummber', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], userPhonesController.add);
+router.post('/phoneNumber', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], userPhonesController.add);
 router.put('/phoneNumber/:phoneId', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], userPhonesController.setPrimary);
 router.delete('/phoneNumber/:phoneId', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], userPhonesController.delete);
 
