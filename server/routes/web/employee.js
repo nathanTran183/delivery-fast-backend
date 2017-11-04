@@ -4,11 +4,11 @@
 const express = require('express');
 const employeesController = require('../../controllers/web').employees;
 const router = express.Router();
-const passport = require('../../middlewares/passport');
 
-router.get('/', passport.isAdminWeb, employeesController.list);
-router.post('/', passport.isAdminWeb, employeesController.create);
-router.get('/:employeeId', passport.isAdminWeb, employeesController.get);
-router.put('/:employeeId', passport.isAdminWeb, employeesController.update);
+router.get('/', employeesController.list);
+router.post('/', employeesController.create);
+router.post('/changeStatus/:employeeId', employeesController.changeStatus);
+router.get('/:employeeId', employeesController.get);
+router.post('/:employeeId', employeesController.update);
 
 module.exports = router;

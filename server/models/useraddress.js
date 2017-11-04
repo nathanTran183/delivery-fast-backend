@@ -7,7 +7,8 @@ module.exports = function (sequelize, DataTypes) {
             primaryKey: true,
         },
         address: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false
         },
         latitude: {
             type: DataTypes.FLOAT,

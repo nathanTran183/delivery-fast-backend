@@ -11,11 +11,9 @@ const express = require('express');
 const passport = require('../../middlewares/passport');
 const router = express.Router();
 
-router.get('/', (req, res) => res.send({
-    message: 'Welcome to the User Web!',
-}));
+router.get('/', (req, res) => res.send(res.sendFile('/uploads/image1.jpg')));
 router.use('/users', passport.isAdminWeb, usersRoute);
-router.use('/employees', employeeRoute);
+router.use('/employees', passport.isAdminWeb, employeeRoute);
 router.use('/stores', passport.isAdminWeb, storeRoute);
 router.use('/storeTypes', passport.isAdminWeb, storeTypeRoute);
 // router.use('/order');

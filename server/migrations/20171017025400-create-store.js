@@ -10,14 +10,17 @@ module.exports = {
             },
             name: {
                 type: Sequelize.STRING,
+                unique: true,
                 allowNull: false
             },
             address: {
                 type: Sequelize.STRING,
+                unique: true,
                 allowNull: false,
             },
             phone_number: {
                 type: Sequelize.STRING,
+                unique: true,
                 allowNull: false
             },
             opening_time: Sequelize.STRING,
@@ -38,6 +41,9 @@ module.exports = {
                 type: Sequelize.BOOLEAN,
                 defaultValue: true,
                 allowNull: false
+            },
+            image_url: {
+                type: Sequelize.STRING
             },
             createdAt: {
                 allowNull: false,

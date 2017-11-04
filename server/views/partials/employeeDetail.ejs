@@ -1,0 +1,188 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <%
+        // message the validation
+        if (messages.errors) {
+        for (i = 0; i < messages.errors.length; i++) {
+        %>
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Fail !</strong> <%= messages.errors[i].msg %>
+        </div>
+        <%
+        }
+        }
+
+        // message the reason change password fail
+        if (messages.reason_fail) {
+        %>
+        <div class="alert alert-warning">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.reason_fail %>
+        </div>
+        <%
+        }
+
+        // message if success
+        if (messages.success) {
+        %>
+        <div class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.success %>
+        </div>
+        <%
+        }
+        %>
+
+        <h1>
+            Employee Profile
+        </h1>
+    </section>
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-4">
+
+                <div class="box box-primary">
+                    <div class="box-body box-profile">
+
+                        <h3 class="profile-username text-center"><%= employee.first_name %> <%= employee.last_name %></h3>
+
+                        <p class="text-muted text-center">Role: <%= employee.role %></p>
+
+                        <ul class="list-group list-group-unbordered">
+                            <li class="list-group-item">
+                                <b>Username</b> <a class="pull-right"><%= employee.username %></a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Email</b> <a class="pull-right"><%= employee.email %></a>
+                            </li>
+                            <%
+                                let dateCreate = new Date(employee.createdAt);
+                                let dateUpdate = new Date(employee.updatedAt);
+                            %>
+                            <li class="list-group-item">
+                                <b>Created At</b> <a class="pull-right"><%= dateCreate.toLocaleString() %></a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Updated At</b> <a class="pull-right"><%= dateUpdate.toLocaleString() %></a>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#settings" data-toggle="tab">Employee Information</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="settings">
+                            <form id="panel-update-employee" action="/employees/<%= employee.id%>" method="post" class="update-form form-horizontal">
+                                <div class="form-group">
+                                    <label for="username" class="col-sm-2 control-label">Username</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="username" name="username"
+                                               placeholder="Username" value="<%= employee.username %>">
+                                    </div>
+
+                                    <label for="email" class="col-sm-2 control-label">Email</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="email" name="email"
+                                               placeholder="Email" value="<%= employee.email %>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="first_name" class="col-sm-2 control-label">First name</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="first_name" name="first_name"
+                                               placeholder="First name" value="<%= employee.first_name %>">
+                                    </div>
+
+                                    <label for="last_name" class="col-sm-2 control-label">Last name</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="last_name" name="last_name"
+                                               placeholder="Last name" value="<%= employee.last_name %>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone_number" class="col-sm-2 control-label">Phone number</label>
+
+                                    <div class="col-sm-10">
+                                        <input type="tel" class="form-control" id="phone_number" name="phone_number"
+                                               placeholder="Phone number" value="<%= employee.phone_number %>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender" class="col-sm-2 control-label">Gender</label>
+                                    <div class="col-sm-4">
+                                        <label class="radio-inline">
+                                            <input type="radio" id="radioMale"  <% if(employee.gender == true){ %> checked="<%= true %>" <% } %> value="true"
+                                                   name="gender" placeholder="Gender">Male
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" id="radioFemale"
+                                                   value="false" <% if(employee.gender == false){ %> checked=" <%= true %>" <% } %>
+                                                   name="gender" placeholder="Gender">Female</label>
+                                    </div>
+
+                                    <label for="dob" class="col-sm-2 control-label">Date of birth</label>
+                                    <div class="col-sm-4">
+                                        <div class="input-group date">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="text" class="datepicker form-control pull-right" id="date_of_birth" name="date_of_birth" placeholder="Date of birth" value="<%= employee.date_of_birth %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="role" class="col-sm-2 control-label">Role</label>
+                                    <div class="col-sm-4">
+                                        <label class="radio-inline">
+                                            <input type="radio" id="radioStaff" <% if(employee.role == "Staff"){ %> checked="<%= true %>" <% } %>
+                                                   value="Staff" name="role" placeholder="Staff">Staff
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" id="radioDeliMan" <% if(employee.role == "DeliMan"){ %> checked="<%= true %>" <% } %>
+                                                   value="DeliMan" name="role" placeholder="DeliMan">Delivery Man
+                                        </label>
+                                    </div>
+
+                                    <label for="status" class="col-sm-2 control-label">Status</label>
+                                    <div class="col-sm-4">
+                                        <label class="radio-inline">
+                                            <input type="radio" id="radioActive" <% if(employee.status == "Active"){ %> checked="<%= true %>" <% } %>
+                                                   value="Active" name="status" placeholder="Active">Active
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" id="radioBusy" <% if(employee.status == "Busy"){ %> checked="<%= true %>" <% } %>
+                                                   value="Busy" name="status" placeholder="Busy">Busy
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" id="radioDeactivated" <% if(employee.status == "Deactivated"){ %> checked="<%= true %>" <% } %>
+                                                   value="Deactivated" name="status" placeholder="Deactivated">Deactivated
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-5">
+                                        <button type="submit" id="saveBtn" disabled class="btn btn-success btn-flat"><i class="fa fa-save"></i> Submit</button>
+                                        <button type="button" id="resetBtn" disabled class="btn btn-danger btn-flat"><i class="fa fa-repeat"></i> Reset</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.tab-pane -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+

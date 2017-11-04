@@ -3,16 +3,15 @@
  */
 const StoreType = require('../../models/index').StoreType;
 const config = require('../../config/index');
-const Response = require('../../helpers/response');
-const httpStatus = require('http-status');
+
 module.exports = {
     list(req, res) {
         StoreType
             .all()
             .then(storetypes => {
-                return res.json(Response.returnSuccess("Get list store type successfully!", {storetypes: storetypes}))
+                return res.render("storeTypes/index", {storetypes: storetypes})
             })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
+            .catch(err => res.json(err))
     },
 
     get(req, res) {
@@ -31,9 +30,10 @@ module.exports = {
         StoreType
             .create(req.body)
             .then(storetype => {
-                return res.json(Response.returnSuccess("Create type for store successfully!", {storetype: storetype}))
+                req.flash('success', 'Create type for store successfully!');
+                return res.redirect('/storeTypes');
             })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
+            .catch(err => res.json(err))
     },
 
     update(req, res) {
@@ -41,17 +41,19 @@ module.exports = {
             .findById(req.params.storeTypeId)
             .then(storetype => {
                 if (!storetype) {
-                    return res.json(Response.returnError("Store type not found!", httpStatus.NOT_FOUND))
+                    req.flash('reason-fail', 'Store type not found!');
+                    res.redirect('/storeTypes');
                 } else {
                     storetype
                         .update(req.body)
                         .then(storetype => {
-                            return res.json(Response.returnSuccess("Update type for store successfully!", {storetype: storetype}))
+                            req.flash('success', 'Update type for store successfully!');
+                            return res.redirect('/storeTypes');
                         })
-                        .catch(err => res.json(Response.returnError(err.message, err.code)))
+                        .catch(err => res.json(err))
                 }
             })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
+            .catch(err => res.json(err))
     },
 
     delete(req, res) {
@@ -59,16 +61,18 @@ module.exports = {
             .findById(req.params.storeTypeId)
             .then(storetype => {
                 if (!storetype) {
-                    return res.json(Response.returnError("Store type not found!", httpStatus.NOT_FOUND))
+                    req.flash('reason-fail', 'Store type not found!');
+                    res.redirect('/storeTypes');
                 } else {
                     storetype
                         .destroy()
                         .then(() => {
-                            return res.json(Response.returnSuccess("Delete store type successfully!", {}))
+                            req.flash('success', 'Delete store type successfully!');
+                            return res.redirect('/storeTypes');
                         })
-                        .catch(err => res.json(Response.returnError(err.message, err.code)))
+                        .catch(err => res.json(err))
                 }
             })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
+            .catch(err => res.json(err))
     }
 }

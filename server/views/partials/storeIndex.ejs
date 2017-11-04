@@ -1,0 +1,156 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <%
+        // message the validation
+        if (messages.errors) {
+        for (i = 0; i < messages.errors.length; i++) {
+        %>
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Fail !</strong> <%= messages.errors[i].msg %>
+        </div>
+        <%
+        }
+        }
+
+        // message the reason change password fail
+        if (messages.reason_fail) {
+        %>
+        <div class="alert alert-warning">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.reason_fail %>
+        </div>
+        <%
+        }
+
+        // message if success
+        if (messages.success) {
+        %>
+        <div class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.success %>
+        </div>
+        <%
+        }
+        %>
+
+        <h1>
+            Store List
+        </h1>
+        <br>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Store Information</h3>
+                        <hr>
+                        <a href="/stores/create" class="btn bg-navy btn-flat">Create new store</a>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="tableListStores" class="table table-bordered table-striped dataTable">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Phone number</th>
+                                <th>Opening time</th>
+                                <th>Closing time</th>
+                                <th>Location</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% var i = 1; stores.forEach(function(store) { %>
+                            <tr>
+                                <td><%= i++ %></td>
+                                <td><%= store.name %></td>
+                                <td><%= store.address %></td>
+                                <td><%= store.phone_number %></td>
+                                <td><%= store.opening_time %></td>
+                                <td><%= store.closing_time %></td>
+                                <td>
+                                    <% if((store.latitude != "" && store.longitude != "") && (store.latitude != null && store.longitude != null)) { %>
+                                    <div class="googleMap" style="width:300px;height:200px;">
+                                        <input type="text" hidden class="location"
+                                               value="<%= store.latitude + "," + store.longitude %>"/>
+                                    </div>
+                                    <% } else { %>
+                                    <h3 class="label label-danger">No location</h3>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-id="<%= store.id %>"
+                                       data-type="<%= store.type %>" title="Edit"
+                                       class="confirmEditstore btn btn-primary"><span
+                                                class="fa fa-edit" aria-hidden="true"></span>
+                                    </a>
+                                    <a href="#" data-toggle="modal" data-id="<%= store.id %>" title="Delete"
+                                       class="confirmDelstore btn btn-danger"><span
+                                                class="fa fa-trash" aria-hidden="true"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<div class="modal fade" id="confirm-edit-store" role="dialog">
+    <form method="POST" id="form-edit-store" class="form-horizontal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit store type</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="type" class="col-sm-2 control-label">Store type</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="type" name="type"
+                                   placeholder="Store Type">
+                        </div>
+                    </div>
+                    <p>Click on <b>"Yes"</b> to continue, <b>"No"</b> to cancel.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="confirm-del-store" role="dialog">
+    <form method="POST" id="form-delete-store">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirm to delete store type?</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="status" id="status" value="Deactivated" hidden="true">
+                    Click on "Yes" to continue, "No" to cancel.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -8,8 +8,8 @@ const expressJwt = require('express-jwt');
 const passport = require('../../middlewares/passport');
 const config = require('../../config/index');
 
-router.get('/', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], storesController.list);
-router.get('/:storeId', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], storesController.get);
+router.get('/', storesController.list);
 router.post('/', storesController.create);
+router.get('/:storeId', storesController.get);
 
 module.exports = router;

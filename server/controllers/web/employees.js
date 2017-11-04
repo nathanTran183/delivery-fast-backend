@@ -2,8 +2,7 @@
  * Created by nathan on 16/10/2017.
  */
 const Employee = require('../../models/index').Employee;
-const config = require('../../config/index');
-
+const validate = require('../../helpers/validate');
 module.exports = {
 
     signIn (req, res, next) {
@@ -135,10 +134,10 @@ module.exports = {
         // check validation
         req.assert('first_name', 'First name is required').notEmpty();
         req.assert('last_name', 'Last name is required').notEmpty();
-        req.assert('phone_number', 'Phone number is required').len(6, 48);
+        req.assert('phone_number', 'Phone number is required').len(6, 48).isNumeric();
         var errors = req.validationErrors();
         Employee
-            .find({phone_number: req.body.phone_number})
+            .find({phone_number: req.body.phone_number}, { id: {$ne: req.session.user.id}})
             .then(employee => {
                 if(employee){
                     if (errors.length > 0) {
@@ -206,13 +205,10 @@ module.exports = {
                 }
             })
             .then(employees => {
-                let data = {
-                    employees: employees
-                };
-                return res.json(Response.returnSuccess("get list of employees successfully", data));
+                return res.render('employees/index', {employees: employees});
             })
             .catch(error => {
-                res.json(Response.returnError(error.message, error.code))
+                res.json(error)
             });
     },
 
@@ -221,46 +217,164 @@ module.exports = {
             .findById(req.params.employeeId)
             .then(employee => {
                 if (!employee) {
-                    return res.json(Response.returnError('Employee Not Found', httpStatus.NOT_FOUND));
+                    req.flash('reason-fail', 'Employee not found!');
+                    res.redirect('back');
                 }
-                let data = {
-                    employee: employee
-                };
-                return res.status(200).json(Response.returnSuccess("Retrieve employee successfully!", data));
+                let date = new Date(employee.date_of_birth);
+                employee.date_of_birth = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
+                return res.render('employees/detail', {employee: employee});
             })
-            .catch(error => res.json(Response.returnError(error.message, error.code)));
+            .catch(error => res.json(error));
     },
 
     create(req, res) {
-        Employee
-            .create(req.body)
-            .then(employee => {
-                let data = {
-                    employee: employee
-                };
-                return res.json(Response.returnSuccess("Create employee successfully!", data));
+        req.assert('first_name', 'First name is required!').notEmpty();
+        req.assert('username', 'Username is required!').notEmpty();
+        req.assert('last_name', 'Last name is required').notEmpty();
+        req.assert('email', 'Must be email format').isEmail();
+        req.assert('email', 'Email is required').notEmpty();
+        req.assert('phone_number', 'Phone number (length between 10 to 15) is required').len(10, 15);
+        req.assert('date_of_birth', 'Date of birth is required').notEmpty();
+
+        var errors = req.validationErrors();
+        if(validate.isLetter(req.body.first_name) == false){
+            validate.addErrorAssert('First name must be characters only', errors);
+        }
+        if(validate.isLetter(req.body.last_name) == false){
+            validate.addErrorAssert('Last name must be characters only', errors);
+        }
+        if(validate.isLetterPhone(req.body.username) == false){
+            validate.addErrorAssert('Username contains characters and numbers only', errors);
+        }
+        if(validate.isPhoneNumber(req.body.phone_number) == false){
+            validate.addErrorAssert("Phone number must be phone format!", errors);
+        } else {
+            Employee
+                .find({phone_number: req.body.phone_number})
+                .then(employee => {
+                    if(employee){
+                        validate.addErrorAssert("Phone number is already existed!", errors);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    return res.json(err)
+                })
+        }
+        if(validate.isDate(req.body.date_of_birth) == false){
+            validate.addErrorAssert("Date of birth must be date format!", errors);
+        } else {
+            let date = new Date(req.body.date_of_birth);
+            req.body.date_of_birth = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+        }
+
+        if (errors) {   //Display errors to user
+            req.flash('errors', errors);
+            res.redirect('/employees');
+            return;
+        }
+
+        let employee = Employee.build(req.body);
+        employee.password = "123456";
+        employee.status = "Active";
+        employee
+            .save()
+            .then(() => {
+                req.flash('success', 'Create new employee successfully!');
+                res.redirect('back');
             })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
+            .catch(err => res.json(err))
     },
 
     update(req, res) {
+        console.log(req.body)
+        req.assert('first_name', 'First name is required!').notEmpty();
+        req.assert('last_name', 'Last name is required').notEmpty();
+        req.assert('username', 'Username is required!').notEmpty();
+        req.assert('email', 'Email is required').notEmpty();
+        req.assert('date_of_birth', 'Date of birth is required').notEmpty();
+        req.assert('email', 'Must be email format').isEmail();
+        req.assert('phone_number', 'Phone number (length between 10 to 15) is required').len(10, 15);
+
+        var errors = req.validationErrors();
+        if(validate.isLetter(req.body.first_name) == false){
+            validate.addErrorAssert('First name must be characters only', errors);
+        }
+        if(validate.isLetter(req.body.last_name) == false){
+            validate.addErrorAssert('Last name must be characters only', errors);
+        }
+        if(validate.isLetterPhone(req.body.username) == false){
+            validate.addErrorAssert('Username contains characters and numbers only', errors);
+        }
+        if(validate.isPhoneNumber(req.body.phone_number) == false){
+            validate.addErrorAssert("Phone number must be phone format!", errors);
+        } else {
+            Employee
+                .find({
+                    where: {
+                        phone_number: req.body.phone_number,
+                        id: { $ne: req.params.employeeId}
+                    }
+                })
+                .then(employee => {
+                    if(employee){
+                        validate.addErrorAssert("Phone number is already existed!", errors);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    return res.json(err)
+                })
+        }
+        if(validate.isDate(req.body.date_of_birth) == false){
+            validate.addErrorAssert("Date of birth must be date format!", errors);
+        } else {
+            let date = new Date(req.body.date_of_birth);
+            req.body.date_of_birth = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+        }
+
+        if (errors) {   //Display errors to user
+            req.flash('errors', errors);
+            res.redirect('/employees');
+            return;
+        }
+
         Employee
             .findById(req.params.employeeId)
             .then(employee => {
                 if (!employee) {
-                    return res.json(Response.returnError("Employee not found!", httpStatus.NOT_FOUND))
+                    req.flash('reason-fail', 'Employee not found!');
+                    res.redirect('back');
                 } else {
                     employee
                         .update(req.body)
                         .then(employee => {
-                            let data = {
-                                employee: employee
-                            };
-                            return res.json(Response.returnSuccess("Update employee successfully!", data))
+                            req.flash('success', 'Update employee successfully!')
+                            res.redirect('/employees');
                         })
-                        .catch(err => res.json(Response.returnError(err.message, err.code)))
+                        .catch(err => res.json(err))
                 }
             })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
+            .catch(err => res.json(err))
     },
+
+    changeStatus(req, res) {
+        Employee
+            .findById(req.params.employeeId)
+            .then(employee => {
+                if (!employee) {
+                    req.flash('reason-fail', 'Employee not found!');
+                    res.redirect('back');
+                } else {
+                    employee
+                        .update(req.body)
+                        .then(employee => {
+                            req.flash('success', 'Change employee\'s status successfully!')
+                            res.redirect('/employees');
+                        })
+                        .catch(err => res.json(err))
+                }
+            })
+            .catch(err => res.json(err))
+    }
 }

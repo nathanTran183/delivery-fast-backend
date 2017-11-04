@@ -116,5 +116,16 @@ module.exports = function(sequelize, DataTypes) {
                 });
         }
     });
+    Employee.associate = (models) => {
+        Employee.hasMany(models.Order, {
+            foreignKey: 'employee_id',
+            as: 'orders',
+        });
+        Employee.hasMany(models.Order, {
+            foreignKey: 'deliMan_id',
+            as: 'orders',
+        });
+
+    };
   return Employee;
 };

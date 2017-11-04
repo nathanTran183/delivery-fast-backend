@@ -7,6 +7,7 @@ const expressValidator = require('express-validator');
 const flash = require('express-flash');
 const session = require('express-session');
 const passport = require('passport');
+const multer = require('multer');
 
 
 const Path = require('path');
@@ -22,10 +23,9 @@ app.use(logger('dev'));
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(Path.resolve(__dirname, '..', 'publics'), {maxAge: 31557600000}));
+app.use(express.static(Path.join(__dirname,"../publics")));
 app.set('view engine', 'ejs');
 app.set('views', Path.join(__dirname, '../views'));
-console.log(__dirname);
 app.use('/bower_components', express.static(Path.join(__dirname,"../../bower_components")));
 app.use(cookieParser());
 

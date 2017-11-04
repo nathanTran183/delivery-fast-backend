@@ -7,9 +7,9 @@ const router = express.Router();
 
 router.get('/', storeTypesController.list);
 router.post('/', storeTypesController.create);
-router.put('/:storeTypeId', storeTypesController.update);
-router.delete('/:storeTypeId', storeTypesController.delete);
-router.get('/:storeTypeId', storeTypesController.get);
+// router.get('/:storeTypeId', storeTypesController.get);
+router.post('/:storeTypeId', storeTypesController.update);
+router.post('/delete/:storeTypeId', storeTypesController.delete);
 
 
 module.exports = router;

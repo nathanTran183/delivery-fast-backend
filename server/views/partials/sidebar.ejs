@@ -24,35 +24,41 @@
             if(session.user != null)
             if (session.user.role == "Admin") { %>
             <li>
-                <a href="/account">
+                <a href="/employees">
                     <i class="glyphicon glyphicon-user"></i>
                     <span>Employees</span>
+                </a>
+            </li>
+            <li>
+                <a href="/employees/blackList">
+                    <i class="fa fa-circle-o" style="margin-left: 10%"></i>
+                    <span>Black List</span>
                 </a>
             </li>
             <% } %>
 
             <li>
-                <a href="#">
+                <a href="/stores">
                     <i class="glyphicon glyphicon-tasks"></i> <span>Stores</span>
                 </a>
             </li>
             <!--<li class="active">-->
             <li>
-                <a href="/overviewTasks">
+                <a href="/stores">
                     <i class="fa fa-circle-o" style="margin-left: 10%"></i>
                     <span>Overview</span>
                 </a>
             </li>
             <li>
-                <a href="/pendingTasks">
+                <a href="/storeTypes">
                     <i class="fa fa-circle-o" style="margin-left: 10%"></i>
-                    <span>StoreType</span>
+                    <span>Store Type</span>
                 </a>
             </li>
             <li>
-                <a href="/createNewTask">
+                <a href="/stores/create">
                     <i class="fa fa-circle-o" style="margin-left: 10%"></i>
-                    <span>Add task</span>
+                    <span>Add Store</span>
                 </a>
             </li>
             <li>
@@ -62,46 +68,18 @@
                 </a>
             </li>
             <li>
-                <a href="/createNewTask">
+                <a href="/users/blackList">
                     <i class="fa fa-circle-o" style="margin-left: 10%"></i>
-                    <span>Overview</span>
+                    <span>Black List</span>
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <i class="glyphicon glyphicon-usd"></i>
-                    <span>Payments</span>
+                <a href="/orders">
+                    <i class="glyphicon glyphicon-user"></i>
+                    <span>Users</span>
                 </a>
             </li>
-            <li>
-                <a href="/pendingPayments">
-                    <i class="fa fa-circle-o" style="margin-left: 10%"></i>
-                    <span>Pending</span>
-                </a>
-            </li>
-            <li><a href="/archivedPayments">
-                    <i class="fa fa-circle-o" style="margin-left: 10%"></i>
-                    <span>Archive</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="glyphicon glyphicon-envelope"></i>
-                    <span>Messaging</span>
-                </a>
-            </li>
-            <li>
-                <a href="/inbox">
-                    <i class="fa fa-circle-o" style="margin-left: 10%"></i>
-                    <span>Overview</span>
-                </a>
-            </li>
-            <li>
-                <a href="/notifications">
-                    <i class="fa fa-circle-o" style="margin-left: 10%"></i>
-                    <span>New Message</span>
-                </a>
-            </li>
+
         </ul>
     </section>
     <!-- /.sidebar -->

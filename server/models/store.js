@@ -8,14 +8,26 @@ module.exports = function (sequelize, DataTypes) {
         },
         name: {
             type:DataTypes.STRING,
+            unique: {
+                args: true,
+                msg: "Store name is unique!"
+            },
             allowNull: false
         },
         address: {
             type:DataTypes.STRING,
+            unique: {
+                args: true,
+                msg: "Store address is unique!"
+            },
             allowNull: false,
         },
         phone_number: {
             type:DataTypes.STRING,
+            unique: {
+                args: true,
+                msg: "Store phone number is unique!"
+            },
             allowNull: false
         },
         opening_time: DataTypes.STRING,
@@ -36,6 +48,9 @@ module.exports = function (sequelize, DataTypes) {
             type:DataTypes.BOOLEAN,
             defaultValue: true,
             allowNull: false
+        },
+        image_url: {
+            type: DataTypes.STRING
         }
     }, {
         classMethods: {
@@ -56,6 +71,18 @@ module.exports = function (sequelize, DataTypes) {
             through: models.StoreType_Store,
             as: 'storeTypes',
             foreignKey: 'store_id',
+        });
+        Store.hasMany(models.Order, {
+            foreignKey: 'store_id',
+            as: 'orders',
+        });
+        Store.hasMany(models.Category, {
+            foreignKey: 'store_id',
+            as: 'categories',
+        });
+        Store.hasMany(models.Discount, {
+            foreignKey: 'store_id',
+            as: 'discounts',
         });
     };
     return Store;

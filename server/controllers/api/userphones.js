@@ -16,7 +16,6 @@ module.exports = {
                 }
             })
             .then(phones => {
-                console.log(phones)
                 return res.json(Response.returnSuccess(`Get phone numbers of user`, {phones: phones}))
             })
             .catch(error => {
@@ -63,25 +62,33 @@ module.exports = {
 
     setPrimary(req, res) {
         UserPhone
-            .find({user_id: req.user.id, role: true})
+            .findOne({
+                where: {
+                    user_id: req.user.id,
+                    role: true
+                }
+            })
             .then(phone => {
-                if (phone)
+                if (phone){
                     phone
                         .update({role: false})
-                        .then()
-                        .catch(err => res.json(Response.returnError(err.message, err.code)));
-                UserPhone
-                    .findById(req.params.phoneId)
-                    .then(userPhone => {
-                        if (!userPhone)
-                            return res.json(Response.returnError('Phone number not found!', httpStatus.NOT_FOUND));
-                        userPhone
-                            .update({role: true})
-                            .then(phoneSaved => res.json(Response.returnSuccess("Set phone number becoming Primary successfully!", {phone: phoneSaved})))
-                            .catch(err => res.json(Response.returnError(err.message, err.code)))
+                        .then(() => {
+                            UserPhone
+                                .findById(req.params.phoneId)
+                                .then(userPhone => {
+                                    if (!userPhone)
+                                        return res.json(Response.returnError('Phone number not found!', httpStatus.NOT_FOUND));
+                                    userPhone
+                                        .update({role: true})
+                                        .then(phoneSaved => res.json(Response.returnSuccess("Set phone number becoming Primary successfully!", {phone: phoneSaved})))
+                                        .catch(err => res.json(Response.returnError(err.message, err.code)))
 
-                    })
-                    .catch(err => res.json(Response.returnError(err.message, err.code)))
+                                })
+                                .catch(err => res.json(Response.returnError(err.message, err.code)))
+                        })
+                        .catch(err => res.json(Response.returnError(err.message, err.code)));
+                }
+                else return res.json(Response.returnError("Cannot set to primary cause no primary phone!",httpStatus.NOT_FOUND))
             })
 
             .catch(err => res.json(Response.returnError(err.message, err.code)));

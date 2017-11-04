@@ -93,15 +93,15 @@
                                     <% if(user.status == true) { %>
                                     <span class="label label-primary ">Active</span>
                                     <% } else  { %>
-                                    <span class="label label-danger">Deactived</span>
+                                    <span class="label label-danger">Deactivated</span>
                                     <% } %>
                                 </td>
                                 <td>
-                                    <a href="/users/<%= user.id %>" title="View Detail" class="btn btn-default"><span
+                                    <a href="/users/<%= user.id %>" title="View Detail" class="btn btn-default btn-flat"><span
                                                 class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
                                     <% if(user.status == true) { %>
                                     <a href="#" data-toggle="modal" data-id="<%= user.id %>" title="Deactive"
-                                       class="confirmChangeUserStatus btn btn-danger"><span
+                                       class="confirmChangeUserStatus btn btn-danger btn-flat"><span
                                                 class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
                                     <% } %>
                                 </td>

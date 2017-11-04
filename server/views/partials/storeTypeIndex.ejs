@@ -1,0 +1,171 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <%
+        // message the validation
+        if (messages.errors) {
+        for (i = 0; i < messages.errors.length; i++) {
+        %>
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Fail !</strong> <%= messages.errors[i].msg %>
+        </div>
+        <%
+        }
+        }
+
+        // message the reason change password fail
+        if (messages.reason_fail) {
+        %>
+        <div class="alert alert-warning">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.reason_fail %>
+        </div>
+        <%
+        }
+
+        // message if success
+        if (messages.success) {
+        %>
+        <div class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.success %>
+        </div>
+        <%
+        }
+        %>
+
+        <h1>
+            Store type List
+        </h1>
+        <br>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Store type Information</h3>
+                        <hr>
+                        <p>Create new store type here</p>
+                        <button type="button" class="btn bg-navy btn-flat" data-toggle="collapse"
+                                data-target="#panel-create-employee">Create Store type
+                        </button>
+                        <div id="panel-create-employee" class="collapse clearfix">
+                            <br>
+                            <form id="panel-insert-storeType" action="/storeTypes" method="post"
+                                  class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="type" class="col-sm-2 control-label">Store type</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="type" name="type"
+                                               placeholder="Store Type">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn bg-maroon btn-flat"><i class="fa fa-save"></i>
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="tableListStoreTypes" class="table table-bordered table-striped dataTable">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Type</th>
+                                <th>Created at</th>
+                                <th>Updated at</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% storetypes.forEach(function(storeType) { %>
+                            <tr>
+                                <td><%= storeType.id %></td>
+                                <td><%= storeType.type %></td>
+                                <td>
+                                    <%
+                                        let createdDate = new Date(storeType.createdAt);
+                                        let updatedDate = new Date(storeType.updatedAt);
+                                    %>
+                                    <%= createdDate.toLocaleString() %>
+                                </td>
+                                <td>
+                                    <%= updatedDate.toLocaleString() %>
+                                </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-id="<%= storeType.id %>" data-type="<%= storeType.type%>" title="Edit"
+                                       class="confirmEditStoreType btn btn-primary"><span
+                                                class="fa fa-edit" aria-hidden="true"></span>
+                                    </a>
+                                    <a href="#" data-toggle="modal" data-id="<%= storeType.id %>" title="Delete"
+                                       class="confirmDelStoreType btn btn-danger"><span
+                                                class="fa fa-trash" aria-hidden="true"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<div class="modal fade" id="confirm-edit-storeType" role="dialog">
+    <form method="POST" id="form-edit-storeType" class="form-horizontal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit store type</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="type" class="col-sm-2 control-label">Store type</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="type" name="type"
+                                   placeholder="Store Type">
+                        </div>
+                    </div>
+                    <p>Click on <b>"Yes"</b> to continue, <b>"No"</b> to cancel.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="confirm-del-storeType" role="dialog">
+    <form method="POST" id="form-delete-storeType">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirm to delete store type?</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="status" id="status" value="Deactivated" hidden="true">
+                    Click on "Yes" to continue, "No" to cancel.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
