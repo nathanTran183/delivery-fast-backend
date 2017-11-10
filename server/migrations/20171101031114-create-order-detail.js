@@ -8,6 +8,10 @@ module.exports = {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV1,
             },
+            product_id: {
+                type: Sequelize.STRING,
+                allowNull: false
+            },
             product_name: {
                 type: Sequelize.STRING,
                 allowNull: false
@@ -28,6 +32,9 @@ module.exports = {
                 validate: {
                     min: 0
                 }
+            },
+            image_url: {
+                type: Sequelize.STRING,
             },
             order_id: {
                 type: Sequelize.UUID,

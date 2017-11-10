@@ -19,6 +19,9 @@ $(document).ready(function () {
 
     var tableListUsers = $('#tableListUsers').DataTable();
     var tableListStoreTypes = $('#tableListStoreTypes').DataTable();
+    $('#tableListProducts').DataTable();
+     $("#tableListProductAddons").DataTable();
+    $("#tableListAddons").DataTable();
     var tableListStores = $('#tableListStores').DataTable({
         "drawCallback": function(){
             loadManyMaps();
@@ -59,8 +62,6 @@ $(document).ready(function () {
         showMeridian: false,
     });
 
-
-
     $("#panel-insert-store #image_url").change(function() {
         if($(this).val()!=''){
             readURL(this);
@@ -69,7 +70,36 @@ $(document).ready(function () {
         else {
             $('#imageUpload').parent().addClass('hidden');
         }
+    });
 
+    $("#panel-update-store #image_url").change(function() {
+        if($(this).val()!=''){
+            readURL(this);
+            $('#imageUpload').parent().removeClass('hidden');
+        }
+        else {
+            $('#imageUpload').parent().addClass('hidden');
+        }
+    });
+
+    $("#panel-insert-product #image_url").change(function() {
+        if($(this).val()!=''){
+            readURL(this);
+            $('#imageUpload').parent().removeClass('hidden');
+        }
+        else {
+            $('#imageUpload').parent().addClass('hidden');
+        }
+    });
+
+    $("#panel-update-product #image_url").change(function() {
+        if($(this).val()!=''){
+            readURL(this);
+            $('#imageUpload').parent().removeClass('hidden');
+        }
+        else {
+            $('#imageUpload').parent().addClass('hidden');
+        }
     });
 
     $('.select2').select2();
@@ -78,20 +108,26 @@ $(document).ready(function () {
         $('.update-form #saveBtn').removeAttr('disabled');
         $('.update-form #resetBtn').removeAttr('disabled');
     });
-    $(".update-form input").change(function() {
+    $(".update-form input,select").change(function() {
         $('.update-form #saveBtn').removeAttr('disabled');
         $('.update-form #resetBtn').removeAttr('disabled');
     });
     $(".update-form #resetBtn").click(function() {
         $('.update-form')[0].reset();
-        $('.update-form #saveBtn').attr('disabled', true);
-        $('.update-form #resetBtn').attr('disabled', true);
         checkRole();
+        if($("#panel-update-store #resetBtn")!= undefined){
+            if($('.update-form #imageUpload')!= undefined || $('.update-form #imageUpload') != null){
+                $('.update-form #imageUpload').prop('src',  $('.update-form #imageUpload').prop('alt'))
+            }
+            $('#panel-update-store #store_type').val(storetype).trigger('change');
+        }
+        $('.update-form #saveBtn').attr('disabled', true);
+
     });
 
+    let storetype = $('#panel-update-store #store_type').val();
+
     checkRole();
-
-
 
     $('#panel-update-employee input[type=radio][name=role]').change(function() {
         if(this.value == "Staff"){
@@ -103,6 +139,65 @@ $(document).ready(function () {
         }
     });
 
+    $('.confirmDelCategory').click(function(event){
+        $('#form-delete-category').attr('action', $('#form-delete-category').attr('action') + "delete/" + $(this).data('id'));
+        $('#confirm-del-category').modal();
+    });
+
+    $('.confirmEditCategory').click(function(event){
+        $('#form-edit-category #name').val($(this).data('type'));
+        $('#form-edit-category').attr('action', $('#form-edit-category').attr('action') + $(this).data('id'));
+        $('#confirm-edit-category').modal();
+    });
+
+    $('.confirmDelProduct').click(function(event){
+        $('#form-delete-product').attr('action', $('#form-delete-product').attr('action') + "delete/" + $(this).data('id'));
+        $('#confirm-del-product').modal();
+    });
+
+    $('.confirmEditProduct').click(function(event){
+        $('#form-edit-product #name').val($(this).data('name'));
+        $('#form-edit-product #price').val($(this).data('price'));
+        $('#form-edit-product #imageUpload').prop('src', $(this).data('img'));
+        $('#form-edit-product').attr('action', $('#form-edit-product').attr('action') + $(this).data('id'));
+        $('#confirm-edit-product').modal();
+    });
+
+    $("#confirm-del-product #image_url").change(function() {
+        if($(this).val()!=''){
+            readURL(this);
+            $('#imageUpload').parent().removeClass('hidden');
+        }
+        else {
+            $('#imageUpload').parent().addClass('hidden');
+        }
+    });
+
+    $('.confirmDelAddon').click(function(event){
+        $('#form-delete-addon').attr('action', $('#form-delete-addon').attr('action') + "delete/" + $(this).data('id'));
+        $('#confirm-del-addon').modal();
+    });
+
+    $('.confirmEditAddon').click(function(event){
+        $('#form-edit-addon #name').val($(this).data('name'));
+        $('#form-edit-addon #role').val($(this).data('role'));
+        $('#form-edit-addon').attr('action', $('#form-edit-addon').attr('action') + $(this).data('id'));
+        $('#confirm-edit-addon').modal();
+    });
+
+    $('.confirmDelProductAddon').click(function(event){
+        $('#form-delete-productAddon').attr('action', $('#form-delete-productAddon').attr('action') + "delete/" + $(this).data('id'));
+        $('#confirm-del-productAddon').modal();
+    });
+
+    $('.confirmEditProductAddon').click(function(event){
+        $('#form-edit-productAddon #name').val($(this).data('name'));
+        $('#form-edit-productAddon #price').val($(this).data('price'));
+        let addonVal = $(this).data('addon');
+        $('#form-edit-productAddon #addon_id').val(addonVal).change();
+        $('#form-edit-productAddon').attr('action', $('#form-edit-productAddon').attr('action') + $(this).data('id'));
+        $('#confirm-edit-productAddon').modal();
+    });
 
 });
 
@@ -120,7 +215,9 @@ function readURL(input) {
 }
 
 function checkRole() {
-    if($('#panel-update-employee input[type=radio][name=role]').val() == "Staff"){
+    if($('#panel-update-employee #radioStaff').prop('checked')){
         $('#panel-update-employee #radioBusy').parent().hide();
-    } else $('#panel-update-employee #radioBusy').parent().show();
+    } else {
+        $('#panel-update-employee #radioBusy').parent().show();
+    }
 }

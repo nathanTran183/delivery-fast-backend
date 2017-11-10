@@ -217,7 +217,7 @@ module.exports = {
             .findById(req.params.employeeId)
             .then(employee => {
                 if (!employee) {
-                    req.flash('reason-fail', 'Employee not found!');
+                    req.flash('reason_fail', 'Employee not found!');
                     res.redirect('back');
                 }
                 let date = new Date(employee.date_of_birth);
@@ -236,33 +236,23 @@ module.exports = {
         req.assert('phone_number', 'Phone number (length between 10 to 15) is required').len(10, 15);
         req.assert('date_of_birth', 'Date of birth is required').notEmpty();
 
+
         var errors = req.validationErrors();
         if(validate.isLetter(req.body.first_name) == false){
-            validate.addErrorAssert('First name must be characters only', errors);
+            errors = validate.addErrorAssert('First name must be characters only', errors);
         }
         if(validate.isLetter(req.body.last_name) == false){
-            validate.addErrorAssert('Last name must be characters only', errors);
+
+            errors = validate.addErrorAssert('Last name must be characters only', errors);
         }
-        if(validate.isLetterPhone(req.body.username) == false){
-            validate.addErrorAssert('Username contains characters and numbers only', errors);
+        if(validate.isLetterNumber(req.body.username) == false){
+            errors = validate.addErrorAssert('Username contains characters and numbers only', errors);
         }
         if(validate.isPhoneNumber(req.body.phone_number) == false){
-            validate.addErrorAssert("Phone number must be phone format!", errors);
-        } else {
-            Employee
-                .find({phone_number: req.body.phone_number})
-                .then(employee => {
-                    if(employee){
-                        validate.addErrorAssert("Phone number is already existed!", errors);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    return res.json(err)
-                })
+            errors = validate.addErrorAssert("Phone number must be phone format!", errors);
         }
         if(validate.isDate(req.body.date_of_birth) == false){
-            validate.addErrorAssert("Date of birth must be date format!", errors);
+            errors = validate.addErrorAssert("Date of birth must be date format!", errors);
         } else {
             let date = new Date(req.body.date_of_birth);
             req.body.date_of_birth = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
@@ -283,11 +273,13 @@ module.exports = {
                 req.flash('success', 'Create new employee successfully!');
                 res.redirect('back');
             })
-            .catch(err => res.json(err))
+            .catch(err => {
+                req.flash('errors', {msg: err.message});
+                res.redirect('back');
+            })
     },
 
     update(req, res) {
-        console.log(req.body)
         req.assert('first_name', 'First name is required!').notEmpty();
         req.assert('last_name', 'Last name is required').notEmpty();
         req.assert('username', 'Username is required!').notEmpty();
@@ -298,36 +290,19 @@ module.exports = {
 
         var errors = req.validationErrors();
         if(validate.isLetter(req.body.first_name) == false){
-            validate.addErrorAssert('First name must be characters only', errors);
+            errors = validate.addErrorAssert('First name must be characters only', errors);
         }
         if(validate.isLetter(req.body.last_name) == false){
-            validate.addErrorAssert('Last name must be characters only', errors);
+            errors = validate.addErrorAssert('Last name must be characters only', errors);
         }
-        if(validate.isLetterPhone(req.body.username) == false){
-            validate.addErrorAssert('Username contains characters and numbers only', errors);
+        if(validate.isLetterNumber(req.body.username) == false){
+            errors = validate.addErrorAssert('Username contains characters and numbers only', errors);
         }
         if(validate.isPhoneNumber(req.body.phone_number) == false){
-            validate.addErrorAssert("Phone number must be phone format!", errors);
-        } else {
-            Employee
-                .find({
-                    where: {
-                        phone_number: req.body.phone_number,
-                        id: { $ne: req.params.employeeId}
-                    }
-                })
-                .then(employee => {
-                    if(employee){
-                        validate.addErrorAssert("Phone number is already existed!", errors);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    return res.json(err)
-                })
+            errors = validate.addErrorAssert("Phone number must be phone format!", errors);
         }
         if(validate.isDate(req.body.date_of_birth) == false){
-            validate.addErrorAssert("Date of birth must be date format!", errors);
+            errors = validate.addErrorAssert("Date of birth must be date format!", errors);
         } else {
             let date = new Date(req.body.date_of_birth);
             req.body.date_of_birth = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
@@ -335,7 +310,7 @@ module.exports = {
 
         if (errors) {   //Display errors to user
             req.flash('errors', errors);
-            res.redirect('/employees');
+            res.redirect('back');
             return;
         }
 
@@ -343,7 +318,7 @@ module.exports = {
             .findById(req.params.employeeId)
             .then(employee => {
                 if (!employee) {
-                    req.flash('reason-fail', 'Employee not found!');
+                    req.flash('reason_fail', 'Employee not found!');
                     res.redirect('back');
                 } else {
                     employee
@@ -352,10 +327,17 @@ module.exports = {
                             req.flash('success', 'Update employee successfully!')
                             res.redirect('/employees');
                         })
-                        .catch(err => res.json(err))
+                        .catch(err => {
+                            console.log(err);
+                            req.flash('errors', {msg: err.message});
+                            res.redirect('back');
+                        })
                 }
             })
-            .catch(err => res.json(err))
+            .catch(err => {
+                req.flash('reason_fail', err.message);
+                res.redirect('back');
+            })
     },
 
     changeStatus(req, res) {
@@ -363,7 +345,7 @@ module.exports = {
             .findById(req.params.employeeId)
             .then(employee => {
                 if (!employee) {
-                    req.flash('reason-fail', 'Employee not found!');
+                    req.flash('reason_fail', 'Employee not found!');
                     res.redirect('back');
                 } else {
                     employee

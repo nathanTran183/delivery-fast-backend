@@ -13,7 +13,7 @@ module.exports = {
                 allowNull: false
             },
             role: {
-                type: Sequelize.BOOLEAN,
+                type: Sequelize.INTEGER,
                 allowNull: false
             },
             category_id: {

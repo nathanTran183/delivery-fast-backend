@@ -11,8 +11,14 @@ module.exports = function(sequelize, DataTypes) {
           allowNull: false
       },
       role: {
-        type: DataTypes.BOOLEAN,
-          allowNull: false
+        type: DataTypes.INTEGER,
+          allowNull: false,
+          validate: {
+            min: {
+                args: [1],
+                msg: "Addon product's quantity must bigger than 1"
+            }
+          }
       }
   }, {
     classMethods: {

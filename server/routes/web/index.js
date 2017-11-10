@@ -5,6 +5,10 @@ const usersRoute = require('./user');
 const employeeRoute = require('./employee');
 const storeTypeRoute = require('./storetype');
 const storeRoute = require('./store');
+const categoryRoute = require('./category');
+const addonRoute = require('./addon');
+const productRoute = require('./product');
+const productaddonRoute = require('./productaddon');
 const employeesController = require('../../controllers/web').employees;
 
 const express = require('express');
@@ -16,6 +20,11 @@ router.use('/users', passport.isAdminWeb, usersRoute);
 router.use('/employees', passport.isAdminWeb, employeeRoute);
 router.use('/stores', passport.isAdminWeb, storeRoute);
 router.use('/storeTypes', passport.isAdminWeb, storeTypeRoute);
+router.use('/stores/:storeId/categories', passport.isAdminWeb, categoryRoute);
+router.use('/stores/:storeId/categories/:categoryId/addons', passport.isAdminWeb, addonRoute);
+router.use('/stores/:storeId/categories/:categoryId/products', passport.isAdminWeb, productRoute);
+router.use('/stores/:storeId/categories/:categoryId/productAddons', passport.isAdminWeb, productaddonRoute);
+
 // router.use('/order');
 
 //DeliMans' routers

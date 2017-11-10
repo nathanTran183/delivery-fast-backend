@@ -39,6 +39,10 @@ $(function() {
 
         $('#latitude').val(lat);
         $('#longitude').val(lng);
+        if($("#panel-update-store #resetBtn") != undefined){
+            $('#panel-update-store #saveBtn').removeAttr('disabled');
+            $('#panel-update-store #resetBtn').removeAttr('disabled');
+        }
     };
 
 });

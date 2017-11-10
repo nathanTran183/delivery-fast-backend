@@ -6,6 +6,10 @@ module.exports = function (sequelize, DataTypes) {
             defaultValue: DataTypes.UUIDV1,
             primaryKey: true,
         },
+        product_id: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         product_name: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -26,6 +30,9 @@ module.exports = function (sequelize, DataTypes) {
             validate: {
                 min: 0
             }
+        },
+        image_url: {
+            type: DataTypes.STRING,
         }
     }, {
         classMethods: {

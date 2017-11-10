@@ -8,14 +8,12 @@ module.exports = function (sequelize, DataTypes) {
         },
         user_phone: {
             type: DataTypes.STRING,
-            allowNull: false,
             validate: {
                 isNumeric: true,
             }
         },
         user_address: {
             type: DataTypes.STRING,
-            allowNull: false
         },
         latitude: {
             type: DataTypes.FLOAT,
@@ -29,27 +27,23 @@ module.exports = function (sequelize, DataTypes) {
             defaultValue: null,
             validate: {min: -180, max: 180}
         },
-        delivery_date: {
-            type: DataTypes.DATEONLY,
-            allowNull: false
+        order_date: {
+            type: DataTypes.DATE,
         },
-        delivery_time: {
-            type: DataTypes.STRING,
-            allowNull: false
+        delivery_date: {
+            type: DataTypes.DATE,
         },
         ship_fee: {
             type: DataTypes.INTEGER,
-            allowNull: false
         },
         total_amount: {
             type: DataTypes.INTEGER,
-            allowNull: false
         },
         note: DataTypes.STRING,
         status: {
             type: DataTypes.ENUM('Order Submitted', 'Processing', 'Confirmed', 'Assigned', 'Picked', 'Delivered', 'Cancelled'),
             allowNull: false,
-            defaultValue: "Order Submitted"
+            defaultValue: 'Order Submitted'
         },
         payment: {
             type: DataTypes.ENUM('Cash'),

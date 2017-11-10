@@ -19,6 +19,12 @@ module.exports = function(sequelize, DataTypes) {
       password: {
           type: DataTypes.STRING(255),
           allowNull: false,
+          validate: {
+              min: {
+                  args: 8,
+                  msg: "Password length must be at least 8 characters"
+              }
+          }
       },
       email: {
           type: DataTypes.STRING(50),

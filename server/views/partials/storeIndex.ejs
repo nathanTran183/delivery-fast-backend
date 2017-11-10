@@ -85,10 +85,9 @@
                                     <% } %>
                                 </td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-id="<%= store.id %>"
-                                       data-type="<%= store.type %>" title="Edit"
-                                       class="confirmEditstore btn btn-primary"><span
-                                                class="fa fa-edit" aria-hidden="true"></span>
+                                    <a href="/stores/<%= store.id %>" title="Detail"
+                                       class="btn btn-primary btn-flat"><span
+                                                class="fa fa-search" aria-hidden="true"></span>
                                     </a>
                                     <a href="#" data-toggle="modal" data-id="<%= store.id %>" title="Delete"
                                        class="confirmDelstore btn btn-danger"><span
@@ -109,31 +108,7 @@
     </section>
 </div>
 
-<div class="modal fade" id="confirm-edit-store" role="dialog">
-    <form method="POST" id="form-edit-store" class="form-horizontal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Edit store type</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="type" class="col-sm-2 control-label">Store type</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="type" name="type"
-                                   placeholder="Store Type">
-                        </div>
-                    </div>
-                    <p>Click on <b>"Yes"</b> to continue, <b>"No"</b> to cancel.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-primary">Yes</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
+
 
 <div class="modal fade" id="confirm-del-store" role="dialog">
     <form method="POST" id="form-delete-store">

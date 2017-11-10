@@ -10,7 +10,7 @@ module.exports = function (sequelize, DataTypes) {
             type:DataTypes.STRING,
             unique: {
                 args: true,
-                msg: "Store name is unique!"
+                msg: "Store name has been existed!"
             },
             allowNull: false
         },
@@ -18,7 +18,7 @@ module.exports = function (sequelize, DataTypes) {
             type:DataTypes.STRING,
             unique: {
                 args: true,
-                msg: "Store address is unique!"
+                msg: "Store address has been existed!"
             },
             allowNull: false,
         },
@@ -26,7 +26,7 @@ module.exports = function (sequelize, DataTypes) {
             type:DataTypes.STRING,
             unique: {
                 args: true,
-                msg: "Store phone number is unique!"
+                msg: "Store phone number has been existed!"
             },
             allowNull: false
         },

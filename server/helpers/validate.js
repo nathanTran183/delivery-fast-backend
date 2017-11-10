@@ -9,24 +9,22 @@ module.exports = {
 
     isPhoneNumber(phone) {
         var phoneRe = new RegExp("^\\+?[0-9\\-\\()\\s]+$", 'g');
-
-        if (!phoneRe.test(phone)) {
-            return false;
-        } else return true;
+        return phoneRe.test(phone);
     },
 
     isLetter(string) {
-        var strRe = new RegExp('/^[A-Za-z\d\s]+$/');
-        if(!strRe.test(string)){
-            return false;
-        } else return true;
+        var strRe = new RegExp(/^[A-Za-z\s]+$/);
+        return strRe.test(string);
     },
 
-    isLetterPhone(string) {
-        var strRe = new RegExp('/^[0-9a-zA-Z]+$/');
-        if(!strRe.test(string)){
-            return false;
-        } else return true;
+    isSpecialLetter(string) {
+        var strRe = new RegExp(/^[A-Za-z0-9\,\.\-\'\s]+$/);
+        return strRe.test(string);
+    },
+
+    isLetterNumber(string) {
+        var strRe = new RegExp(/^[0-9a-zA-Z\s]+$/);
+        return strRe.test(string);
     },
 
     addErrorAssert(string, errors) {
@@ -35,5 +33,14 @@ module.exports = {
         } else {
             errors = [{msg: string}]
         }
-    }
+        return errors;
+    },
+
+    // isTime(string) {
+    //     var strRe = new RegExp('/^[0-9a-zA-Z]+$/');
+    //     if(!strRe.test(string)){
+    //         return false;
+    //     } else return true;
+    // }
+
 }

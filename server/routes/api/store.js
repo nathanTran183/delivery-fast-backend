@@ -4,12 +4,12 @@
 const express = require('express');
 const storesController = require('../../controllers/api').stores;
 const router = express.Router();
-const expressJwt = require('express-jwt');
-const passport = require('../../middlewares/passport');
 const config = require('../../config/index');
+const expressJwt = require('express-jwt');
+
 
 router.get('/', storesController.list);
-router.post('/', storesController.create);
+router.get('/storeType',storesController.storeTypeList);
 router.get('/:storeId', storesController.get);
 
 module.exports = router;

@@ -14,7 +14,10 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false,
             validate: {
-                min: 0
+                min: {
+                    args: [0],
+                    msg: "Product's price must be higher than 0!"
+                }
             }
         },
         image_url: DataTypes.STRING

@@ -25,6 +25,7 @@ router.delete('/phoneNumber/:phoneId', [expressJwt({secret: config.jwtSecret}), 
 //Address
 router.get('/address', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], userAddressController.list);
 router.post('/address', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], userAddressController.add);
+router.put('/address/:addressId', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], userAddressController.update);
 router.delete('/address/:addressId', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], userAddressController.delete);
 
 

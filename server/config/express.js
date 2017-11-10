@@ -59,18 +59,9 @@ app.use(flash());
 // config express-validator
 app.use(expressValidator());  //required for Express-Validator
 
-
-// Setup a default catch-all route that sends back a welcome message in JSON format.
-app.get('/welcome', (req, res) => res.status(200).send({
-  message: 'Welcome to the beginning of nothingness.',
-}));
-app.get('/port', (req, res) => res.send({
-    message: process.env.EXPIRE_TIME
-}));
-
 app.use('/api', routes.Api);
 app.use('/', routes.Web);
-
-
-
+app.get('/test', function(req, res){
+    res.render('test');
+})
 module.exports = app;

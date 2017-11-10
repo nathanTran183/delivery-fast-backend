@@ -5,7 +5,7 @@ const express = require('express');
 const storesController = require('../../controllers/web').stores;
 const router = express.Router();
 const multer = require('multer');
-// const upload = multer({ dest: 'server/publics/uploads' }); // multer configuration
+const passport = require('../../middlewares/passport');
 
 router.get('/', storesController.list);
 router.post('/', storesController.create);
