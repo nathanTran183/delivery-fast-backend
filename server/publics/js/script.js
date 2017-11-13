@@ -20,9 +20,10 @@ $(document).ready(function () {
     var tableListUsers = $('#tableListUsers').DataTable();
     var tableListStoreTypes = $('#tableListStoreTypes').DataTable();
     $('#tableListProducts').DataTable();
-     $("#tableListProductAddons").DataTable();
+    $("#tableListProductAddons").DataTable();
     $("#tableListAddons").DataTable();
     $("#tableListDiscounts").DataTable();
+    $("#tableListSubmittedOrders").DataTable();
     var tableListStores = $('#tableListStores').DataTable({
         "drawCallback": function(){
             loadManyMaps();

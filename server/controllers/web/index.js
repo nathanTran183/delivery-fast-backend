@@ -10,6 +10,7 @@ const addons = require('./addons');
 const products = require('./products');
 const productaddons = require('./productaddons');
 const discounts = require('./discounts');
+const orders = require('./orders');
 module.exports = {
     users,
     employees,
@@ -19,5 +20,6 @@ module.exports = {
     addons,
     products,
     productaddons,
-    discounts
+    discounts,
+    orders
 };

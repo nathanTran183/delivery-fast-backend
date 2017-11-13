@@ -12,7 +12,8 @@ const Employee = require('../../models/index').Employee;
 const Store = require('../../models/index').Store;
 
 var associationObject = {
-    include: [{
+    include: [
+        {
         model: OrderDetail,
         as: 'orderDetails'
     }, {
@@ -37,7 +38,8 @@ var associationObject = {
     }, {
         model: Employee,
         as: 'deliMan'
-    },], attributes: {
+    }
+    ], attributes: {
         exclude: ['user_id', 'store_id', 'employee_id', 'deliMan_id']
     }
 };
@@ -64,23 +66,7 @@ module.exports = {
             .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
 
-    // create(req, res) {
-    //     req.body.user_id = req.user.id;
-    //     Order
-    //         .create(req.body, {
-    //             include: [{
-    //                 model: OrderDetail,
-    //                 as: 'orderDetails'
-    //             }]
-    //         })
-    //         .then(order => {
-    //             res.json(order)
-    //         })
-    //         .catch(err => res.json(Response.returnError(err.message, err.code)))
-    //
-    // },
-
-    updateClient(req, res) {
+    update(req, res) {
         Order
             .findById(req.params.orderId)
             .then(order => {
@@ -89,46 +75,6 @@ module.exports = {
                 }
                 order
                     .update(req.body)
-                    .then(savedOrder => {
-                        OrderDetail
-                            .destroy({
-                                where: {
-                                    order_id: savedOrder.id
-                                }
-                            })
-                            .then(() => {
-                                if (req.body.orderDetails && req.body.orderDetails.length > 0) {
-                                    OrderDetail
-                                        .bulkCreate(req.body.orderDetails)
-                                        .then((orderDetails) => {
-                                            return res.json(Response.returnSuccess("Update order successfully!", {
-                                                order: savedOrder,
-                                                orderDetails: orderDetails
-                                            }))
-                                        })
-                                        .catch(err => res.json(Response.returnError(err.message, err.code)));
-                                }
-                                else return res.json(Response.returnSuccess("Update order successfully!", {
-                                    order: savedOrder,
-                                    orderDetails: null
-                                }))
-                            })
-                            .catch(err => res.json(Response.returnError(err.message, err.code)));
-                    })
-                    .catch(err => res.json(Response.returnError(err.message, err.code)));
-            })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
-    },
-
-    updateStatus(req, res) {
-        Order
-            .findById(req.params.orderId)
-            .then(order => {
-                if (!order) {
-                    return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND))
-                }
-                order
-                    .update({status: req.body.status})
                     .then(savedOrder => {
                         return res.json(Response.returnSuccess("Update order's status successfully!", {order: savedOrder}));
                     })
@@ -146,9 +92,12 @@ module.exports = {
                 }
             })
             .then(orders => {
-                return res.json(Response.returnSuccess("Get submmited order list successfully!", {orders: orders}));
+                res.render('orders/submittedIndex', {orders: orders});
             })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
+            .catch(err => {
+                req.flash('errors', {msg: err.message});
+                res.redirect('/orders/submitted');
+            })
     },
 
     history(req, res) {
@@ -163,5 +112,5 @@ module.exports = {
                 return res.json(Response.returnSuccess("Get order history successfully!", {orders: orders}));
             })
             .catch(err => res.json(Response.returnError(err.message, err.code)))
-    },
+    }
 }

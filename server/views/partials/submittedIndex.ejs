@@ -1,0 +1,147 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <%
+        // message the validation
+        if (messages.errors) {
+        for (i = 0; i < messages.errors.length; i++) {
+        %>
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Fail !</strong> <%= messages.errors[i].msg %>
+        </div>
+        <%
+        }
+        }
+
+        // message the reason change password fail
+        if (messages.reason_fail) {
+        %>
+        <div class="alert alert-warning">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.reason_fail %>
+        </div>
+        <%
+        }
+
+        // message if success
+        if (messages.success) {
+        %>
+        <div class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.success %>
+        </div>
+        <%
+        }
+        %>
+
+        <h1>
+            Submitted Order List
+        </h1>
+        <br>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-body">
+                        <table id="tableListSubmittedOrders" class="table table-bordered table-striped dataTable">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>User Name</th>
+                                <th>User Phone</th>
+                                <th>User Address</th>
+                                <th>Order Date</th>
+                                <th>Delivery Date</th>
+                                <th>Ship fee</th>
+                                <th>Total Amount</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% orders.forEach(function(order) { %>
+                            <tr>
+                                <td><%= order.id %></td>
+                                <td><%= order.user_name %></td>
+                                <td><%= order.user_phone %></td>
+                                <td><%= order.user_address %></td>
+
+                                <td>
+                                    <%
+                                        let createdDate = new Date(order.order_date);
+                                        let updatedDate = new Date(order.delivery_date);
+                                    %>
+                                    <%= createdDate.toLocaleString() %>
+                                </td>
+                                <td>
+                                    <%= updatedDate.toLocaleString() %>
+                                </td>
+                                <td><%= order.ship_fee %></td>
+                                <td><%= order.total_amount %></td>
+
+                                <td>
+                                    <a href="/orders/<%= order.id%>" title="Detail" class="btn-flat btn btn-primary"><span
+                                                class="fa fa-edit" aria-hidden="true"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<div class="modal fade" id="confirm-edit-storeType" role="dialog">
+    <form method="POST" id="form-edit-storeType" class="form-horizontal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit store type</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="type" class="col-sm-2 control-label">Store type</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="type" name="type"
+                                   placeholder="Store Type">
+                        </div>
+                    </div>
+                    <p>Click on <b>"Yes"</b> to continue, <b>"No"</b> to cancel.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="confirm-del-storeType" role="dialog">
+    <form method="POST" id="form-delete-storeType">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirm to delete store type?</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="status" id="status" value="Deactivated" hidden="true">
+                    Click on "Yes" to continue, "No" to cancel.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
