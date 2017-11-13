@@ -6,6 +6,9 @@ module.exports = function (sequelize, DataTypes) {
             defaultValue: DataTypes.UUIDV1,
             primaryKey: true,
         },
+        user_name: {
+            type: DataTypes.STRING
+        },
         user_phone: {
             type: DataTypes.STRING,
             validate: {
@@ -41,9 +44,9 @@ module.exports = function (sequelize, DataTypes) {
         },
         note: DataTypes.STRING,
         status: {
-            type: DataTypes.ENUM('Order Submitted', 'Processing', 'Confirmed', 'Assigned', 'Picked', 'Delivered', 'Cancelled'),
+            type: DataTypes.ENUM('Order Submitted', 'Processing', 'Confirmed', 'Assigned', 'Picked', 'Delivered', 'Cancelled', 'Pending'),
             allowNull: false,
-            defaultValue: 'Order Submitted'
+            defaultValue: 'Pending'
         },
         payment: {
             type: DataTypes.ENUM('Cash'),
@@ -67,18 +70,22 @@ module.exports = function (sequelize, DataTypes) {
         Order.belongsTo(models.User, {
             foreignKey: 'user_id',
             onDelete: 'CASCADE',
+            as: 'user'
         });
         Order.belongsTo(models.Store, {
             foreignKey: 'store_id',
             onDelete: 'CASCADE',
+            as: 'store'
         });
         Order.belongsTo(models.Employee, {
             foreignKey: 'employee_id',
             onDelete: 'CASCADE',
+            as: 'staff'
         });
         Order.belongsTo(models.Employee, {
             foreignKey: 'deliMan_id',
             onDelete: 'CASCADE',
+            as: 'deliMan'
         });
         Order.hasMany(models.OrderDetail, {
             foreignKey: 'order_id',

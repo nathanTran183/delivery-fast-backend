@@ -5,89 +5,82 @@ const Response = require('../../helpers/response');
 const httpStatus = require('http-status');
 const Order = require('../../models/index').Order;
 const OrderDetail = require('../../models/index').OrderDetail;
+const User = require('../../models/index').User;
+const UserPhone = require('../../models/index').UserPhone;
+const UserAddress = require('../../models/index').UserAddress;
+const Employee = require('../../models/index').Employee;
+const Store = require('../../models/index').Store;
+
+var associationObject = {
+    include: [{
+        model: OrderDetail,
+        as: 'orderDetails'
+    }, {
+        model: User,
+        as: 'user',
+        include: [
+            {
+                model: UserPhone,
+                as: 'userPhones',
+            },
+            {
+                model: UserAddress,
+                as: 'userAddress',
+            }
+        ]
+    }, {
+        model: Store,
+        as: 'store'
+    }, {
+        model: Employee,
+        as: 'staff'
+    }, {
+        model: Employee,
+        as: 'deliMan'
+    },], attributes: {
+        exclude: ['user_id', 'store_id', 'employee_id', 'deliMan_id']
+    }
+};
 
 module.exports = {
     get(req, res) {
         Order
-            .findById(req.params.orderId)
+            .findById(req.params.orderId, associationObject)
             .then(order => {
                 if (!order) {
-                    Order
-                        .create({order_date: Date.now(), user_id: req.user.id, store_id: req.params.storeId})
-                        .then(savedOrder => {
-                            return res.json(Response.returnSuccess("Get pending order successfully!", {order: savedOrder}))
-                        })
-                        .catch(err => Response.returnError(err.message, err.code))
+                    return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND))
                 }
-                return res.json(Response.returnSuccess("Get pending order successfully!", {order: order}));
+                return res.json(Response.returnSuccess("Get order successfully!", {order: order}));
             })
             .catch(err => Response.returnError(err.message, err.code))
     },
 
-    /*getPending(req, res) {
-        if(req.user){
-            Order
-                .find({
-                    where: {
-                        user_id: req.user.id,
-                        status: 'Pending'
-                    }
-                })
-                .then(order => {
-                    if (!order) {
-                        // this.create(req,res);
-                        Order
-                            .create({order_date: Date.now(), user_id: req.user.id, store_id: req.params.storeId})
-                            .then(savedOrder => {
-                                return res.json(Response.returnSuccess("Get pending order successfully!", {order: savedOrder}))
-                            })
-                            .catch(err => Response.returnError(err.message, err.code))
-                    }
-                    return res.json(Response.returnSuccess("Get pending order successfully!", {order: order}));
-                })
-                .catch(err => Response.returnError(err.message, err.code))
-        }
-
-    },*/
-
     list(req, res) {
         Order
-            .all({
-                include: [
-                    {
-                        model: OrderDetail,
-                        as: 'orderDetails'
-                    }
-                ]
-            })
+            .all(associationObject)
             .then(orders => {
                 return res.json(Response.returnSuccess("Get list order successfully", {orders: orders}))
             })
             .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
 
-    create(req, res) {
-        req.body.user_id = req.user.id;
-        console.log(req.body);
-        Order
-            .create(req.body)
-            .then(order => {
-                if(req.body.orderDetails && req.body.orderDetails.length > 0){
-                    req.body.orderDetails.forEach(orderDetail => {
-                        orderDetail.order_id = order.id;
-                        OrderDetail
-                            .create(orderDetail)
-                            .then(() => {
-                            })
-                            .catch(err => res.json(Response.returnError(err.message, err.code)))
-                    })
-                }
-                return res.json(Response.returnSuccess("Create order successfully!", {order: order}))
-            })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
-    },
+    // create(req, res) {
+    //     req.body.user_id = req.user.id;
+    //     Order
+    //         .create(req.body, {
+    //             include: [{
+    //                 model: OrderDetail,
+    //                 as: 'orderDetails'
+    //             }]
+    //         })
+    //         .then(order => {
+    //             res.json(order)
+    //         })
+    //         .catch(err => res.json(Response.returnError(err.message, err.code)))
+    //
+    // },
 
-    update(req, res) {
+    updateClient(req, res) {
         Order
             .findById(req.params.orderId)
             .then(order => {
@@ -97,9 +90,51 @@ module.exports = {
                 order
                     .update(req.body)
                     .then(savedOrder => {
-                        return res.json(Response.returnSuccess("Update order successfully!", {order: savedOrder}))
+                        OrderDetail
+                            .destroy({
+                                where: {
+                                    order_id: savedOrder.id
+                                }
+                            })
+                            .then()
+                            .catch(err => res.json(Response.returnError(err.message, err.code)));
+                    })
+                    .then(orderSaved => {
+                        if (req.body.orderDetails && req.body.orderDetails.length > 0) {
+                            OrderDetail
+                                .bulkCreate(req.body.orderDetails)
+                                .then((orderDetails) => {
+                                    return res.json(Response.returnSuccess("Update order successfully!", {
+                                        order: orderSaved,
+                                        orderDetails: orderDetails
+                                    }))
+                                })
+                                .catch(err => res.json(Response.returnError(err.message, err.code)));
+                        }
+                        else return res.json(Response.returnSuccess("Update order successfully!", {
+                            order: orderSaved,
+                            orderDetails: null
+                        }))
                     })
                     .catch(err => res.json(Response.returnError(err.message, err.code)));
+            })
+            .catch(err => res.json(Response.returnError(err.message, err.code)))
+    },
+
+    updateStatus(req, res) {
+        Order
+            .findById(req.params.orderId)
+            .then(order => {
+                if (!order) {
+                    return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND))
+                }
+                order
+                    .update({status: req.body.status})
+                    .then(savedOrder => {
+                        return res.json(Response.returnSuccess("Update order's status successfully!", {order: savedOrder}));
+                    })
+                    .catch(err => res.json(Response.returnError(err.message, err.code)))
+
             })
             .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
@@ -114,20 +149,20 @@ module.exports = {
             .then(orders => {
                 return res.json(Response.returnSuccess("Get submmited order list successfully!", {orders: orders}));
             })
-            .catch(err => res.json(Response.returnError(err.message,err.code)))
+            .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
 
     history(req, res) {
         Order
             .all({
                 where: {
-                    status: {$or: ["Cancelled", "Delivered"]},
+                    status: {$ne: "Pending"},
                     user_id: req.user.id
                 }
             })
             .then(orders => {
-                return res.json(Response.returnSuccess("Get submmited order list successfully!", {orders: orders}));
+                return res.json(Response.returnSuccess("Get order history successfully!", {orders: orders}));
             })
-            .catch(err => res.json(Response.returnError(err.message,err.code)))
-    }
+            .catch(err => res.json(Response.returnError(err.message, err.code)))
+    },
 }

@@ -7,6 +7,7 @@ app.set('port', port);
 
 const server = http.createServer(app);
 const io = require('socket.io')(server);
+global.io = io;
 
 io.on('connection', function(socket) {
     console.log('a user connected');

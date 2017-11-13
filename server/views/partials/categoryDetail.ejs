@@ -167,7 +167,13 @@
                                         <td><%= i++ %></td>
                                         <td><%= product.name %></td>
                                         <td><%= product.price %></td>
-                                        <td><img src="<%= product.image_url %>" height="200px"></td>
+                                        <td>
+                                        <% if(product.image_url != "" && product.image_url != null) {%>
+                                            <img src="<%= product.image_url %>" height="200px">
+                                        <%} else {%>
+                                            No image
+                                            <%}%>
+                                        </td>
                                         <td>
                                             <a href="#" data-toggle="modal" data-id="<%= product.id %>"
                                                data-price="<%= product.price %>"

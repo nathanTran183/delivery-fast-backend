@@ -26,6 +26,13 @@ module.exports = {
                     min: 1
                 }
             },
+            unit_price: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                validate: {
+                    min: 0
+                }
+            },
             price: {
                 type: Sequelize.INTEGER,
                 allowNull: false,

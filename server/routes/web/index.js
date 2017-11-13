@@ -9,6 +9,7 @@ const categoryRoute = require('./category');
 const addonRoute = require('./addon');
 const productRoute = require('./product');
 const productaddonRoute = require('./productaddon');
+const discountRoute = require('./discount');
 const employeesController = require('../../controllers/web').employees;
 
 const express = require('express');
@@ -20,6 +21,7 @@ router.use('/users', passport.isAdminWeb, usersRoute);
 router.use('/employees', passport.isAdminWeb, employeeRoute);
 router.use('/stores', passport.isAdminWeb, storeRoute);
 router.use('/storeTypes', passport.isAdminWeb, storeTypeRoute);
+router.use('/discounts', /*passport.isAdminWeb,*/ discountRoute);
 router.use('/stores/:storeId/categories', passport.isAdminWeb, categoryRoute);
 router.use('/stores/:storeId/categories/:categoryId/addons', passport.isAdminWeb, addonRoute);
 router.use('/stores/:storeId/categories/:categoryId/products', passport.isAdminWeb, productRoute);

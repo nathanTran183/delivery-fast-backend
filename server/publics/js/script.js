@@ -22,6 +22,7 @@ $(document).ready(function () {
     $('#tableListProducts').DataTable();
      $("#tableListProductAddons").DataTable();
     $("#tableListAddons").DataTable();
+    $("#tableListDiscounts").DataTable();
     var tableListStores = $('#tableListStores').DataTable({
         "drawCallback": function(){
             loadManyMaps();
@@ -197,6 +198,20 @@ $(document).ready(function () {
         $('#form-edit-productAddon #addon_id').val(addonVal).change();
         $('#form-edit-productAddon').attr('action', $('#form-edit-productAddon').attr('action') + $(this).data('id'));
         $('#confirm-edit-productAddon').modal();
+    });
+
+    $('#panel-insert-discount #getCode').click(function(e){
+        $.ajax({
+            url: "/discounts/generateCode",
+            success: function(result){
+                $('#panel-insert-discount #code').val(result);
+            }
+        });
+    });
+
+    $('.confirmDelDiscount').click(function(event){
+        $('#form-delete-discount').attr('action', "/discounts/" + $(this).data('id'));
+        $('#confirm-del-discount').modal();
     });
 
 });

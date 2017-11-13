@@ -12,7 +12,7 @@ const passport = require('../../middlewares/passport');
 router.post('/signIn', employeesController.signIn);
 
 //All employees' routers
-router.get('/profile', [expressJwt({secret: config.jwtSecret}), passport.notUserAPI], employeesController.viewProfile);
-router.post('/updateInfo', [expressJwt({secret: config.jwtSecret}), passport.notUserAPI], employeesController.updateInfo);
+router.get('/profile', [expressJwt({secret: config.jwtSecret}), passport.isDeliManAPI], employeesController.viewProfile);
+router.post('/updateInfo', [expressJwt({secret: config.jwtSecret}), passport.isDeliManAPI], employeesController.updateInfo);
 
 module.exports = router;

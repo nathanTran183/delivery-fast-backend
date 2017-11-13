@@ -14,17 +14,17 @@ module.exports = {
             .catch(err => res.json(err))
     },
 
-    get(req, res) {
-        StoreType
-            .findById(req.params.storeTypeId)
-            .then(storetype => {
-                if (!storetype) {
-                    return res.json(Response.returnError('Store type is not existed!', httpStatus.NOT_FOUND));
-                }
-                return res.json(Response.returnSuccess('Retrieve store type successfully!', {storetype: storetype}));
-            })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
-    },
+    // get(req, res) {
+    //     StoreType
+    //         .findById(req.params.storeTypeId)
+    //         .then(storetype => {
+    //             if (!storetype) {
+    //                 return res.json(Response.returnError('Store type is not existed!', httpStatus.NOT_FOUND));
+    //             }
+    //             return res.json(Response.returnSuccess('Retrieve store type successfully!', {storetype: storetype}));
+    //         })
+    //         .catch(err => res.json(Response.returnError(err.message, err.code)))
+    // },
 
     create(req, res) {
         StoreType

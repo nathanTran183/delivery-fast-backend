@@ -43,16 +43,11 @@
 <!--<form action="">-->
     <!--<input id="m" autocomplete="off" /><button>Send</button>-->
 <!--</form>-->
-<!--<script src="/socket.io/socket.io.js"></script>-->
-<!--<script src="https://code.jquery.com/jquery-1.11.1.js"></script>-->
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <!--<script>-->
     <!--$(function () {-->
-        <!--var socket = io();-->
-        <!--$('form').submit(function(){-->
-            <!--socket.emit('chat message', $('#m').val());-->
-            <!--$('#m').val('');-->
-            <!--return false;-->
-        <!--});-->
+
     <!--});-->
 <!--</script>-->
 <p>render thanh cong</p>
@@ -106,10 +101,16 @@
             {'data': 'type'},
         ]
     });
-    setInterval (function () {
+    var socket = io();
+    socket.on('refresh',function(msg){
+        console.log("Message: " +msg);
+    });
+    socket.on('refresh feed',function(msg){
         testingTable.ajax.reload();
-        console.log('aaaaaaaaa')
-    }, 5000);
+    });
+//    setInterval (function () {
+//        console.log('aaaaaaaaa')
+//    }, 5000);
 </script>
 </body>
 </html>

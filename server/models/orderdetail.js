@@ -24,6 +24,13 @@ module.exports = function (sequelize, DataTypes) {
                 min: 1
             }
         },
+        unit_price: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                min: 0
+            }
+        },
         price: {
             type: DataTypes.INTEGER,
             allowNull: false,

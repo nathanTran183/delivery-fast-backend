@@ -30,12 +30,20 @@ module.exports = function (sequelize, DataTypes) {
             associate: function (models) {
                 // associations can be defined here
             }
+        },
+        validate: {
+            dateRangeValidation() {
+                if(this.start_date > this.expire_date){
+                    throw new Error("Expire date must be later than Start date!");
+                }
+            }
         }
     });
     Discount.associate = (models) => {
         Discount.belongsTo(models.Store, {
             foreignKey: 'store_id',
             onDelete: 'CASCADE',
+            as: 'store'
         });
     };
     return Discount;

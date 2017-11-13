@@ -8,6 +8,9 @@ module.exports = {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV1,
             },
+            user_name: {
+                type: Sequelize.STRING
+            },
             user_phone: {
                 type: Sequelize.STRING,
                 validate: {
@@ -43,9 +46,9 @@ module.exports = {
             },
             note: Sequelize.STRING,
             status: {
-                type: Sequelize.ENUM('Order Submitted', 'Processing', 'Confirmed', 'Assigned', 'Picked', 'Delivered', 'Cancelled'),
+                type: Sequelize.ENUM('Order Submitted', 'Processing', 'Confirmed', 'Assigned', 'Picked', 'Delivered', 'Cancelled', 'Pending'),
                 allowNull: false,
-                defaultValue: 'Order Submitted'
+                defaultValue: 'Pending'
             },
             payment: {
                 type: Sequelize.ENUM('Cash'),

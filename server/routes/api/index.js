@@ -5,6 +5,7 @@ const usersRoute = require('./user');
 const employeeRoute = require('./employee');
 const storeRoute = require('./store');
 const orderRoute = require('./order');
+const discountRoute = require('./discount');
 const express = require('express');
 const router = express.Router();
 const expressJwt = require('express-jwt');
@@ -17,6 +18,7 @@ router.get('/', (req, res) => res.status(200).send({
 router.use('/users', usersRoute);
 router.use('/employees', employeeRoute);
 router.use('/stores', storeRoute);
-router.use('/orders', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], orderRoute);
+router.use('/discounts', discountRoute);
+router.use('/orders', [expressJwt({secret: config.jwtSecret})], orderRoute);
 
 module.exports = router;

@@ -4,13 +4,15 @@
 const express = require('express');
 const ordersController = require('../../controllers/api').orders;
 const router = express.Router();
+const passport = require('../../middlewares/passport');
 
+router.get('/submitted', passport.notUserWeb, ordersController.getSubmittedList);
+router.get('/', ordersController.list);
+// router.post('/', ordersController.create);
 
-router.get('/submitted', ordersController.getSubmittedList);
-router.post('/', ordersController.create);
-router.get('/',ordersController.list);
-router.get('/history', ordersController.history);
-router.get('/:orderId', ordersController.get);
-router.put('/:orderId', ordersController.update);
+router.get('/history', passport.isUserAPI, ordersController.history);
+router.get('/:orderId', passport.isUserAPI, ordersController.get);
+router.put('/:orderId', passport.isUserAPI, ordersController.updateClient);
+router.put('/updateStatus/:orderId', passport.isDeliManAPI, ordersController.updateStatus);
 
 module.exports = router;

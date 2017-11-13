@@ -33,6 +33,23 @@ module.exports = {
         else return res.json(Response.returnError("Should login with user account!", HTTPStatus.UNAUTHORIZED))
     },
 
+    async isDeliManAPI(req, res, next) {
+        if (req.user) {
+            Employee
+                .findById(req.user.id)
+                .then(employee => {
+                    if (!employee) return res.json(Response.returnError('DeliMan not found!', HTTPStatus.NOT_FOUND));
+                    if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
+                    if (req.user.role === 'DeliMan') {
+                        next();
+                    } else {
+                        return res.json(Response.returnError("Users cannot access the route!", HTTPStatus.UNAUTHORIZED));
+                    }
+                })
+                .catch(err => res.json(Response.returnError(err.message, err.code)))
+        } else return res.json(Response.returnError("Should login with DeliMan account!", HTTPStatus.UNAUTHORIZED))
+    },
+
     async notUserAPI(req, res, next) {
         if (req.user) {
             Employee
@@ -40,7 +57,7 @@ module.exports = {
                 .then(employee => {
                     if (!employee) return res.json(Response.returnError('User not found!', HTTPStatus.NOT_FOUND));
                     if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                    if (req.user.role !== 'User') {
+                    if (req.user.role !== 'User' && req.user.role !== 'DeliMan') {
                         next();
                     } else {
                         return res.json(Response.returnError("Users cannot access the route!", HTTPStatus.UNAUTHORIZED));
