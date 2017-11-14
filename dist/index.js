@@ -19,5 +19,5 @@ io.on('connection', function (socket) {
 });
 
 server.listen(port, function () {
-    console.log('Server build start on port ' + port);
+    console.log('Server start on port ' + port);
 });

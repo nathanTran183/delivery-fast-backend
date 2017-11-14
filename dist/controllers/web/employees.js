@@ -57,7 +57,7 @@ module.exports = {
                 return;
             }
         }).catch(function (err) {
-            return res.json(Response.returnError(err.message, err.code));
+            return res.json(err);
         });
     },
     logout: function logout(req, res, next) {
