@@ -1,0 +1,520 @@
+
+.createNewTask .taskTitle {
+    width: 50%;
+    margin-bottom: 20px;
+}
+.createNewTask .taskDescription {
+    width: 50%;
+    margin-bottom: 20px;
+}
+.createNewTask .maxResponse {
+    width: 25%;
+    margin-bottom: 20px;
+}
+.createNewTask .maxUser {
+    width: 25%;
+    margin-bottom: 20px;
+}
+.createNewTask .targettingUser {
+    margin-left: 20px;
+}
+.createNewTask .targettingLocation {
+    margin-left: 20px;
+}
+.createNewTask #moneyType {
+    width: 10%;
+}
+.createNewTask #publishDate {
+    width: 50%;
+}
+.createNewTask #expireDate {
+    width: 50%;
+}
+.createNewTask .publishDateNow {
+    margin-left: 20px;
+}
+.createNewTask .singleLocation {
+    margin-left: 20px;
+}
+.createNewTask .multiLocation {
+    margin-left: 20px;
+}
+.createNewTask #latitude {
+    width: 50%;
+}
+.createNewTask #longitude {
+    width: 50%;
+}
+.createNewTask .searchLocation {
+    margin-top: 20px;
+}
+.createNewTask .searchLocation #searchLocationText{
+    width: 50%;
+}
+
+
+/* author: Quang */
+.createNewTask {
+	background-color: white;
+}
+.createNewTask #content-questions {
+	min-height: 800px;
+}
+.createNewTask .questions-container {
+	width: 54%;
+	margin: 20px auto;
+	padding: 20px 0px;
+	background-color: white;
+	box-shadow: 0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+}
+.createNewTask .questions-container #none-question {
+	font-size: 16px;
+	text-align: center;
+}
+.createNewTask .questions-function {
+	width: 45%;
+	margin: 20px auto;
+}
+.createNewTask .questions-function #button-new-question {
+	margin: 20px auto;
+}
+.createNewTask #new-question .question {
+	padding: 20px;
+	background-color: white;
+	box-shadow: 0 -2px 2px 0 rgba(0,0,0,0.2),0 6px 10px 0 rgba(0,0,0,0.3);
+	border-left: 3px solid #4D90FE;
+}
+.createNewTask #new-question .question.edit-question {
+	border-left: 3px solid #00A65A;
+}
+.createNewTask .questions-container .question {
+	margin: 10px;
+	padding: 10px;
+	background-color: white;
+	border-bottom: 1px solid #E1E1E1;
+}
+.createNewTask .questions-container .question:hover {
+	box-shadow: 0 -2px 2px 0 rgba(0,0,0,0.2),0 6px 5px 0 rgba(0,0,0,0.3);
+}
+.createNewTask #new-question .question .question-header .question-functions {
+	display: none;
+}
+.createNewTask .questions-container .question:not(:hover) .question-header .question-functions {
+	display: none;
+}
+.createNewTask #new-question .question .question-header input[type='text'] {
+	width: 74%;
+	font-size: 20px;
+	line-height: 135%;
+	border: none;
+	outline: none;
+	border-bottom: 1px solid #E1E1E1;
+}
+.createNewTask .questions-container .question .question-header input[type='text'] {
+	width: 100%;
+	font-size: 20px;
+	line-height: 135%;
+	border: none;
+	outline: none;
+	background-color: inherit;
+}
+.createNewTask #new-question .question .question-header input[type='text']:focus {
+	border-bottom: 2px solid #3C8DBC;
+}
+.createNewTask #new-question .question .question-header select.type-question-selection {
+	width: 25%;
+	padding: 4px 8px;
+	color: #555555;
+	border-color: #CCCCCC;
+}
+.createNewTask .questions-container .question .question-header select.type-question-selection {
+	width: 25%;
+	padding: 4px 2px;
+	color: #555555;
+	border: 1px dashed black;
+}
+.createNewTask #new-question .question .question-body {
+	margin: 10px;
+}
+.createNewTask .questions-container .question .question-body {
+	margin: 10px;
+}
+.createNewTask .questions-container .question:not(:hover) .question-body {
+	display: none;
+}
+.createNewTask #new-question .question .question-body .option {
+	margin-bottom: 10px;
+}
+.createNewTask .questions-container .question .question-body .option {
+	margin-bottom: 10px;
+}
+.createNewTask #new-question .question .question-body .option img {
+	width:20px;
+	height:20px;
+	margin-right: 5px;
+}
+.createNewTask .questions-container .question .question-body .option img {
+	width:20px;
+	height:20px;
+	margin-right: 5px;
+}
+.createNewTask #new-question .question .question-body .option input[type='text'] {
+	width: 90%;
+	border: none;
+	outline: none;
+}
+.createNewTask .questions-container .question .question-body .option input[type='text'] {
+	width: 90%;
+	border: none;
+	outline: none;
+	background-color: inherit;
+}
+.createNewTask #new-question .question .question-body .option:not(.option-other) input[type='text']:hover {
+	border-bottom: 1px solid #E1E1E1;
+}
+.createNewTask #new-question .question .question-body .option:not(.option-other) input[type='text']:focus {
+	border-bottom: 2px solid #3C8DBC;
+}
+.createNewTask #new-question .question.in-app-browser .question-body input[type='text'] {
+	width: 90%;
+	border: none;
+	outline: none;
+}
+.createNewTask .questions-container .question.in-app-browser .question-body input[type='text'] {
+	width: 90%;
+	border: none;
+	outline: none;
+	background-color: inherit;
+}
+.createNewTask #new-question .question.in-app-browser .question-body input[type='text']:hover {
+	border-bottom: 1px solid #E1E1E1;
+}
+.createNewTask #new-question .question.in-app-browser .question-body input[type='text']:focus {
+	border-bottom: 2px solid #3C8DBC;
+}
+.createNewTask #new-question .question .question-body .option:not(.option-add) button {
+	margin-left: 5px;
+}
+.createNewTask .questions-container .question .question-body .option:not(.option-add) button {
+	display: none;
+}
+.createNewTask #new-question .question .question-body .option.option-add button {
+	padding: 0px;
+	border: none;
+	background-color: inherit;
+}
+.createNewTask #new-question .question .question-body .option.option-add button.add-option {
+	margin-right: 4px;
+	color: darkgray;
+}
+.createNewTask #new-question .question .question-body .option.option-add button.add-other {
+	margin-left: 4px;
+	color: blue;
+}
+.createNewTask #new-question .question .question-body .option.option-add button.add-option:hover {
+	border-bottom: 1px solid #E1E1E1;
+}
+.createNewTask #new-question .question .question-body .option.option-add button.add-other:hover {
+	border-bottom: 1px solid #0000FF;
+}
+.createNewTask .questions-container .question .question-body .option.option-add {
+	display: none;
+}
+.createNewTask .questions-container .question .question-body .branching-logic {
+	display: none;
+}
+.createNewTask #new-question .question .question-footer input[type='checkbox'] {
+	width: 14px;
+	height: 14px;
+	margin: 3px 4px 0px 0px;
+}
+.createNewTask .questions-container .question .question-footer {
+	display: none;
+}
+.createNewTask #new-question .question.edit-question .question-footer button#btn-add {
+	display: none;
+}
+.createNewTask #new-question .question:not(.edit-question) .question-footer button#btn-update {
+	display: none;
+}
+.createNewTask #new-question .question .question-body input[type='text']:read-only {
+	width: 90%;
+	border: none;
+	outline: none;
+	border-bottom: 1px dotted #E1E1E1;
+}
+.createNewTask .questions-container .question .question-body input[type='text']:read-only {
+	width: 90%;
+	border: none;
+	outline: none;
+}
+.createNewTask #new-question .question.photo .question-body input[type='number'] {
+	padding: 0px;
+	border: none;
+	outline: none;
+	text-align: center;
+}
+.createNewTask #new-question .question.photo .question-body input[type='number']:hover {
+	border-bottom: 1px solid #E1E1E1;
+}
+.createNewTask #new-question .question.photo .question-body input[type='number']:focus {
+	border-bottom: 1px solid #E1E1E1;
+}
+.createNewTask .questions-container .question.photo .question-body input[type='number'] {
+	padding: 0px;
+	border: none;
+	text-align: right;
+	border-bottom: 1px dotted #E1E1E1;
+	background-color: inherit;
+}
+.createNewTask #new-question .question.star-ratings .question-body .main-display {
+	margin: 5px 0px;
+}
+.createNewTask .questions-container .question.star-ratings .question-body .main-display {
+	margin: 5px 0px;
+}
+.createNewTask #new-question .question.star-ratings .question-body .main-display .star-label {
+	float: left;
+	width: 14.195%;
+	height: auto;
+	margin: 48px 0px 0px 0px;
+	text-align: center;
+	border: none;
+	outline: none;
+	resize: none;
+}
+.createNewTask .questions-container .question.star-ratings .question-body .main-display .star-label {
+	float: left;
+	width: 14.195%;
+	height: auto;
+	margin: 48px 0px 0px 0px;
+	text-align: center;
+	border: none;
+	outline: none;
+	resize: none;
+}
+.createNewTask #new-question .question.star-ratings .question-body .main-display .star-level {
+	float: left;
+	width: 14.322%;
+	text-align: center;
+}
+.createNewTask .questions-container .question.star-ratings .question-body .main-display .star-level {
+	float: left;
+	width: 14.322%;
+	text-align: center;
+}
+.createNewTask #new-question .question.star-ratings .question-body .main-display .star-level .star-number {
+	height: 48px;
+}
+.createNewTask .questions-container .question.star-ratings .question-body .main-display .star-level .star-number {
+	height: 48px;
+}
+.createNewTask #new-question .question.star-ratings .question-body .main-display .star-level .star-number p {
+	font-size: 16px;
+	margin: 16px auto;
+}
+.createNewTask .questions-container .question.star-ratings .question-body .main-display .star-level .star-number p {
+	font-size: 16px;
+	margin: 16px auto;
+}
+.createNewTask #new-question .question.star-ratings .question-body .main-display .star-level .star-node {
+	height: 48px;
+	background-color: #FAFAFA;
+}
+.createNewTask .questions-container .question.star-ratings .question-body .main-display .star-level .star-node {
+	height: 48px;
+	background-color: #FAFAFA;
+}
+.createNewTask #new-question .question.star-ratings .question-body .main-display .star-level .star-node img {
+	margin: 14px auto;
+}
+.createNewTask .questions-container .question.star-ratings .question-body .main-display .star-level .star-node img {
+	margin: 14px auto;
+}
+.createNewTask #new-question .question.star-ratings .question-body .main-setting {
+	margin: 25px 0px;
+}
+.createNewTask #new-question .question.star-ratings .question-body .main-setting select {
+	border: none;
+	outline: none;
+	width: 40px;
+	margin: 0px 5px;
+	font-size: 16px;
+}
+.createNewTask .questions-container .question.star-ratings .question-body .main-setting {
+	display: none;
+}
+.createNewTask #new-question .question.star-ratings .question-body .option-setting div {
+	margin: 10px 0px;
+}
+.createNewTask #new-question .question.star-ratings .question-body .option-setting input.level-number {
+	width: 20px;
+	border: none;
+	outline: none;
+}
+.createNewTask #new-question .question.star-ratings .question-body .option-setting input.level-text {
+	width: 200px;
+	border: none;
+	border-bottom: 1px solid #E1E1E1;
+	outline: none;
+}
+.createNewTask #new-question .question.star-ratings .question-body .option-setting input.level-text:focus {
+	border-bottom: 2px solid #3C8DBC;
+}
+.createNewTask .questions-container .question.star-ratings .question-body .option-setting {
+	display: none;
+}
+.createNewTask #new-question .question .question-body .branching-logic .branch-container .branch-title {
+	padding: 8px 0px;
+	background-color: #CFEAE7;
+	border-radius: 5px 5px 0px 0px;
+}
+.createNewTask #new-question .question .question-body .branching-logic .branch-container .branch-body {
+	margin-top: 2px;
+	padding: 8px 0px;
+	background-color: #EAEAE8;
+}
+.createNewTask #new-question .question .question-body .branching-logic .branch-container .branch-body:last-child {
+	border-radius: 0px 0px 5px 5px;
+}
+.createNewTask #new-question .question .question-body .branching-logic .branch-container .branch-body select.branching-combobox {
+	outline: none;
+}
+.createNewTask #new-question .question .question-body .branching-logic .branch-container button {
+	border: none;
+	color: #008996;
+	background-color: inherit;
+	font-size: 14px;
+}
+
+/* author: Quang*/
+.overviewTask {
+    background-color: white;
+}
+
+/* author: Quang*/
+.pendingTask {
+    background-color: white;
+}
+.pendingTask .panelTableHeading {
+    float: right;
+}
+.pendingTask .panelTableHeading .dataTables_info {
+    font-size: 18px;
+}
+
+/* author: Quang*/
+.overviewAccount {
+    background-color: white;
+}
+.overviewAccount #tableListAccounts tr.in-edit span.glyphicon-ok {
+	display: none;
+}
+.overviewAccount #tableListAccounts tr:not(.in-edit) input[type="checkbox"] {
+	display: none;
+}
+.overviewAccount #tableListAccounts tr.in-edit .button-edit {
+	display: none;
+}
+.overviewAccount #tableListAccounts tr:not(.in-edit) .button-save {
+	display: none;
+}
+.overviewAccount #tableListAccounts tr.in-edit .button-delete {
+	display: none;
+}
+.overviewAccount #tableListAccounts tr:not(.in-edit) .button-cancel {
+	display: none;
+}
+.overviewAccount #tableListAccounts tr .button-edit {
+	color: #337AB7;
+}
+.overviewAccount #tableListAccounts tr .button-save {
+	color: #5CB85C;
+}
+.overviewAccount #tableListAccounts tr .button-delete {
+	color: #5BC0DE;
+}
+.overviewAccount #tableListAccounts tr .button-cancel {
+	color: #D9534F;
+}
+.overviewAccount #panel-create-admin-account {
+	margin: 30px 50px 5px 50px;
+	padding: 30px 50px 5px 5px;
+	box-shadow: 0 -2px 2px 0 rgba(0,0,0,0.2),0 6px 5px 0 rgba(0,0,0,0.3);
+}
+
+/* author: Quang */
+/*.profile .panel-profile {*/
+    /*!*margin: 50px auto;*!*/
+    /*width: 500px;*/
+    /*background-color: white;*/
+    /*box-shadow: 0 -2px 2px 0 rgba(0,0,0,0.2),0 6px 5px 0 rgba(0,0,0,0.3);*/
+/*}*/
+.profile  #panel-change-password {
+    margin: 10px 0 10px 0;
+    padding: 10px 0 0 0;
+    background-color: white;
+    border: 1px solid #3c8dbc;
+	border-radius: 3px;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.profile .panel-profile {
+	margin: 50px auto;
+	width: 500px;
+	background-color: white;
+	box-shadow: 0 -2px 2px 0 rgba(0,0,0,0.2),0 6px 5px 0 rgba(0,0,0,0.3);
+}
+.overviewUser {
+    background-color: white;
+}
+.notifications {
+    background-color: white;
+}
+.notifications #message-header {
+    width: 90%;
+}
+.notifications #message-body {
+    width: 90%;
+}
+.notifications #segmentUserToSendMessage {
+    width: 90%;
+}
+.form-receivedMessage {
+    background-color: white;
+}
+.checkbox-mail {
+    width: 18px;
+    height: 18px;
+    margin-top:3px;
+}
+#outboxList td {
+    white-space: nowrap;
+    overflow: hidden;
+    height: 25px;
+    padding: 10px;
+    width: 20px;
+}
+#outboxList{
+    table-layout: fixed;
+}
+#outboxList td+td{
+    width: 20%;
+}
+#outboxList td+td+td{
+    width: 60%;
+    padding-left: 5%;
+}
+#outboxList td+td+td+td{
+    width: auto;
+}
+.tableMailDetail{
+    border: 0; 
+    border-collapse: separate; 
+    border-spacing: 0 15px
+}
+.tableMailDetail .subject {
+    width: 20%;
+    text-align: right;
+    padding-right: 15px;
+}
