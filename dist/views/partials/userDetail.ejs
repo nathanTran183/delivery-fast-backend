@@ -1,0 +1,171 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            User Detail
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/users"><i class="fa fa-dashboard"></i> User list</a></li>
+            <li class="active">User Detail</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <div class="row">
+
+
+            <div class="col-md-2">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="box box-primary profile col-md-8">
+                        <div class="box-body box-profile panel-profile">
+
+                            <h3 class="profile-username text-center"><%= user.first_name %> <%= user.last_name %></h3>
+
+                            <p class="text-muted text-center">Status:
+                                <% if(user.status == true) { %>
+                                <span class="label label-primary ">Active</span>
+                                <% } else  { %>
+                                <span class="label label-danger">Deactived</span>
+                                <% } %>
+                            </p>
+
+                            <ul class="list-group list-group-unbordered">
+                                <li class="list-group-item">
+                                    <b>Username</b> <a class="pull-right"><%= user.username %></a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Email</b> <a class="pull-right"><%= user.email %></a>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+                <div class="row">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#settings" data-toggle="tab">Basic information</a></li>
+                        <li><a href="#user-contact" data-toggle="tab">User Contact</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="settings">
+                            <form id="panel-update-info" class="form-horizontal">
+
+                            <div class="form-group">
+                                <label for="first_name" class="col-sm-2 control-label">First name</label>
+
+                                <div class="col-sm-4">
+                                    <input type="text" disabled class="form-control" id="first_name" name="first_name"
+                                           placeholder="First name" value="<%= user.first_name %>">
+                                </div>
+
+                                <label for="last_name" class="col-sm-2 control-label">Last name</label>
+
+                                <div class="col-sm-4">
+                                    <input type="text" disabled class="form-control" id="last_name" name="last_name"
+                                           placeholder="Last name" value="<%= user.last_name %>">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="gender" class="col-sm-2 control-label">Gender</label>
+                                <div class="col-sm-10">
+                                    <input type="text" disabled class="form-control" id="point" name="point"
+                                           placeholder="Last name"  <% if(user.gender == true){ %> value="Male"
+                                            <% } else {%>
+                                           value="Female"
+                                            <%}%>>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="dob" class="col-sm-2 control-label">Date of birth</label>
+
+                                <div class="col-sm-10">
+                                    <%
+                                    if(user.date_of_birth != null && user.date_of_birth != ''){
+                                        let date = new Date(user.date_of_birth);
+                                    %>
+                                    <input type="text" disabled class="datepicker form-control pull-right" id="date_of_birth"
+                                           name="date_of_birth" placeholder="Date of birth"
+                                           value="<%= date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear() %>">
+                                    <%
+                                    }
+                                    %>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="dob" class="col-sm-2 control-label">Point</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" disabled class="form-control" id="point" name="point"
+                                           placeholder="Point" value="<%= user.point %>">
+                                </div>
+                            </div>
+                                <div class="form-group">
+                                    <label for="dob" class="col-sm-2 control-label">Created at</label>
+
+                                    <div class="col-sm-10">
+                                        <% let createDate = new Date(user.createdAt).toLocaleString(); %>
+                                        <input type="text" disabled class="form-control" id="point" name="point"
+                                               placeholder="Last name" value="<%= createDate%>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dob" class="col-sm-2 control-label">Updated at</label>
+
+                                    <div class="col-sm-10">
+                                        <% let updateDate = new Date(user.updatedAt).toLocaleString();; %>
+
+                                        <input type="text" disabled class="form-control" id="point" name="point"
+                                               placeholder="Last name" value="<%= updateDate %>">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="user-contact">
+                            <div class="box box-primary">
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <h3 class="box-title"><i class="fa fa-mobile-phone margin-r-5"></i> User phone</h3>
+
+                                    <p class="text-muted">
+                                    <% user.userPhones.forEach(function(phone) { %>
+                                        <b><%= phone.phone_number%></b> <a class="pull-right"><%= phone.role%></a>
+
+                                        <br/>
+                                    <% })%>
+                                    </p>
+                                    <hr>
+
+                                    <h3 class="box-title"><i class="fa fa-map-marker margin-r-5"></i> User Address</h3>
+                                    <% user.userAddress.forEach(function(address) { %>
+                                    <p class="text-muted">
+                                        <%= address.address%>
+                                    </p>
+
+                                    <%})%>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+
+                        </div>
+                        <!-- /.tab-pane -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+            </div>
+        </div>
+    </section>
+</div>
+

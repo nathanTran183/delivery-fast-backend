@@ -38,8 +38,8 @@
   },
   "scripts": {
     "start_dev": "./node_modules/.bin/nodemon server/index.js --exec babel-node --presets es2015,stage-2",
-    "start": "pm2 start --interpreter babel-node server/index.js",
-    "stop": "pm2 stop --interpreter babel-node server/index.js",
+    "start": "babel-node dist/index.js --presets es2015,stage-2",
+    "stop": "pm2 stop --interpreter babel-node dist/index.js",
     "build": "babel server --presets babel-preset-es2015 --out-dir dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   }

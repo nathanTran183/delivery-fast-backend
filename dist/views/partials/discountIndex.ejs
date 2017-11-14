@@ -1,0 +1,174 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <%
+        // message the validation
+        if (messages.errors) {
+        for (i = 0; i < messages.errors.length; i++) {
+        %>
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Fail !</strong> <%= messages.errors[i].msg %>
+        </div>
+        <%
+        }
+        }
+
+        // message the reason change password fail
+        if (messages.reason_fail) {
+        %>
+        <div class="alert alert-warning">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.reason_fail %>
+        </div>
+        <%
+        }
+
+        // message if success
+        if (messages.success) {
+        %>
+        <div class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.success %>
+        </div>
+        <%
+        }
+        %>
+
+        <h1>
+            Store type List
+        </h1>
+        <br>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Discount Information</h3>
+                        <hr>
+                        <p>Create new discount type here</p>
+                        <button type="button" class="btn bg-navy btn-flat" data-toggle="collapse"
+                                data-target="#panel-create-discount">Create Discount
+                        </button>
+                        <div id="panel-create-discount" class="collapse clearfix">
+                            <br>
+                            <form id="panel-insert-discount" action="/discounts" method="post"
+                                  class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="code" class="col-sm-2 control-label">Code</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" required class="form-control" readonly id="code" name="code"
+                                               placeholder="Store Type">
+                                    </div>
+                                    <button type="button" class="btn btn-flat btn-success col-md-1" id="getCode">Generate Code</button>
+                                </div>
+                                <div class="form-group">
+                                    <label for="percentage" class="col-sm-2 control-label">Percentage (%)</label>
+                                    <div class="col-sm-4">
+                                        <input type="number" required class="form-control" id="percentage" name="percentage"
+                                               min="5" max="100" value="5" step="5" placeholder="Percentage">
+                                    </div>
+
+                                    <label for="percentage" class="col-sm-2 control-label">Store</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control select2" id="store_id" name="store_id" style="width: 100%;">
+                                            <% stores.forEach(function(store) {%>
+                                            <option value="<%= store.id%>"><%= store.name%></option>
+                                            <% }); %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="start_date" class="col-sm-2 control-label">Start Date</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control datepicker" id="start_date" name="start_date"
+                                               placeholder="Start Date">
+                                    </div>
+
+                                    <label for="expire_date" class="col-sm-2 control-label">Expire Date</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control datepicker" id="expire_date" name="expire_date"
+                                               placeholder="Expire Date">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn bg-maroon btn-flat"><i class="fa fa-save"></i>
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="tableListDiscounts" class="table table-bordered table-striped dataTable">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Code</th>
+                                <th>Percentage</th>
+                                <th>Store</th>
+                                <th>Start Date</th>
+                                <th>Expire Date</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% var i= 1; discounts.forEach(function(discount) { %>
+                            <tr>
+                                <td><%= i++ %></td>
+                                <td><%= discount.code %></td>
+                                <td><%= discount.percentage %></td>
+                                <td><%= discount.store.name%></td>
+                                <td>
+                                    <%
+                                        let startDate = new Date(discount.start_date);
+                                        let expireDate = new Date(discount.expire_date);
+                                    %>
+                                    <%= startDate.getMonth() + 1 + "/" + startDate.getDate() + "/" + startDate.getFullYear() %>
+                                </td>
+                                <td>
+                                    <%= expireDate.getMonth() + 1 + "/" + expireDate.getDate() + "/" + expireDate.getFullYear() %>
+                                </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-id="<%= discount.id %>" title="Delete"
+                                       class="confirmDelDiscount btn btn-danger"><span
+                                                class="fa fa-trash" aria-hidden="true"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<div class="modal fade" id="confirm-del-discount" role="dialog">
+    <form method="POST" id="form-delete-discount">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirm to delete discount?</h3>
+                </div>
+                <div class="modal-body">
+                    Click on "Yes" to continue, "No" to cancel.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

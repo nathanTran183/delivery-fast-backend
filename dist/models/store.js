@@ -9,14 +9,26 @@ module.exports = function (sequelize, DataTypes) {
         },
         name: {
             type: DataTypes.STRING,
+            unique: {
+                args: true,
+                msg: "Store name has been existed!"
+            },
             allowNull: false
         },
         address: {
             type: DataTypes.STRING,
+            unique: {
+                args: true,
+                msg: "Store address has been existed!"
+            },
             allowNull: false
         },
         phone_number: {
             type: DataTypes.STRING,
+            unique: {
+                args: true,
+                msg: "Store phone number has been existed!"
+            },
             allowNull: false
         },
         opening_time: DataTypes.STRING,
@@ -37,6 +49,9 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
             allowNull: false
+        },
+        image_url: {
+            type: DataTypes.STRING
         }
     }, {
         classMethods: {
@@ -55,7 +70,20 @@ module.exports = function (sequelize, DataTypes) {
     Store.associate = function (models) {
         Store.belongsToMany(models.StoreType, {
             through: models.StoreType_Store,
-            as: 'storeTypes'
+            as: 'storeTypes',
+            foreignKey: 'store_id'
+        });
+        Store.hasMany(models.Order, {
+            foreignKey: 'store_id',
+            as: 'orders'
+        });
+        Store.hasMany(models.Category, {
+            foreignKey: 'store_id',
+            as: 'categories'
+        });
+        Store.hasMany(models.Discount, {
+            foreignKey: 'store_id',
+            as: 'discounts'
         });
     };
     return Store;

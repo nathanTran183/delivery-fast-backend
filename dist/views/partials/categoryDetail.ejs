@@ -1,0 +1,548 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <%
+        // message the validation
+        if (messages.errors) {
+        for (i = 0; i < messages.errors.length; i++) {
+        %>
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Fail !</strong> <%= messages.errors[i].msg %>
+        </div>
+        <%
+        }
+        }
+
+        // message the reason change password fail
+        if (messages.reason_fail) {
+        %>
+        <div class="alert alert-warning">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.reason_fail %>
+        </div>
+        <%
+        }
+
+        // message if success
+        if (messages.success) {
+        %>
+        <div class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.success %>
+        </div>
+        <%
+        }
+        %>
+
+        <h1>
+            Category Detail
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/stores"><i class="fa fa-building"></i>Store List</a></li>
+            <li><a href="/stores/<%= category.store_id %>"><i class="fa fa-info"></i>Store Detail</a></li>
+            <li class="active">Category Detail</li>
+        </ol>
+    </section>
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="box box-primary">
+                    <div class="box-body box-profile">
+
+                        <h3 class="profile-username text-center">Category Information</h3>
+
+                        <ul class="list-group list-group-unbordered">
+                            <form id="panel-update-category"
+                                  action="/stores/<%= category.store_id %>/categories/<%= category.id %>" method="post"
+                                  class="form-horizontal update-form">
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-4 control-label">Category name</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="name" name="name"
+                                               placeholder="Category Name" value="<%= category.name %>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-4 col-sm-10">
+                                        <button type="submit" disabled id="saveBtn" class="btn btn-success btn-flat"><i
+                                                    class="fa fa-save"></i> Save
+                                        </button>
+                                        <button type="button" id="resetBtn" disabled class="btn btn-danger btn-flat"><i
+                                                    class="fa fa-repeat"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <%
+                            let createdDate = new Date(category.createdAt);
+                            let updatedDate = new Date(category.updatedAt);
+                            %>
+                            <li class="list-group-item">
+                                <b>Created At</b> <a class="pull-right"><%= createdDate.toLocaleString() %></a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Updated At</b> <a class="pull-right"><%= updatedDate.toLocaleString() %></a>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#products" data-toggle="tab">Products</a></li>
+                        <li><a href="#addons" data-toggle="tab">Addons</a></li>
+                        <li><a href="#productAddons" data-toggle="tab">Products Addon</a></li>
+                    </ul>
+                    <div class="tab-content">
+
+                        <div class="tab-pane active" id="products">
+                            <div class="box-header">
+                                <p>Create new product here</p>
+                                <button type="button" class="btn bg-navy btn-flat" data-toggle="collapse"
+                                        data-target="#panel-insert-product">Create product
+                                </button>
+                                <div id="panel-insert-product" class="collapse clearfix">
+                                    <br>
+                                    <form enctype="multipart/form-data"
+                                          action="/stores/<%= category.store_id %>/categories/<%= category.id %>/products"
+                                          method="post" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-2 control-label">Product name</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" id="name" name="name"
+                                                       placeholder="Product Name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="price" class="col-sm-2 control-label">Product Price</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" id="price" name="price"
+                                                       placeholder="Product Price" value="1000" min="0" step="1000">
+                                            </div>
+
+                                            <label for="image_url" class="col-sm-2 control-label">Upload Image</label>
+                                            <div class="col-sm-4">
+                                                <input type="file" class="form-control" id="image_url" name="image_url">
+                                                <p><i>Only image with jpeg is accepted</i></p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group hidden">
+                                            <img id="imageUpload" class="col-md-offset-4 col-md-4 img-responsive"
+                                                 src="#" alt="your image"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn bg-maroon btn-flat"><i
+                                                            class="fa fa-save"></i>
+                                                    Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <hr>
+                                <h3 class="box-title">Product List</h3>
+                                <table id="tableListProducts" class="table table-bordered table-striped dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Product Name</th>
+                                        <th>Price</th>
+                                        <th>Image</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% var i = 1; category.products.forEach(function(product) { %>
+                                    <tr>
+                                        <td><%= i++ %></td>
+                                        <td><%= product.name %></td>
+                                        <td><%= product.price %></td>
+                                        <td>
+                                        <% if(product.image_url != "" && product.image_url != null) {%>
+                                            <img src="<%= product.image_url %>" height="200px">
+                                        <%} else {%>
+                                            No image
+                                            <%}%>
+                                        </td>
+                                        <td>
+                                            <a href="#" data-toggle="modal" data-id="<%= product.id %>"
+                                               data-price="<%= product.price %>"
+                                               data-name="<%= product.name %>" data-img="<%= product.image_url %>"
+                                               title="Edit"
+                                               class="confirmEditProduct btn btn-primary btn-flat"><span
+                                                        class="fa fa-edit" aria-hidden="true"></span>
+                                            </a>
+                                            <a href="#" data-toggle="modal" data-id="<%= product.id %>" title="Delete"
+                                               class="confirmDelProduct btn btn-danger btn-flat"><span
+                                                        class="fa fa-trash" aria-hidden="true"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="addons">
+                            <div class="box-header">
+                                <p>Create new addon here</p>
+                                <button type="button" class="btn bg-navy btn-flat" data-toggle="collapse"
+                                        data-target="#panel-create-addon">Create addon
+                                </button>
+                                <div id="panel-create-addon" class="collapse clearfix">
+                                    <br>
+                                    <form action="/stores/<%= category.store_id %>/categories/<%= category.id %>/addons"
+                                          method="post" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-2 control-label">Addon Name</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" id="name" name="name"
+                                                       placeholder="Category Name">
+                                            </div>
+
+                                            <label for="role" class="col-sm-2 control-label">Maximum products</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" min="1", step="1" value="1" class="form-control" id="role" name="role"
+                                                       placeholder="Addon product maximum quantity">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn bg-maroon btn-flat"><i
+                                                            class="fa fa-save"></i>
+                                                    Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <hr>
+                                <h3 class="box-title">Addon List</h3>
+                                <table id="tableListAddons" class="table table-bordered table-striped dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Addon</th>
+                                        <th>Maximum product</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% var i = 1; category.addons.forEach(function(addon) { %>
+                                    <tr>
+                                        <td><%= i++ %></td>
+                                        <td><%= addon.name %></td>
+                                        <td>
+                                            <%= addon.role %>
+
+                                        <td>
+                                            <a href="#" data-toggle="modal" data-id="<%= addon.id %>"
+                                               data-name="<%= addon.name %>"
+                                               data-role="<%= addon.role %>"
+                                               title="Edit" class="confirmEditAddon btn btn-primary btn-flat">
+                                                <span class="fa fa-edit" aria-hidden="true"></span>
+                                            </a>
+                                            <a href="#" data-toggle="modal" data-id="<%= addon.id %>" title="Delete"
+                                               class="confirmDelAddon btn btn-danger btn-flat"><span
+                                                        class="fa fa-trash" aria-hidden="true"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="productAddons">
+                            <div class="box-header">
+                                <p>Create new product addon here</p>
+                                <button type="button" class="btn bg-navy btn-flat" data-toggle="collapse"
+                                        data-target="#panel-create-productAddon">Create product addon
+                                </button>
+                                <div id="panel-create-productAddon" class="collapse clearfix">
+                                    <br>
+                                    <form action="/stores/<%= category.store_id %>/categories/<%= category.id %>/productAddons/"
+                                          method="post" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-2 control-label">Product Addon Name</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" id="name" name="name"
+                                                       placeholder="Product Addon Name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="price" class="col-sm-2 control-label">Price</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" id="price" name="price"
+                                                       placeholder="Product Price" value="0" min="0" step="1000">
+                                            </div>
+
+                                            <label for="addon_id" class="col-sm-2 control-label">Addons</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control select2" id="addon_id" name="addon_id" style="width: 100%;">
+                                                    <% category.addons.forEach(function(addon) {%>
+                                                        <option value="<%= addon.id%>"><%= addon.name%></option>
+                                                    <% }); %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn bg-maroon btn-flat"><i
+                                                            class="fa fa-save"></i>
+                                                    Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <hr>
+                                <h3 class="box-title">Product Addon List</h3>
+                                <table id="tableListProductAddons" class="table table-bordered table-striped dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Products Addon</th>
+                                        <th>Price</th>
+                                        <th>Addon</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% var i = 1; category.addons.forEach(function(addon) { %>
+                                        <% addon.productAddons.forEach(function(productAddon) { %>
+                                            <tr>
+                                                <td><%= i++ %></td>
+                                                <td><%= productAddon.name %></td>
+                                                <td><%= productAddon.price %></td>
+                                                <td><%= addon.name %></td>
+                                                <td>
+                                                    <a href="#" data-toggle="modal" data-id="<%= productAddon.id %>"
+                                                       data-name="<%= productAddon.name %>" data-price="<%= productAddon.price %>"
+                                                       data-addon="<%= addon.id%>"
+                                                       title="Edit" class="confirmEditProductAddon btn btn-primary btn-flat">
+                                                        <span class="fa fa-edit" aria-hidden="true"></span>
+                                                    </a>
+                                                    <a href="#" data-toggle="modal" data-id="<%= productAddon.id %>" title="Delete"
+                                                       class="confirmDelProductAddon btn btn-danger btn-flat"><span
+                                                                class="fa fa-trash" aria-hidden="true"></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <% })%>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.tab-pane -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!--Modal for products-->
+<div class="modal fade" id="confirm-edit-product" role="dialog">
+    <form method="POST" enctype="multipart/form-data"
+          action="/stores/<%= category.store_id %>/categories/<%= category.id %>/products/" id="form-edit-product"
+          class="form-horizontal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit Product</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label">Product</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name"
+                                   placeholder="Product Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="price" class="col-sm-2 control-label">Price</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="price" name="price" step="1000"
+                                   placeholder="Product Price">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="image_url" class="col-sm-2 control-label">Image</label>
+                        <div class="col-sm-10">
+                            <input type="file" class="form-control" id="image_url" name="image_url">
+                            <p><i>Only image with jpeg is accepted</i></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-8">
+                            <img id="imageUpload" class="img-responsive" src="#"/>
+                        </div>
+                    </div>
+                    <p>Click on <b>"Yes"</b> to continue, <b>"No"</b> to cancel.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="confirm-del-product" role="dialog">
+    <form method="POST" action="/stores/<%= category.store_id %>/categories/<%= category.id %>/products/"
+          id="form-delete-product">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirm to delete Product?</h3>
+                </div>
+                <div class="modal-body">
+                    Click on "Yes" to continue, "No" to cancel.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--Modal for addons-->
+<div class="modal fade" id="confirm-edit-addon" role="dialog">
+    <form method="POST" action="/stores/<%= category.store_id %>/categories/<%= category.id %>/addons/"
+          id="form-edit-addon" class="form-horizontal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit Addon</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label">Addon</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name"
+                                   placeholder="Addon Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="role" class="col-sm-2 control-label">Maximum product</label>
+                        <div class="col-sm-10">
+                            <input type="number" min="1", step="1" class="form-control" id="role" name="role"
+                                   placeholder="Addon product maximum quantity">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="modal fade" id="confirm-del-addon" role="dialog">
+    <form method="POST" action="/stores/<%= category.store_id %>/categories/<%= category.id %>/addons/"
+          id="form-delete-addon">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirm to delete Addon?</h3>
+                </div>
+                <div class="modal-body">
+                    Click on "Yes" to continue, "No" to cancel.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modals for product addons-->
+<div class="modal fade" id="confirm-edit-productAddon" role="dialog">
+    <form method="POST" action="/stores/<%= category.store_id %>/categories/<%= category.id %>/productAddons/" id="form-edit-productAddon"
+          class="form-horizontal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit Product Addon</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label">Product Addon</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name"
+                                   placeholder="Product Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="price" class="col-sm-2 control-label">Price</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="price" name="price" step="1000"
+                                   placeholder="Product Price">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="image_url" class="col-sm-2 control-label">Addon</label>
+                        <div class="col-md-10">
+                            <select class="form-control select2" id="addon_id" name="addon_id" style="width: 100%;">
+                                <% category.addons.forEach(function(addon) {%>
+                                <option value="<%= addon.id%>"><%= addon.name%></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="confirm-del-productAddon" role="dialog">
+    <form method="POST" action="/stores/<%= category.store_id %>/categories/<%= category.id %>/productAddons/"
+          id="form-delete-productAddon">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirm to delete Product Addon?</h3>
+                </div>
+                <div class="modal-body">
+                    Click on "Yes" to continue, "No" to cancel.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

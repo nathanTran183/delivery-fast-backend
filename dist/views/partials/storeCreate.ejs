@@ -1,0 +1,182 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <%
+        // message the validation
+        if (messages.errors) {
+        for (i = 0; i < messages.errors.length; i++) {
+        %>
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Fail !</strong> <%= messages.errors[i].msg %>
+        </div>
+        <%
+        }
+        }
+
+        // message the reason change password fail
+        if (messages.reason_fail) {
+        %>
+        <div class="alert alert-warning">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.reason_fail %>
+        </div>
+        <%
+        }
+
+        // message if success
+        if (messages.success) {
+        %>
+        <div class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.success %>
+        </div>
+        <%
+        }
+        %>
+
+        <h1>
+            Create new store
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/stores"><i class="fa fa-building"></i>Store list</a></li>
+            <li class="active">Create new store</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <form id="panel-insert-store"  enctype="multipart/form-data" action="/stores" method="post"
+                      class="form-horizontal">
+                    <div class="col-md-5">
+                        <div class="box box-primary">
+                            <div class="box-header">
+
+                                <h3 class="box-title">Store Basic Information</h3>
+                                <hr>
+                            </div>
+                            <div class="box-body">
+
+                                <div class="form-group">
+                                    <label for="type" class="col-sm-2 control-label">Store Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="name" name="name"
+                                               placeholder="Store Name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address" class="col-sm-2 control-label">Address</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="address" name="address"
+                                               placeholder="Store Address">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone_number" class="col-sm-2 control-label">Phone Number</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="phone_number" name="phone_number"
+                                               placeholder="Store Phone Number">
+                                    </div>
+                                </div>
+
+                                <div class=" input-group bootstrap-timepicker timepicker">
+                                    <label for="opening_time" class="col-sm-2 control-label">Opening Time</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control timepicker" id="opening_time"
+                                               name="opening_time"
+                                               value="08:00">
+                                    </div>
+
+                                    <label for="closing_time" class="col-sm-2 control-label">Closing Time</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control timepicker" id="closing_time"
+                                               name="closing_time"
+                                               value="22:00">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="image_url" class="col-sm-2 control-label">Upload Image</label>
+                                    <div class="col-sm-10">
+                                        <input type="file" class="form-control" id="image_url" name="image_url">
+                                        <p><i>Only image with jpeg is accepted</i></p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="store_type" class="col-sm-2 control-label">Store Type</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control select2" id="store_type" name="store_type"
+                                                multiple="multiple" data-placeholder="Select store type"
+                                                style="width: 100%;">
+                                            <% storeTypes.forEach(function(storeType) { %>
+                                            <option value="<%= storeType.id %>"><%= storeType.type%></option>
+                                            <% }); %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12 hidden">
+                                    <img id="imageUpload" class="img-responsive" src="#" alt="your image" />
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn bg-success btn-flat"><i class="fa fa-save"></i>
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+
+                    </div>
+                    <div class="col-md-7">
+                        <div class="box">
+                            <div class="box-header">
+
+                                <h3 class="box-title">Store Location</h3>
+                                <hr>
+                            </div>
+                            <div class="box-body">
+
+                                <div id="targettingLocation-box">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Latitude</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" readonly class="form-control" id="latitude"
+                                                   name="latitude"
+                                                   value="16.066418">
+                                        </div>
+
+                                        <label class="col-sm-2 control-label">Longitude</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" readonly class="form-control" id="longitude"
+                                                   name="longitude"
+                                                   value="108.216035">
+                                        </div>
+                                    </div>
+                                    <div class="searchLocation form-group">
+                                        <div class="col-sm-offset-2 col-sm-4">
+                                            <input type="text" class="form-control" id="searchLocationText"
+                                                   placeholder="Key in address here">
+                                        </div>
+                                        <p><small class="help-block">Use address search box and map below to find
+                                            location.
+                                        </small></p>
+                                    </div>
+
+                                    <div id="googleMap"
+                                         style="height: 380px; margin-top: 20px"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+

@@ -10,7 +10,8 @@ module.exports = {
                 defaultValue: Sequelize.UUIDV1
             },
             address: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                allowNull: false
             },
             latitude: {
                 type: Sequelize.FLOAT,
