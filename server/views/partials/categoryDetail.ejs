@@ -81,10 +81,10 @@
                             let updatedDate = new Date(category.updatedAt);
                             %>
                             <li class="list-group-item">
-                                <b>Created At</b> <a class="pull-right"><%= createdDate.toLocaleString() %></a>
+                                <b>Created At</b> <a class="pull-right"><%= createdDate.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}) %></a>
                             </li>
                             <li class="list-group-item">
-                                <b>Updated At</b> <a class="pull-right"><%= updatedDate.toLocaleString() %></a>
+                                <b>Updated At</b> <a class="pull-right"><%= updatedDate.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}) %></a>
                             </li>
                         </ul>
 

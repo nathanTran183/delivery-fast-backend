@@ -95,10 +95,10 @@
                                         let createdDate = new Date(storeType.createdAt);
                                         let updatedDate = new Date(storeType.updatedAt);
                                     %>
-                                    <%= createdDate.toLocaleString() %>
+                                    <%= createdDate.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}) %>
                                 </td>
                                 <td>
-                                    <%= updatedDate.toLocaleString() %>
+                                    <%= updatedDate.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}) %>
                                 </td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-id="<%= storeType.id %>" data-type="<%= storeType.type%>" title="Edit"

@@ -113,7 +113,7 @@
                                     <label for="dob" class="col-sm-2 control-label">Created at</label>
 
                                     <div class="col-sm-10">
-                                        <% let createDate = new Date(user.createdAt).toLocaleString(); %>
+                                        <% let createDate = new Date(user.createdAt).toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}); %>
                                         <input type="text" disabled class="form-control" id="point" name="point"
                                                placeholder="Last name" value="<%= createDate%>">
                                     </div>
@@ -122,7 +122,7 @@
                                     <label for="dob" class="col-sm-2 control-label">Updated at</label>
 
                                     <div class="col-sm-10">
-                                        <% let updateDate = new Date(user.updatedAt).toLocaleString();; %>
+                                        <% let updateDate = new Date(user.updatedAt).toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"});; %>
 
                                         <input type="text" disabled class="form-control" id="point" name="point"
                                                placeholder="Last name" value="<%= updateDate %>">

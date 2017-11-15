@@ -243,10 +243,10 @@
                                         let createdDate = new Date(category.createdAt);
                                         let updatedDate = new Date(category.updatedAt);
                                     %>
-                                    <%= createdDate.toLocaleString() %>
+                                    <%= createdDate.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}) %>
                                 </td>
                                 <td>
-                                    <%= updatedDate.toLocaleString() %>
+                                    <%= updatedDate.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}) %>
                                 </td>
                                 <td>
                                     <a href="/stores/<%= store.id%>/categories/<%= category.id%>" title="View Detail"

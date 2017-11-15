@@ -73,10 +73,10 @@
                                         let createdDate = new Date(order.order_date);
                                         let updatedDate = new Date(order.delivery_date);
                                     %>
-                                    <%= createdDate.toLocaleString() %>
+                                    <%= createdDate.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}) %>
                                 </td>
                                 <td>
-                                    <%= updatedDate.toLocaleString() %>
+                                    <%= updatedDate.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}) %>
                                 </td>
                                 <td><%= order.ship_fee %></td>
                                 <td><%= order.total_amount %></td>
