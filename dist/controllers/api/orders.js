@@ -139,11 +139,20 @@ module.exports = {
     history: function history(req, res) {
         Order.all({
             where: {
-                status: { $ne: "Pending" },
+                status: { $in: ["Cancelled", "Delivered"] },
                 user_id: req.user.id
             }
         }).then(function (orders) {
-            return res.json(Response.returnSuccess("Get order history successfully!", { orders: orders }));
+            Order.all({
+                where: {
+                    status: { $notIn: ["Delivered", "Cancelled"] },
+                    user_id: req.user.id
+                }
+            }).then(function (inComing) {
+                return res.json(Response.returnSuccess("Get order history successfully!", { history: orders, inComing: inComing }));
+            }).catch(function (err) {
+                return res.json(Response.returnError(err.message, err.code));
+            });
         }).catch(function (err) {
             return res.json(Response.returnError(err.message, err.code));
         });

@@ -155,12 +155,22 @@ module.exports = {
         Order
             .all({
                 where: {
-                    status: {$ne: "Pending"},
+                    status: {$in: ["Cancelled", "Delivered"]},
                     user_id: req.user.id
                 }
             })
             .then(orders => {
-                return res.json(Response.returnSuccess("Get order history successfully!", {orders: orders}));
+                Order
+                    .all({
+                        where: {
+                            status: {$notIn: ["Delivered", "Cancelled"]},
+                            user_id: req.user.id
+                        }
+                    })
+                    .then(inComing => {
+                        return res.json(Response.returnSuccess("Get order history successfully!", {history: orders, inComing: inComing}));
+                    })
+                    .catch(err => res.json(Response.returnError(err.message, err.code)))
             })
             .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
