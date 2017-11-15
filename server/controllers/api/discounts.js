@@ -13,8 +13,7 @@ module.exports = {
         let storeId = req.query.storeId;
         let code = req.query.code;
         let date = new Date();
-        // res.json(new Date("2017-11-12T17:00:00.000Z").toLocaleString())
-        if(storeId == undefined || code == undefined) {
+        if (storeId == undefined || code == undefined) {
             return res.json(Response.returnError("Require Store id and discount code"));
         } else {
             Discount
@@ -25,12 +24,12 @@ module.exports = {
                     }
                 })
                 .then(discount => {
-                    if(!discount)
+                    if (!discount)
                         return res.json(Response.returnError("Invalid code!"), httpStatus.BAD_REQUEST);
                     else {
                         let expireDate = new Date(discount.expire_date);
-                        expireDate.setHours(23,59,59,999);
-                        if(discount.start_date < new Date() && expireDate > new Date())
+                        expireDate.setHours(23, 59, 59, 999);
+                        if (discount.start_date < new Date() && expireDate > new Date())
                             return res.json(Response.returnSuccess("Code is valid", {}));
                         else res.json(Response.returnError("Code is expired or not applied yet!", httpStatus.BAD_REQUEST));
                     }

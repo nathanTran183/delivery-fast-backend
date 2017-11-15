@@ -52,13 +52,13 @@ $(function() {
      * calculate the distance between two markers
      * add html for search user
      **/
-    var latitude, longitude, position
+    var latitude, longitude, position;
 
     function loadManyMaps() {
         $(".googleMap").each(function () {
             latitude = $(this).find('.location').val().split(",")[0];
             longitude = $(this).find('.location').val().split(",")[1];
-            var map, geocoder = new google.maps.Geocoder();
+            var map, marker, geocoder = new google.maps.Geocoder();
             if ((latitude != "" && longitude != "") && (latitude != null && longitude != null)) {
                 position = new google.maps.LatLng(latitude, longitude);
                 var mapProp = {

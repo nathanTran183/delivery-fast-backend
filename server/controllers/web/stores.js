@@ -102,8 +102,10 @@ module.exports = {
                 store
                     .save()
                     .then(savedstore => {
-
-                        if (req.body.store_type.length > 0) {
+                        if (req.body.store_type!=undefined){
+                            if(Array.isArray(req.body.store_type) == false){
+                                req.body.store_type = [req.body.store_type];
+                            }
                             req.body.store_type.forEach(function (storeType) {
                                 StoreType_Store
                                     .create({store_id: savedstore.id, store_type_id: storeType})
