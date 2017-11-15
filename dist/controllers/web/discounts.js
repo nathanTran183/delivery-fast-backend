@@ -14,7 +14,8 @@ module.exports = {
             include: [{
                 model: Store,
                 as: 'store'
-            }]
+            }],
+            order: 'start_date DESC'
         }).then(function (discounts) {
             Store.all({
                 where: {

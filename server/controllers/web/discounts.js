@@ -15,7 +15,8 @@ module.exports = {
                         model: Store,
                         as: 'store'
                     }
-                ]
+                ],
+                order: 'start_date DESC'
             })
             .then(discounts => {
                 Store

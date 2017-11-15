@@ -23,7 +23,9 @@ $(document).ready(function () {
     $("#tableListProductAddons").DataTable();
     $("#tableListAddons").DataTable();
     $("#tableListDiscounts").DataTable();
-    $("#tableListSubmittedOrders").DataTable();
+    $("#tableListSubmittedOrders").DataTable({
+        "ordering": false
+    });
     var tableListStores = $('#tableListStores').DataTable({
         "drawCallback": function drawCallback() {
             loadManyMaps();

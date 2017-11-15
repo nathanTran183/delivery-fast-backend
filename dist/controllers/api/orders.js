@@ -129,9 +129,10 @@ module.exports = {
         Order.all({
             where: {
                 status: 'Order Submitted'
-            }
+            },
+            order: '"updatedAt"'
         }).then(function (orders) {
-            return res.json(Response.returnSuccess("Get submmited order list successfully!", { orders: orders }));
+            return res.json(Response.returnSuccess("Get submitted order list successfully!", { orders: orders }));
         }).catch(function (err) {
             return res.json(Response.returnError(err.message, err.code));
         });
@@ -151,7 +152,7 @@ module.exports = {
         }).then(function (orders) {
             Order.all({
                 where: {
-                    status: { $notIn: ["Delivered", "Cancelled"] },
+                    status: { $notIn: ["Delivered", "Cancelled", "Pending"] },
                     user_id: req.user.id
                 },
                 attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],

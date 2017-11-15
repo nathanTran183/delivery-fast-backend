@@ -53,10 +53,13 @@ module.exports = {
         });
     },
     list: function list(req, res) {
-        Order.all(associationObject).then(function (orders) {
-            return res.json(Response.returnSuccess("Get list order successfully", { orders: orders }));
+        Order.all({
+            order: '"updatedAt"'
+        }).then(function (orders) {
+            res.render('orders/submittedIndex', { orders: orders });
         }).catch(function (err) {
-            return res.json(Response.returnError(err.message, err.code));
+            req.flash('errors', { msg: err.message });
+            res.redirect('/orders/submitted');
         });
     },
     update: function update(req, res) {
@@ -77,7 +80,8 @@ module.exports = {
         Order.all({
             where: {
                 status: 'Order Submitted'
-            }
+            },
+            order: '"updatedAt"'
         }).then(function (orders) {
             res.render('orders/submittedIndex', { orders: orders });
         }).catch(function (err) {

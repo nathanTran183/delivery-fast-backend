@@ -59,11 +59,16 @@ module.exports = {
 
     list(req, res) {
         Order
-            .all(associationObject)
-            .then(orders => {
-                return res.json(Response.returnSuccess("Get list order successfully", {orders: orders}))
+            .all({
+                order: '"updatedAt"'
             })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
+            .then(orders => {
+                res.render('orders/submittedIndex', {orders: orders});
+            })
+            .catch(err => {
+                req.flash('errors', {msg: err.message});
+                res.redirect('/orders/submitted');
+            })
     },
 
     update(req, res) {
@@ -89,7 +94,8 @@ module.exports = {
             .all({
                 where: {
                     status: 'Order Submitted',
-                }
+                },
+                order: '"updatedAt"'
             })
             .then(orders => {
                 res.render('orders/submittedIndex', {orders: orders});
