@@ -8,7 +8,6 @@ const randomize = require('randomatic');
 const validate = require('../../helpers/validate');
 module.exports = {
     list(req, res) {
-        global.io.emit('refresh', "fuck you");
         Discount
             .all({
                 include: [
@@ -76,7 +75,6 @@ module.exports = {
         Discount
             .create(req.body)
             .then(discount => {
-                console.log(discount);
                 req.flash('success', 'Create discount successfully!');
                 return res.redirect('/discounts');
             })

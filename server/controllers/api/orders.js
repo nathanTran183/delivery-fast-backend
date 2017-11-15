@@ -157,7 +157,13 @@ module.exports = {
                 where: {
                     status: {$in: ["Cancelled", "Delivered"]},
                     user_id: req.user.id
-                }
+                },
+                attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
+                include: [{
+                    model: Store,
+                    as: 'store',
+                    attributes: ['name', 'address']
+                }]
             })
             .then(orders => {
                 Order
@@ -165,7 +171,13 @@ module.exports = {
                         where: {
                             status: {$notIn: ["Delivered", "Cancelled"]},
                             user_id: req.user.id
-                        }
+                        },
+                        attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
+                        include: [{
+                            model: Store,
+                            as: 'store',
+                            attributes: ['name', 'address']
+                        }]
                     })
                     .then(inComing => {
                         return res.json(Response.returnSuccess("Get order history successfully!", {history: orders, inComing: inComing}));
