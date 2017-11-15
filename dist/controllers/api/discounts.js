@@ -15,7 +15,6 @@ module.exports = {
         var storeId = req.query.storeId;
         var code = req.query.code;
         var date = new Date();
-        // res.json(new Date("2017-11-12T17:00:00.000Z").toLocaleString())
         if (storeId == undefined || code == undefined) {
             return res.json(Response.returnError("Require Store id and discount code"));
         } else {

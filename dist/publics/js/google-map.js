@@ -62,6 +62,7 @@ function loadManyMaps() {
         latitude = $(this).find('.location').val().split(",")[0];
         longitude = $(this).find('.location').val().split(",")[1];
         var map,
+            marker,
             geocoder = new google.maps.Geocoder();
         if (latitude != "" && longitude != "" && latitude != null && longitude != null) {
             position = new google.maps.LatLng(latitude, longitude);

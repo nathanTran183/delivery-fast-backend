@@ -91,8 +91,10 @@ module.exports = {
                 var store = Store.build(req.body);
                 if (req.file != undefined) store.image_url = '/uploads/' + req.file.filename;
                 store.save().then(function (savedstore) {
-
-                    if (req.body.store_type.length > 0) {
+                    if (req.body.store_type != undefined) {
+                        if (Array.isArray(req.body.store_type) == false) {
+                            req.body.store_type = [req.body.store_type];
+                        }
                         req.body.store_type.forEach(function (storeType) {
                             StoreType_Store.create({ store_id: savedstore.id, store_type_id: storeType }).then().catch(function (err) {
                                 req.flash('errors', { msg: err.message });
