@@ -15,10 +15,10 @@ var config = require(__dirname + '/../config/db-config.json')[env];
 
 var sequelize = void 0;
 if (config.use_env_variable) {
-    pg.defaults.ssl = true;
+    if (env == 'production') pg.defaults.ssl = true;
     sequelize = new Sequelize(process.env[config.use_env_variable]);
 } else {
-    pg.defaults.ssl = true;
+    if (env == 'production') pg.defaults.ssl = true;
     sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 

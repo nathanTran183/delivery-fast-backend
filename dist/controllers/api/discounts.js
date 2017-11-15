@@ -14,7 +14,6 @@ module.exports = {
     check: function check(req, res) {
         var storeId = req.query.storeId;
         var code = req.query.code;
-        var date = new Date();
         if (storeId == undefined || code == undefined) {
             return res.json(Response.returnError("Require Store id and discount code"));
         } else {
@@ -27,7 +26,7 @@ module.exports = {
                 if (!discount) return res.json(Response.returnError("Invalid code!"), httpStatus.BAD_REQUEST);else {
                     var expireDate = new Date(discount.expire_date);
                     expireDate.setHours(23, 59, 59, 999);
-                    if (discount.start_date < new Date() && expireDate > new Date()) return res.json(Response.returnSuccess("Code is valid", {}));else res.json(Response.returnError("Code is expired or not applied yet!", httpStatus.BAD_REQUEST));
+                    if (discount.start_date < new Date() && expireDate > new Date()) return res.json(Response.returnSuccess("Code is valid", { percentage: discount.percentage }));else res.json(Response.returnError("Code is expired or not applied yet!", httpStatus.BAD_REQUEST));
                 }
             }).catch(function (error) {
                 res.json(Response.returnError(error.message, error.code));
