@@ -45,16 +45,18 @@ var associationObject = {
 
 module.exports = {
     getSubmittedList: function getSubmittedList(req, res) {
+        res.render('orders/submittedIndex', { orders: orders });
+    },
+    getSubmittedListJSON: function getSubmittedListJSON(req, res) {
         Order.all({
             where: {
                 status: 'Order Submitted'
             },
             order: [['updatedAt']]
         }).then(function (orders) {
-            res.render('orders/submittedIndex', { orders: orders });
+            return res.json(Response.returnSuccess("Get submitted order list successfully!", { orders: orders }));
         }).catch(function (err) {
-            req.flash('errors', { msg: err.message });
-            res.redirect('back');
+            return res.json(Response.returnError(err.message, err.code));
         });
     },
     update: function update(req, res) {
@@ -69,8 +71,8 @@ module.exports = {
                         res.redirect('back');
                     }
                     order.update(req.body).then(function () {
-                        req.flash('success', { msg: "Order has been updated successfully!" });
-                        res.redirect(statusObj.url);
+                        req.flash('success', { msg: statusObj.msg });
+                        if (req.body.status == 'Processing' || req.body.status == 'Confirmed') res.redirect(statusObj.url + req.params.orderId);else res.redirect(statusObj.url);
                     }).catch(function (err) {
                         req.flash('errors', { msg: err.message });
                         res.redirect('back');
@@ -101,13 +103,19 @@ module.exports = {
         });
     },
     getProcessing: function getProcessing(req, res) {
-        Order.findById(req.params.orderId, associationObject).then(function (order) {
+        Order.findById(req.params.orderId, { where: { status: "confirmed" } }).then(function (order) {
             if (!order) {
                 req.flash('errors', { msg: "Order not found!" });
                 res.redirect('back');
             }
-
-            res.render('orders/submittedDetail', { order: order });
+            Employee.all({
+                where: { role: "DeliMan" }
+            }).then(function (deliMans) {
+                res.render('orders/confirmedDetail', { orderId: req.params.orderId, deliMans: deliMans });
+            }).catch(function (err) {
+                req.flash('errors', { msg: err.message });
+                res.redirect('back');
+            });
         }).catch(function (err) {
             req.flash('errors', { msg: err.message });
             res.redirect('back');

@@ -7,13 +7,14 @@ var express = require('express');
 var ordersController = require('../../controllers/api').orders;
 var router = express.Router();
 var passport = require('../../middlewares/passport');
+var expressJwt = require('express-jwt');
+var config = require('../../config/index');
 
-router.get('/submitted', passport.notUserWeb, ordersController.getSubmittedList);
 router.get('/', ordersController.list);
-
-router.get('/history', passport.isUserAPI, ordersController.history);
-router.get('/:orderId', passport.isUserAPI, ordersController.get);
-router.put('/:orderId', passport.isUserAPI, ordersController.updateClient);
-router.put('/updateStatus/:orderId', passport.isDeliManAPI, ordersController.updateStatus);
+router.get('/history', [expressJwt({ secret: config.jwtSecret }), passport.isUserAPI], ordersController.history);
+router.get('/:orderId', [expressJwt({ secret: config.jwtSecret }), passport.isUserAPI], ordersController.get);
+router.put('/:orderId', [expressJwt({ secret: config.jwtSecret }), passport.isUserAPI], ordersController.updateClient);
+router.put('/updateStatusEmp/:orderId', [expressJwt({ secret: config.jwtSecret }), passport.isDeliManAPI], ordersController.updateStatus);
+router.put('/updateStatusUser/:orderId', [expressJwt({ secret: config.jwtSecret }), passport.isUserAPI], ordersController.updateStatus);
 
 module.exports = router;

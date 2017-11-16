@@ -19,6 +19,6 @@ router.use('/users', usersRoute);
 router.use('/employees', employeeRoute);
 router.use('/stores', storeRoute);
 router.use('/discounts', discountRoute);
-router.use('/orders', [expressJwt({secret: config.jwtSecret})], orderRoute);
+router.use('/orders', orderRoute);
 
 module.exports = router;

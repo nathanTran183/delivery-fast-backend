@@ -5,28 +5,31 @@ var status = [
     {
         former: 'Order Submitted',
         latter: 'Processing',
-        url: '/order/submitted/',
+        msg: 'Order is in processing stage!',
+        url: '/orders/processing/',
     },
     {
         former: 'Processing',
         latter: 'Confirmed',
-        url: '',
+        msg: "Order is confirmed!",
+        url: '/orders/assigned/',
     },
     {
         former: 'Processing',
         latter: 'Cancelled',
-        url: '',
+        msg: "Order is cancelled!",
+        url: '/orders/submitted',
     },
     {
         former: 'Confirmed',
         latter: 'Assigned',
-        msg: '',
-        url: '',
+        msg: 'Deliman has been assigned for this order!',
+        url: '/orders/submitted',
     },
     {
         former: 'Assigned',
         latter: 'Picked',
-        msg: 'Deliman has picked the package!',
+        msg: 'Deliman picked the package!',
         url: '',
     },
     {

@@ -125,18 +125,6 @@ module.exports = {
             return res.json(Response.returnError(err.message, err.code));
         });
     },
-    getSubmittedList: function getSubmittedList(req, res) {
-        Order.all({
-            where: {
-                status: 'Order Submitted'
-            },
-            order: [['updatedAt', 'DESC']]
-        }).then(function (orders) {
-            return res.json(Response.returnSuccess("Get submitted order list successfully!", { orders: orders }));
-        }).catch(function (err) {
-            return res.json(Response.returnError(err.message, err.code));
-        });
-    },
     history: function history(req, res) {
         Order.all({
             where: {

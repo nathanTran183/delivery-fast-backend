@@ -138,20 +138,6 @@ module.exports = {
             .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
 
-    getSubmittedList(req, res){
-        Order
-            .all({
-                where: {
-                    status: 'Order Submitted',
-                },
-                order: [['updatedAt', 'DESC']]
-            })
-            .then(orders => {
-                return res.json(Response.returnSuccess("Get submitted order list successfully!", {orders: orders}));
-            })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
-    },
-
     history(req, res) {
         Order
             .all({

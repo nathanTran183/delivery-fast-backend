@@ -24,7 +24,13 @@ $(document).ready(function () {
     $("#tableListAddons").DataTable();
     $("#tableListDiscounts").DataTable();
     $("#tableListSubmittedOrders").DataTable({
-        "ordering": false
+        "ordering": false,
+        "ajax": {
+            url: '/api/stores/storeType',
+            type: 'GET',
+            dataSrc: 'data.orders'
+        },
+        "columns": [{ 'data': 'id' }, { 'data': 'user_name' }, { 'data': 'user_phone' }, { 'data': 'user_address' }, { 'data': 'order_date' }, { 'data': 'delivery_date' }, { 'data': 'ship_fee' }, { 'data': 'total_amount' }]
     });
     var tableListStores = $('#tableListStores').DataTable({
         "drawCallback": function drawCallback() {
