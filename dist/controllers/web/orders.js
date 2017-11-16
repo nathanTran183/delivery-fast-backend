@@ -12,6 +12,8 @@ var UserPhone = require('../../models/index').UserPhone;
 var UserAddress = require('../../models/index').UserAddress;
 var Employee = require('../../models/index').Employee;
 var Store = require('../../models/index').Store;
+var _ = require('lodash');
+var orderStatus = require('../../helpers/orderStatus');
 
 var associationObject = {
     include: [{
@@ -42,45 +44,87 @@ var associationObject = {
 };
 
 module.exports = {
+    getSubmittedList: function getSubmittedList(req, res) {
+        Order.all({
+            where: {
+                status: 'Order Submitted'
+            },
+            order: '"updatedAt"'
+        }).then(function (orders) {
+            res.render('orders/submittedIndex', { orders: orders });
+        }).catch(function (err) {
+            req.flash('errors', { msg: err.message });
+            res.redirect('back');
+        });
+    },
+    update: function update(req, res) {
+        if (req.body.status) {
+            var statusObj = _.find(orderStatus, { latter: req.body.status });
+            if (!statusObj) {
+                Order.findById(req.params.orderId, {
+                    where: { status: statusObj.former }
+                }).then(function (order) {
+                    if (!order) {
+                        req.flash('errors', { msg: "Order not found!" });
+                        res.redirect('back');
+                    }
+                    order.update(req.body).then(function () {
+                        req.flash('success', { msg: "Order has been updated successfully!" });
+                        res.redirect(statusObj.url);
+                    }).catch(function (err) {
+                        req.flash('errors', { msg: err.message });
+                        res.redirect('back');
+                    });
+                }).catch(function (err) {
+                    req.flash('errors', { msg: err.message });
+                    res.redirect('back');
+                });
+            } else {
+                req.flash('errors', { msg: 'Order status is invalid' });
+                res.redirect('back');
+            }
+        } else {
+            req.flash('errors', { msg: 'Order status must be contain to update!' });
+            res.redirect('back');
+        }
+    },
+    getSubmitted: function getSubmitted(req, res) {
+        Order.findById(req.params.orderId, associationObject.where = { status: "Processing" }).then(function (order) {
+            if (!order) {
+                req.flash('errors', { msg: "Order not found!" });
+                res.redirect('back');
+            }
+            res.render('orders/submittedDetail', { order: order });
+        }).catch(function (err) {
+            req.flash('errors', { msg: err.message });
+            res.redirect('back');
+        });
+    },
+    getProcessing: function getProcessing(req, res) {
+        Order.findById(req.params.orderId, associationObject).then(function (order) {
+            if (!order) {
+                req.flash('errors', { msg: "Order not found!" });
+                res.redirect('back');
+            }
+
+            res.render('orders/submittedDetail', { order: order });
+        }).catch(function (err) {
+            req.flash('errors', { msg: err.message });
+            res.redirect('back');
+        });
+    },
     get: function get(req, res) {
         Order.findById(req.params.orderId, associationObject).then(function (order) {
             if (!order) {
-                return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND));
+                req.flash('errors', { msg: "Order not found!" });
+                res.redirect('back');
             }
-            return res.json(Response.returnSuccess("Get order successfully!", { order: order }));
         }).catch(function (err) {
             return Response.returnError(err.message, err.code);
         });
     },
     list: function list(req, res) {
         Order.all({
-            order: '"updatedAt"'
-        }).then(function (orders) {
-            res.render('orders/submittedIndex', { orders: orders });
-        }).catch(function (err) {
-            req.flash('errors', { msg: err.message });
-            res.redirect('/orders/submitted');
-        });
-    },
-    update: function update(req, res) {
-        Order.findById(req.params.orderId).then(function (order) {
-            if (!order) {
-                return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND));
-            }
-            order.update(req.body).then(function (savedOrder) {
-                return res.json(Response.returnSuccess("Update order's status successfully!", { order: savedOrder }));
-            }).catch(function (err) {
-                return res.json(Response.returnError(err.message, err.code));
-            });
-        }).catch(function (err) {
-            return res.json(Response.returnError(err.message, err.code));
-        });
-    },
-    getSubmittedList: function getSubmittedList(req, res) {
-        Order.all({
-            where: {
-                status: 'Order Submitted'
-            },
             order: '"updatedAt"'
         }).then(function (orders) {
             res.render('orders/submittedIndex', { orders: orders });

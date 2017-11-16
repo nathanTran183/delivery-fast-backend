@@ -160,6 +160,7 @@ module.exports = {
                     user_id: req.user.id
                 },
                 attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
+                order: '"updatedAt"',
                 include: [{
                     model: Store,
                     as: 'store',
@@ -174,6 +175,7 @@ module.exports = {
                             user_id: req.user.id
                         },
                         attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
+                        order: '"updatedAt"',
                         include: [{
                             model: Store,
                             as: 'store',

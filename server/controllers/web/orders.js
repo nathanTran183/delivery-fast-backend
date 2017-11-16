@@ -10,49 +10,145 @@ const UserPhone = require('../../models/index').UserPhone;
 const UserAddress = require('../../models/index').UserAddress;
 const Employee = require('../../models/index').Employee;
 const Store = require('../../models/index').Store;
+const _ = require('lodash');
+const orderStatus = require('../../helpers/orderStatus');
 
 var associationObject = {
     include: [
         {
-        model: OrderDetail,
-        as: 'orderDetails'
-    }, {
-        model: User,
-        as: 'user',
-        include: [
-            {
-                model: UserPhone,
-                as: 'userPhones',
-            },
-            {
-                model: UserAddress,
-                as: 'userAddress',
-            }
-        ]
-    }, {
-        model: Store,
-        as: 'store'
-    }, {
-        model: Employee,
-        as: 'staff'
-    }, {
-        model: Employee,
-        as: 'deliMan'
-    }
+            model: OrderDetail,
+            as: 'orderDetails'
+        }, {
+            model: User,
+            as: 'user',
+            include: [
+                {
+                    model: UserPhone,
+                    as: 'userPhones',
+                },
+                {
+                    model: UserAddress,
+                    as: 'userAddress',
+                }
+            ]
+        }, {
+            model: Store,
+            as: 'store'
+        }, {
+            model: Employee,
+            as: 'staff'
+        }, {
+            model: Employee,
+            as: 'deliMan'
+        }
     ], attributes: {
         exclude: ['user_id', 'store_id', 'employee_id', 'deliMan_id']
     }
 };
 
 module.exports = {
-    get(req, res) {
+    getSubmittedList(req, res){
+        Order
+            .all({
+                where: {
+                    status: 'Order Submitted',
+                },
+                order: '"updatedAt"'
+            })
+            .then(orders => {
+                res.render('orders/submittedIndex', {orders: orders});
+            })
+            .catch(err => {
+                req.flash('errors', {msg: err.message});
+                res.redirect('back');
+            })
+    },
+
+    update(req, res) {
+        if (req.body.status) {
+            let statusObj = _.find(orderStatus, {latter: req.body.status});
+            if (!statusObj) {
+                Order
+                    .findById(req.params.orderId, {
+                        where: {status: statusObj.former}
+                    })
+                    .then(order => {
+                        if (!order) {
+                            req.flash('errors', {msg: "Order not found!"});
+                            res.redirect('back');
+                        }
+                        order
+                            .update(req.body)
+                            .then(() => {
+                                req.flash('success', {msg: "Order has been updated successfully!"});
+                                res.redirect(statusObj.url);
+                            })
+                            .catch(err => {
+                                req.flash('errors', {msg: err.message});
+                                res.redirect('back');
+                            })
+
+                    })
+                    .catch(err => {
+                        req.flash('errors', {msg: err.message});
+                        res.redirect('back');
+                    })
+            }
+            else {
+                req.flash('errors', {msg: 'Order status is invalid'});
+                res.redirect('back');
+            }
+
+        }
+        else {
+            req.flash('errors', {msg: 'Order status must be contain to update!'});
+            res.redirect('back');
+        }
+    },
+
+    getSubmitted(req, res) {
+        Order
+            .findById(req.params.orderId, associationObject.where = {status: "Processing"})
+            .then(order => {
+                if (!order) {
+                    req.flash('errors', {msg: "Order not found!"});
+                    res.redirect('back');
+                }
+                res.render('orders/submittedDetail', {order: order});
+            })
+            .catch(err => {
+                req.flash('errors', {msg: err.message});
+                res.redirect('back');
+            })
+    },
+
+    getProcessing(req, res) {
         Order
             .findById(req.params.orderId, associationObject)
             .then(order => {
                 if (!order) {
-                    return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND))
+                    req.flash('errors', {msg: "Order not found!"});
+                    res.redirect('back');
                 }
-                return res.json(Response.returnSuccess("Get order successfully!", {order: order}));
+
+                res.render('orders/submittedDetail', {order: order});
+            })
+            .catch(err => {
+                req.flash('errors', {msg: err.message});
+                res.redirect('back');
+            })
+    },
+
+    get(req, res) {
+        Order
+            .findById(req.params.orderId,
+                associationObject
+            )
+            .then(order => {
+                if (!order) {
+                    req.flash('errors', {msg: "Order not found!"});
+                    res.redirect('back');
+                }
             })
             .catch(err => Response.returnError(err.message, err.code))
     },
@@ -71,40 +167,6 @@ module.exports = {
             })
     },
 
-    update(req, res) {
-        Order
-            .findById(req.params.orderId)
-            .then(order => {
-                if (!order) {
-                    return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND))
-                }
-                order
-                    .update(req.body)
-                    .then(savedOrder => {
-                        return res.json(Response.returnSuccess("Update order's status successfully!", {order: savedOrder}));
-                    })
-                    .catch(err => res.json(Response.returnError(err.message, err.code)))
-
-            })
-            .catch(err => res.json(Response.returnError(err.message, err.code)))
-    },
-
-    getSubmittedList(req, res){
-        Order
-            .all({
-                where: {
-                    status: 'Order Submitted',
-                },
-                order: '"updatedAt"'
-            })
-            .then(orders => {
-                res.render('orders/submittedIndex', {orders: orders});
-            })
-            .catch(err => {
-                req.flash('errors', {msg: err.message});
-                res.redirect('/orders/submitted');
-            })
-    },
 
     history(req, res) {
         Order
