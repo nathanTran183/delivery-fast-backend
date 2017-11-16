@@ -130,7 +130,7 @@ module.exports = {
             where: {
                 status: 'Order Submitted'
             },
-            order: '"updatedAt"'
+            order: [['updatedAt', 'DESC']]
         }).then(function (orders) {
             return res.json(Response.returnSuccess("Get submitted order list successfully!", { orders: orders }));
         }).catch(function (err) {
@@ -144,7 +144,7 @@ module.exports = {
                 user_id: req.user.id
             },
             attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
-            order: '"updatedAt"',
+            order: [['updatedAt', 'DESC']],
             include: [{
                 model: Store,
                 as: 'store',
@@ -157,7 +157,7 @@ module.exports = {
                     user_id: req.user.id
                 },
                 attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
-                order: '"updatedAt"',
+                order: [['updatedAt', 'DESC']],
                 include: [{
                     model: Store,
                     as: 'store',

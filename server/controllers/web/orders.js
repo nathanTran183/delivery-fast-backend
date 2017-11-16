@@ -53,7 +53,7 @@ module.exports = {
                 where: {
                     status: 'Order Submitted',
                 },
-                order: '"updatedAt"'
+                order: [['updatedAt']]
             })
             .then(orders => {
                 res.render('orders/submittedIndex', {orders: orders});
@@ -156,7 +156,7 @@ module.exports = {
     list(req, res) {
         Order
             .all({
-                order: '"updatedAt"'
+                order: [['updatedAt', 'DESC']]
             })
             .then(orders => {
                 res.render('orders/submittedIndex', {orders: orders});
