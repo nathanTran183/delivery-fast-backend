@@ -26,7 +26,7 @@ $(document).ready(function () {
     $("#tableListSubmittedOrders").DataTable({
         "ordering": false,
         "ajax": {
-            url: '/api/stores/storeType',
+            url: '/orders/submittedJSON',
             type: 'GET',
             dataSrc: 'data.orders'
         },
@@ -35,35 +35,53 @@ $(document).ready(function () {
             {'data': 'user_name'},
             {'data': 'user_phone'},
             {'data': 'user_address'},
-            {'data': 'order_date'},
-            {'data': 'delivery_date'},
+            {
+                "data": "order_date",
+                "render": function (data) {
+                    let date = new Date(data);
+                    return date.toLocaleString()
+                }
+            },
+            {
+                "data": "delivery_date",
+                "render": function (data) {
+                    let date = new Date(data);
+                    return date.toLocaleString()
+                }
+            },
             {'data': 'ship_fee'},
             {'data': 'total_amount'},
+            {
+                'data': 'id',
+                'render': function (data) {
+                    return "<a href='#' data-toggle='modal' data-id='"+data+"' data-price='<%= product.price %>' title='Edit' class='confirmEditProduct btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>'";
+                },
+            },
         ]
     });
     var tableListStores = $('#tableListStores').DataTable({
-        "drawCallback": function(){
+        "drawCallback": function () {
             loadManyMaps();
         }
     });
 
 
-    $('.confirmChangeUserStatus').click(function(event){
+    $('.confirmChangeUserStatus').click(function (event) {
         $('#form-change-user-status').attr('action', '/users/' + $(this).data('id'));
         $('#confirm-deactive').modal();
     });
 
-    $('.confirmChangeEmployeeStatus').click(function(event){
+    $('.confirmChangeEmployeeStatus').click(function (event) {
         $('#form-change-employee-status').attr('action', '/employees/changeStatus/' + $(this).data('id'));
         $('#confirm-deactive').modal();
     });
 
-    $('.confirmDelStoreType').click(function(event){
+    $('.confirmDelStoreType').click(function (event) {
         $('#form-delete-storeType').attr('action', '/storeTypes/delete/' + $(this).data('id'));
         $('#confirm-del-storeType').modal();
     });
 
-    $('.confirmEditStoreType').click(function(event){
+    $('.confirmEditStoreType').click(function (event) {
         $('#form-edit-storeType #type').val($(this).data('type'));
         $('#form-edit-storeType').attr('action', '/storeTypes/' + $(this).data('id'));
         $('#confirm-edit-storeType').modal();
@@ -81,8 +99,8 @@ $(document).ready(function () {
         showMeridian: false,
     });
 
-    $("#panel-insert-store #image_url").change(function() {
-        if($(this).val()!=''){
+    $("#panel-insert-store #image_url").change(function () {
+        if ($(this).val() != '') {
             readURL(this);
             $('#imageUpload').parent().removeClass('hidden');
         }
@@ -91,8 +109,8 @@ $(document).ready(function () {
         }
     });
 
-    $("#panel-update-store #image_url").change(function() {
-        if($(this).val()!=''){
+    $("#panel-update-store #image_url").change(function () {
+        if ($(this).val() != '') {
             readURL(this);
             $('#imageUpload').parent().removeClass('hidden');
         }
@@ -101,8 +119,8 @@ $(document).ready(function () {
         }
     });
 
-    $("#panel-insert-product #image_url").change(function() {
-        if($(this).val()!=''){
+    $("#panel-insert-product #image_url").change(function () {
+        if ($(this).val() != '') {
             readURL(this);
             $('#imageUpload').parent().removeClass('hidden');
         }
@@ -111,8 +129,8 @@ $(document).ready(function () {
         }
     });
 
-    $("#panel-update-product #image_url").change(function() {
-        if($(this).val()!=''){
+    $("#panel-update-product #image_url").change(function () {
+        if ($(this).val() != '') {
             readURL(this);
             $('#imageUpload').parent().removeClass('hidden');
         }
@@ -123,20 +141,20 @@ $(document).ready(function () {
 
     $('.select2').select2();
 
-    $(".update-form input").keyup(function() {
+    $(".update-form input").keyup(function () {
         $('.update-form #saveBtn').removeAttr('disabled');
         $('.update-form #resetBtn').removeAttr('disabled');
     });
-    $(".update-form input,select").change(function() {
+    $(".update-form input,select").change(function () {
         $('.update-form #saveBtn').removeAttr('disabled');
         $('.update-form #resetBtn').removeAttr('disabled');
     });
-    $(".update-form #resetBtn").click(function() {
+    $(".update-form #resetBtn").click(function () {
         $('.update-form')[0].reset();
         checkRole();
-        if($("#panel-update-store #resetBtn")!= undefined){
-            if($('.update-form #imageUpload')!= undefined || $('.update-form #imageUpload') != null){
-                $('.update-form #imageUpload').prop('src',  $('.update-form #imageUpload').prop('alt'))
+        if ($("#panel-update-store #resetBtn") != undefined) {
+            if ($('.update-form #imageUpload') != undefined || $('.update-form #imageUpload') != null) {
+                $('.update-form #imageUpload').prop('src', $('.update-form #imageUpload').prop('alt'))
             }
             $('#panel-update-store #store_type').val(storetype).trigger('change');
         }
@@ -148,33 +166,33 @@ $(document).ready(function () {
 
     checkRole();
 
-    $('#panel-update-employee input[type=radio][name=role]').change(function() {
-        if(this.value == "Staff"){
+    $('#panel-update-employee input[type=radio][name=role]').change(function () {
+        if (this.value == "Staff") {
             $('#panel-update-employee #radioBusy').parent().hide();
         }
-        if(this.value == "DeliMan"){
+        if (this.value == "DeliMan") {
             $('#panel-update-employee #radioBusy').parent().show();
 
         }
     });
 
-    $('.confirmDelCategory').click(function(event){
+    $('.confirmDelCategory').click(function (event) {
         $('#form-delete-category').attr('action', $('#form-delete-category').attr('action') + "delete/" + $(this).data('id'));
         $('#confirm-del-category').modal();
     });
 
-    $('.confirmEditCategory').click(function(event){
+    $('.confirmEditCategory').click(function (event) {
         $('#form-edit-category #name').val($(this).data('type'));
         $('#form-edit-category').attr('action', $('#form-edit-category').attr('action') + $(this).data('id'));
         $('#confirm-edit-category').modal();
     });
 
-    $('.confirmDelProduct').click(function(event){
+    $('.confirmDelProduct').click(function (event) {
         $('#form-delete-product').attr('action', $('#form-delete-product').attr('action') + "delete/" + $(this).data('id'));
         $('#confirm-del-product').modal();
     });
 
-    $('.confirmEditProduct').click(function(event){
+    $('.confirmEditProduct').click(function (event) {
         $('#form-edit-product #name').val($(this).data('name'));
         $('#form-edit-product #price').val($(this).data('price'));
         $('#form-edit-product #imageUpload').prop('src', $(this).data('img'));
@@ -182,8 +200,8 @@ $(document).ready(function () {
         $('#confirm-edit-product').modal();
     });
 
-    $("#confirm-del-product #image_url").change(function() {
-        if($(this).val()!=''){
+    $("#confirm-del-product #image_url").change(function () {
+        if ($(this).val() != '') {
             readURL(this);
             $('#imageUpload').parent().removeClass('hidden');
         }
@@ -192,24 +210,24 @@ $(document).ready(function () {
         }
     });
 
-    $('.confirmDelAddon').click(function(event){
+    $('.confirmDelAddon').click(function (event) {
         $('#form-delete-addon').attr('action', $('#form-delete-addon').attr('action') + "delete/" + $(this).data('id'));
         $('#confirm-del-addon').modal();
     });
 
-    $('.confirmEditAddon').click(function(event){
+    $('.confirmEditAddon').click(function (event) {
         $('#form-edit-addon #name').val($(this).data('name'));
         $('#form-edit-addon #role').val($(this).data('role'));
         $('#form-edit-addon').attr('action', $('#form-edit-addon').attr('action') + $(this).data('id'));
         $('#confirm-edit-addon').modal();
     });
 
-    $('.confirmDelProductAddon').click(function(event){
+    $('.confirmDelProductAddon').click(function (event) {
         $('#form-delete-productAddon').attr('action', $('#form-delete-productAddon').attr('action') + "delete/" + $(this).data('id'));
         $('#confirm-del-productAddon').modal();
     });
 
-    $('.confirmEditProductAddon').click(function(event){
+    $('.confirmEditProductAddon').click(function (event) {
         $('#form-edit-productAddon #name').val($(this).data('name'));
         $('#form-edit-productAddon #price').val($(this).data('price'));
         let addonVal = $(this).data('addon');
@@ -218,16 +236,16 @@ $(document).ready(function () {
         $('#confirm-edit-productAddon').modal();
     });
 
-    $('#panel-insert-discount #getCode').click(function(e){
+    $('#panel-insert-discount #getCode').click(function (e) {
         $.ajax({
             url: "/discounts/generateCode",
-            success: function(result){
+            success: function (result) {
                 $('#panel-insert-discount #code').val(result);
             }
         });
     });
 
-    $('.confirmDelDiscount').click(function(event){
+    $('.confirmDelDiscount').click(function (event) {
         $('#form-delete-discount').attr('action', "/discounts/" + $(this).data('id'));
         $('#confirm-del-discount').modal();
     });
@@ -239,7 +257,7 @@ function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             $('#imageUpload').attr('src', e.target.result);
         }
 
@@ -248,7 +266,7 @@ function readURL(input) {
 }
 
 function checkRole() {
-    if($('#panel-update-employee #radioStaff').prop('checked')){
+    if ($('#panel-update-employee #radioStaff').prop('checked')) {
         $('#panel-update-employee #radioBusy').parent().hide();
     } else {
         $('#panel-update-employee #radioBusy').parent().show();

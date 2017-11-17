@@ -127,8 +127,11 @@ module.exports = {
                 if (!order) {
                     return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND))
                 }
+                let query = {status: req.body.status};
+                if(req.body.status == "Cancelled" || req.body.status == "Delivered")
+                    query = {status: req.body.status, delivery_date: new Date()}
                 order
-                    .update({status: req.body.status})
+                    .update(query)
                     .then(savedOrder => {
                         return res.json(Response.returnSuccess("Update order's status successfully!", {order: savedOrder}));
                     })

@@ -48,7 +48,7 @@ var associationObject = {
 
 module.exports = {
     getSubmittedList(req, res){
-        res.render('orders/submittedIndex', {orders: orders});
+        res.render('orders/submittedIndex');
     },
 
     getSubmittedListJSON(req, res){

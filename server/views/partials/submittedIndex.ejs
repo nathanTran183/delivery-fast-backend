@@ -61,33 +61,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <% orders.forEach(function(order) { %>
-                            <tr>
-                                <td><%= order.id %></td>
-                                <td><%= order.user_name %></td>
-                                <td><%= order.user_phone %></td>
-                                <td><%= order.user_address %></td>
-
-                                <td>
-                                    <%
-                                        let createdDate = new Date(order.order_date);
-                                        let updatedDate = new Date(order.delivery_date);
-                                    %>
-                                    <%= createdDate.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}) %>
-                                </td>
-                                <td>
-                                    <%= updatedDate.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}) %>
-                                </td>
-                                <td><%= order.ship_fee %></td>
-                                <td><%= order.total_amount %></td>
-
-                                <td>
-                                    <a href="/orders/<%= order.id%>" title="Detail" class="btn-flat btn btn-primary"><span
-                                                class="fa fa-edit" aria-hidden="true"></span>
-                                    </a>
-                                </td>
-                            </tr>
-                            <% }); %>
+                            
                             </tbody>
                         </table>
                     </div>
