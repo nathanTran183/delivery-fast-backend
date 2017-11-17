@@ -26,11 +26,28 @@ $(document).ready(function () {
     $("#tableListSubmittedOrders").DataTable({
         "ordering": false,
         "ajax": {
-            url: '/api/stores/storeType',
+            url: '/orders/submittedJSON',
             type: 'GET',
             dataSrc: 'data.orders'
         },
-        "columns": [{ 'data': 'id' }, { 'data': 'user_name' }, { 'data': 'user_phone' }, { 'data': 'user_address' }, { 'data': 'order_date' }, { 'data': 'delivery_date' }, { 'data': 'ship_fee' }, { 'data': 'total_amount' }]
+        "columns": [{ 'data': 'id' }, { 'data': 'user_name' }, { 'data': 'user_phone' }, { 'data': 'user_address' }, {
+            "data": "order_date",
+            "render": function render(data) {
+                var date = new Date(data);
+                return date.toLocaleString();
+            }
+        }, {
+            "data": "delivery_date",
+            "render": function render(data) {
+                var date = new Date(data);
+                return date.toLocaleString();
+            }
+        }, { 'data': 'ship_fee' }, { 'data': 'total_amount' }, {
+            'data': 'id',
+            'render': function render(data) {
+                return "<a href='#' data-toggle='modal' data-id='" + data + "' data-price='<%= product.price %>' title='Edit' class='confirmEditProduct btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>'";
+            }
+        }]
     });
     var tableListStores = $('#tableListStores').DataTable({
         "drawCallback": function drawCallback() {

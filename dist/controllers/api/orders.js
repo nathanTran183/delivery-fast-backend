@@ -116,7 +116,9 @@ module.exports = {
             if (!order) {
                 return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND));
             }
-            order.update({ status: req.body.status }).then(function (savedOrder) {
+            var query = { status: req.body.status };
+            if (req.body.status == "Cancelled" || req.body.status == "Delivered") query = { status: req.body.status, delivery_date: new Date() };
+            order.update(query).then(function (savedOrder) {
                 return res.json(Response.returnSuccess("Update order's status successfully!", { order: savedOrder }));
             }).catch(function (err) {
                 return res.json(Response.returnError(err.message, err.code));
