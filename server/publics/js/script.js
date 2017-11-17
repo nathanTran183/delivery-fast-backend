@@ -39,14 +39,14 @@ $(document).ready(function () {
                 "data": "order_date",
                 "render": function (data) {
                     let date = new Date(data);
-                    return date.toLocaleString()
+                    return date.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"})
                 }
             },
             {
                 "data": "delivery_date",
                 "render": function (data) {
                     let date = new Date(data);
-                    return date.toLocaleString()
+                    return date.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"})
                 }
             },
             {'data': 'ship_fee'},
