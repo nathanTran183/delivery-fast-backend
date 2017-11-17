@@ -34,13 +34,13 @@ $(document).ready(function () {
             "data": "order_date",
             "render": function render(data) {
                 var date = new Date(data);
-                return date.toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" });
+                return date.toLocaleString();
             }
         }, {
             "data": "delivery_date",
             "render": function render(data) {
                 var date = new Date(data);
-                return date.toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" });
+                return date.toLocaleString();
             }
         }, { 'data': 'ship_fee' }, { 'data': 'total_amount' }, {
             'data': 'id',
