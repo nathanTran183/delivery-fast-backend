@@ -23,7 +23,7 @@ var status = [
     {
         former: 'Confirmed',
         latter: 'Assigned',
-        msg: 'Deliman has been assigned for this order!',
+        msg: 'Order is assigned! Verify order successfully!!',
         url: '/orders/submitted',
     },
     {
@@ -38,4 +38,6 @@ var status = [
         msg: 'Order has been delivered!',
         url: '',
     },
-]
+];
+
+module.exports = status;

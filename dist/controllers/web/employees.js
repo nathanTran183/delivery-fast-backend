@@ -5,6 +5,7 @@
  */
 var Employee = require('../../models/index').Employee;
 var validate = require('../../helpers/validate');
+var Response = require('../../helpers/response');
 module.exports = {
     signIn: function signIn(req, res, next) {
         return res.render('user/signIn');
@@ -201,6 +202,18 @@ module.exports = {
             res.json(error);
         });
     },
+    getDeliMansJSON: function getDeliMansJSON(req, res) {
+        Employee.all({
+            where: {
+                role: 'DeliMan',
+                status: 'Active'
+            }
+        }).then(function (deliMans) {
+            return res.json(Response.returnSuccess("Get Active DeliMans list successfully!", { deliMans: deliMans }));
+        }).catch(function (err) {
+            return res.json(Response.returnError(err.message, err.code));
+        });
+    },
     get: function get(req, res) {
         Employee.findById(req.params.employeeId).then(function (employee) {
             if (!employee) {
@@ -224,13 +237,13 @@ module.exports = {
         req.assert('date_of_birth', 'Date of birth is required').notEmpty();
 
         var errors = req.validationErrors();
-        if (validate.isLetter(req.body.first_name) == false) {
-            errors = validate.addErrorAssert('First name must be characters only', errors);
-        }
-        if (validate.isLetter(req.body.last_name) == false) {
-
-            errors = validate.addErrorAssert('Last name must be characters only', errors);
-        }
+        // if(validate.isLetter(req.body.first_name) == false){
+        //     errors = validate.addErrorAssert('First name must be characters only', errors);
+        // }
+        // if(validate.isLetter(req.body.last_name) == false){
+        //
+        //     errors = validate.addErrorAssert('Last name must be characters only', errors);
+        // }
         if (validate.isLetterNumber(req.body.username) == false) {
             errors = validate.addErrorAssert('Username contains characters and numbers only', errors);
         }
@@ -272,12 +285,12 @@ module.exports = {
         req.assert('phone_number', 'Phone number (length between 10 to 15) is required').len(10, 15);
 
         var errors = req.validationErrors();
-        if (validate.isLetter(req.body.first_name) == false) {
-            errors = validate.addErrorAssert('First name must be characters only', errors);
-        }
-        if (validate.isLetter(req.body.last_name) == false) {
-            errors = validate.addErrorAssert('Last name must be characters only', errors);
-        }
+        // if(validate.isLetter(req.body.first_name) == false){
+        //     errors = validate.addErrorAssert('First name must be characters only', errors);
+        // }
+        // if(validate.isLetter(req.body.last_name) == false){
+        //     errors = validate.addErrorAssert('Last name must be characters only', errors);
+        // }
         if (validate.isLetterNumber(req.body.username) == false) {
             errors = validate.addErrorAssert('Username contains characters and numbers only', errors);
         }

@@ -54,11 +54,50 @@ $(document).ready(function () {
             {
                 'data': 'id',
                 'render': function (data) {
-                    return "<a href='#' data-toggle='modal' data-id='"+data+"' data-price='<%= product.price %>' title='Edit' class='confirmEditProduct btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>'";
+                    return "<a href='#' data-toggle='modal' data-id='"+data+"' title='Process' class='confirmProcessOrder btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>";
                 },
             },
-        ]
+        ],
+        "drawCallback": function(settings, json) {
+            $('.confirmProcessOrder').click(function (event) {
+                $('#form-process-order').attr('action',  "/orders/" + $(this).data('id'));
+                $('#confirm-process-order').modal();
+            });
+        }
     });
+    $("#tableListDeliMans").DataTable({
+        "ordering": false,
+        "ajax": {
+            url: '/employees/deliMansJSON',
+            type: 'GET',
+            dataSrc: 'data.deliMans'
+        },
+        "columns": [
+            {'data': 'id'},
+            {
+                'data': function(data){
+                    return data.last_name + ' ' + data.first_name;
+                },
+                'render': function (data){
+                    return data;
+                }
+            },
+            {'data': 'phone_number'},
+            {
+                'data': 'id',
+                'render': function (data) {
+                    return "<a href='#' data-toggle='modal' data-id='"+data+"' title='Process' class='confirmAssignOrder btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                },
+            },
+        ],
+        "drawCallback": function(settings, json) {
+            $('.confirmAssignOrder').click(function (event) {
+                $('#form-assign-order #deliMan_id').val($(this).data('id'));
+                $('#confirm-assign-order').modal();
+            });
+        }
+    });
+
     var tableListStores = $('#tableListStores').DataTable({
         "drawCallback": function () {
             loadManyMaps();
@@ -227,6 +266,8 @@ $(document).ready(function () {
         $('#confirm-del-productAddon').modal();
     });
 
+
+
     $('.confirmEditProductAddon').click(function (event) {
         $('#form-edit-productAddon #name').val($(this).data('name'));
         $('#form-edit-productAddon #price').val($(this).data('price'));
@@ -246,8 +287,16 @@ $(document).ready(function () {
     });
 
     $('.confirmDelDiscount').click(function (event) {
-        $('#form-delete-discount').attr('action', "/discounts/" + $(this).data('id'));
         $('#confirm-del-discount').modal();
+    });
+
+    $('.confirmConfirmOrder').click(function (event) {
+        $('#confirm-confirm-order').modal();
+    });
+
+    $('.confirmCancelOrder').click(function (event) {
+        $('#form-cancel-order').attr('action',  "/orders/" + $(this).data('id'));
+        $('#confirm-cancel-order').modal();
     });
 
 });

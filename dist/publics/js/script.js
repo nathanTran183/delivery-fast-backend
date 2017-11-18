@@ -45,10 +45,44 @@ $(document).ready(function () {
         }, { 'data': 'ship_fee' }, { 'data': 'total_amount' }, {
             'data': 'id',
             'render': function render(data) {
-                return "<a href='#' data-toggle='modal' data-id='" + data + "' data-price='<%= product.price %>' title='Edit' class='confirmEditProduct btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>'";
+                return "<a href='#' data-toggle='modal' data-id='" + data + "' title='Process' class='confirmProcessOrder btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>";
             }
-        }]
+        }],
+        "drawCallback": function drawCallback(settings, json) {
+            $('.confirmProcessOrder').click(function (event) {
+                $('#form-process-order').attr('action', "/orders/" + $(this).data('id'));
+                $('#confirm-process-order').modal();
+            });
+        }
     });
+    $("#tableListDeliMans").DataTable({
+        "ordering": false,
+        "ajax": {
+            url: '/employees/deliMansJSON',
+            type: 'GET',
+            dataSrc: 'data.deliMans'
+        },
+        "columns": [{ 'data': 'id' }, {
+            'data': function data(_data) {
+                return _data.last_name + ' ' + _data.first_name;
+            },
+            'render': function render(data) {
+                return data;
+            }
+        }, { 'data': 'phone_number' }, {
+            'data': 'id',
+            'render': function render(data) {
+                return "<a href='#' data-toggle='modal' data-id='" + data + "' title='Process' class='confirmAssignOrder btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+            }
+        }],
+        "drawCallback": function drawCallback(settings, json) {
+            $('.confirmAssignOrder').click(function (event) {
+                $('#form-assign-order #deliMan_id').val($(this).data('id'));
+                $('#confirm-assign-order').modal();
+            });
+        }
+    });
+
     var tableListStores = $('#tableListStores').DataTable({
         "drawCallback": function drawCallback() {
             loadManyMaps();
@@ -228,8 +262,16 @@ $(document).ready(function () {
     });
 
     $('.confirmDelDiscount').click(function (event) {
-        $('#form-delete-discount').attr('action', "/discounts/" + $(this).data('id'));
         $('#confirm-del-discount').modal();
+    });
+
+    $('.confirmConfirmOrder').click(function (event) {
+        $('#confirm-confirm-order').modal();
+    });
+
+    $('.confirmCancelOrder').click(function (event) {
+        $('#form-cancel-order').attr('action', "/orders/" + $(this).data('id'));
+        $('#confirm-cancel-order').modal();
     });
 });
 

@@ -3,6 +3,7 @@
  */
 const Employee = require('../../models/index').Employee;
 const validate = require('../../helpers/validate');
+const Response = require('../../helpers/response');
 module.exports = {
 
     signIn (req, res, next) {
@@ -212,6 +213,20 @@ module.exports = {
             });
     },
 
+    getDeliMansJSON(req, res) {
+        Employee
+            .all({
+                where: {
+                    role: 'DeliMan',
+                    status: 'Active'
+                }
+            })
+            .then(deliMans => {
+                return res.json(Response.returnSuccess("Get Active DeliMans list successfully!", {deliMans: deliMans}));
+            })
+            .catch(err => res.json(Response.returnError(err.message, err.code)))
+    },
+
     get(req, res) {
         Employee
             .findById(req.params.employeeId)
@@ -238,13 +253,13 @@ module.exports = {
 
 
         var errors = req.validationErrors();
-        if(validate.isLetter(req.body.first_name) == false){
-            errors = validate.addErrorAssert('First name must be characters only', errors);
-        }
-        if(validate.isLetter(req.body.last_name) == false){
-
-            errors = validate.addErrorAssert('Last name must be characters only', errors);
-        }
+        // if(validate.isLetter(req.body.first_name) == false){
+        //     errors = validate.addErrorAssert('First name must be characters only', errors);
+        // }
+        // if(validate.isLetter(req.body.last_name) == false){
+        //
+        //     errors = validate.addErrorAssert('Last name must be characters only', errors);
+        // }
         if(validate.isLetterNumber(req.body.username) == false){
             errors = validate.addErrorAssert('Username contains characters and numbers only', errors);
         }
@@ -289,12 +304,12 @@ module.exports = {
         req.assert('phone_number', 'Phone number (length between 10 to 15) is required').len(10, 15);
 
         var errors = req.validationErrors();
-        if(validate.isLetter(req.body.first_name) == false){
-            errors = validate.addErrorAssert('First name must be characters only', errors);
-        }
-        if(validate.isLetter(req.body.last_name) == false){
-            errors = validate.addErrorAssert('Last name must be characters only', errors);
-        }
+        // if(validate.isLetter(req.body.first_name) == false){
+        //     errors = validate.addErrorAssert('First name must be characters only', errors);
+        // }
+        // if(validate.isLetter(req.body.last_name) == false){
+        //     errors = validate.addErrorAssert('Last name must be characters only', errors);
+        // }
         if(validate.isLetterNumber(req.body.username) == false){
             errors = validate.addErrorAssert('Username contains characters and numbers only', errors);
         }

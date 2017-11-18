@@ -74,46 +74,22 @@
     </section>
 </div>
 
-<div class="modal fade" id="confirm-edit-storeType" role="dialog">
-    <form method="POST" id="form-edit-storeType" class="form-horizontal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Do you sure to process this order</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="type" class="col-sm-2 control-label">Store type</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="type" name="type"
-                                   placeholder="Store Type">
-                        </div>
-                    </div>
-                    <p>Click on <b>"Yes"</b> to continue, <b>"No"</b> to cancel.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-primary">Yes</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
 
-<div class="modal fade" id="confirm-del-storeType" role="dialog">
-    <form method="POST" id="form-delete-storeType">
+<div class="modal fade" id="confirm-process-order" role="dialog">
+    <form method="POST" id="form-process-order">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Confirm to delete store type?</h3>
+                    <h3>Confirm to process order?</h3>
                 </div>
                 <div class="modal-body">
-                    <input type="text" name="status" id="status" value="Deactivated" hidden="true">
+                    <input type="text" name="status" id="status" value="Processing" hidden="true">
+                    <input type="text" name="employee_id" id="employee_id" hidden="true" value="<%= session.user.id%>">
                     Click on "Yes" to continue, "No" to cancel.
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-danger">Yes</button>
+                    <button type="button" id="exitModal" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
                 </div>
             </div>
         </div>

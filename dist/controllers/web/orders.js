@@ -47,6 +47,19 @@ module.exports = {
     getSubmittedList: function getSubmittedList(req, res) {
         res.render('orders/submittedIndex');
     },
+    getProcessingList: function getProcessingList(req, res) {
+        Order.all({
+            where: {
+                status: { $or: ["Processing", "Confirmed"] },
+                employee_id: req.session.user.id
+            }
+        }).then(function (orders) {
+            res.render('orders/processingIndex', { orders: orders });
+        }).catch(function (err) {
+            req.flash('errors', { msg: err.message });
+            res.redirect('back');
+        });
+    },
     getSubmittedListJSON: function getSubmittedListJSON(req, res) {
         Order.all({
             where: {
@@ -62,7 +75,7 @@ module.exports = {
     update: function update(req, res) {
         if (req.body.status) {
             var statusObj = _.find(orderStatus, { latter: req.body.status });
-            if (!statusObj) {
+            if (statusObj != null && statusObj != undefined) {
                 Order.findById(req.params.orderId, {
                     where: { status: statusObj.former }
                 }).then(function (order) {
@@ -71,7 +84,7 @@ module.exports = {
                         res.redirect('back');
                     }
                     order.update(req.body).then(function () {
-                        req.flash('success', { msg: statusObj.msg });
+                        req.flash('success', statusObj.msg);
                         if (req.body.status == 'Processing' || req.body.status == 'Confirmed') res.redirect(statusObj.url + req.params.orderId);else res.redirect(statusObj.url);
                     }).catch(function (err) {
                         req.flash('errors', { msg: err.message });
@@ -91,7 +104,19 @@ module.exports = {
         }
     },
     getSubmitted: function getSubmitted(req, res) {
-        Order.findById(req.params.orderId, associationObject.where = { status: "Processing" }).then(function (order) {
+        Order.findById(req.params.orderId, {
+            where: { status: "Processing" },
+            include: [{
+                model: OrderDetail,
+                as: 'orderDetails'
+            }, {
+                model: User,
+                as: 'user'
+            }, {
+                model: Store,
+                as: 'store'
+            }]
+        }).then(function (order) {
             if (!order) {
                 req.flash('errors', { msg: "Order not found!" });
                 res.redirect('back');
@@ -108,14 +133,7 @@ module.exports = {
                 req.flash('errors', { msg: "Order not found!" });
                 res.redirect('back');
             }
-            Employee.all({
-                where: { role: "DeliMan" }
-            }).then(function (deliMans) {
-                res.render('orders/confirmedDetail', { orderId: req.params.orderId, deliMans: deliMans });
-            }).catch(function (err) {
-                req.flash('errors', { msg: err.message });
-                res.redirect('back');
-            });
+            res.render('orders/confirmedDetail', { orderId: req.params.orderId });
         }).catch(function (err) {
             req.flash('errors', { msg: err.message });
             res.redirect('back');

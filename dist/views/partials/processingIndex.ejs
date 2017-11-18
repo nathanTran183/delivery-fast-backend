@@ -36,7 +36,7 @@
         %>
 
         <h1>
-            Submitted Order List
+            Processing Orders
         </h1>
         <br>
     </section>
@@ -46,7 +46,7 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-body">
-                        <table id="tableListSubmittedOrders" class="table table-bordered table-striped dataTable">
+                        <table id="tableListProcessingOrders" class="table table-bordered table-striped dataTable">
                             <thead>
                             <tr>
                                 <th>Id</th>
@@ -57,11 +57,41 @@
                                 <th>Delivery Date</th>
                                 <th>Ship fee</th>
                                 <th>Total Amount</th>
+                                <th>Status</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            
+                            <% orders.forEach(function(order){ %>
+                            <tr>
+                                <td><%= order.id %></td>
+                                <td><%= order.user_name %></td>
+                                <td><%= order.user_phone %></td>
+                                <td><%= order.user_address %></td>
+                                <td><%= order.order_date.toLocaleString() %></td>
+                                <td><%= order.delivery_date.toLocaleString() %></td>
+                                <td><%= order.ship_fee %></td>
+                                <td><%= order.total_amount %></td>
+                                <td>
+                                    <% if(order.status == "Processing") { %>
+                                    <span class="label label-warning"><%= order.status %></span>
+                                    <% } else if(order.status == "Confirmed") {%>
+                                    <span class="label label-danger"><%= order.status %></span>
+                                    <%}%>
+                                </td>
+                                <td>
+                                    <% if(order.status == "Processing"){ %>
+                                    <a href='/orders/processing/<%= order.id %>' title='Continue processing'
+                                       class='btn btn-warning btn-flat'><span class='fa fa-edit'
+                                                                              aria-hidden='true'></span></a>
+                                    <% } else if(order.status == "Confirmed") {%>
+                                    <a href='/orders/assigned/<%= order.id %>' title='Assign DeliMan'
+                                       class='btn btn-danger btn-flat'><span class='fa fa-user'
+                                                                              aria-hidden='true'></span></a>
+                                    <%}%>
+                                </td>
+                            </tr>
+                            <% }) %>
                             </tbody>
                         </table>
                     </div>
@@ -84,7 +114,7 @@
                 </div>
                 <div class="modal-body">
                     <input type="text" name="status" id="status" value="Processing" hidden="true">
-                    <input type="text" name="employee_id" id="employee_id" hidden="true" value="<%= session.user.id%>">
+                    <input type="text" name="employee_id" id="employee_id" hidden="true" value="<%= session.user.id %>">
                     Click on "Yes" to continue, "No" to cancel.
                 </div>
                 <div class="modal-footer">
