@@ -36,10 +36,10 @@
         %>
 
         <h1>
-            Process Order
+            Order Detail
         </h1>
         <ol class="breadcrumb">
-            <li><a href="/submitted"><i class="fa fa-building"></i>Submitted Orders</a></li>
+            <li><a href="javascript:history.back()"><i class="fa fa-building"></i>Orders</a></li>
             <li class="active">Order Detail</li>
         </ol>
     </section>
@@ -74,15 +74,35 @@
                     <b>Ship Fee:</b> <%= order.ship_fee %><br>
                     <b>Total Amount:</b> <%= order.total_amount %><br>
                     <b>Payment:</b> <%= order.payment %><br>
-                    <b>Status:</b> <span class="label label-info"><%= order.status %></span>
+                    <b>Status:</b>
+                    <% switch(order.status){
+                    case "Cancelled": %>
+                    <span class="label label-danger"><%= order.status %></span>
+                    <% break; %>
+                    <% case "Delivered": %>
+                    <span class="label label-success"><%= order.status %></span>
+                    <% break; %>
+                    <% case "Assigned": %>
+                    <span class="label label-warning"><%= order.status %></span>
+                    <% break; %>
+                    <% case "Picked": %>
+                    <span class="label label-info"><%= order.status %></span>
+                    <% break; %>
+                    <% } %>
                 </address>
             </div>
             <!-- /.col -->
             <div class="col-sm-4 invoice-col">
                 <h4>Store</h4>
                 <b>Store's Name: </b> <%= order.store.name %><br>
-                <b>Address: </b><%= order.store.address %><br>
-                <b>Phone:</b> <%= order.store.phone_number %>
+                <b>Store's Address: </b><%= order.store.address %><br>
+                <b>Store's Phone:</b> <%= order.store.phone_number %>
+                <% if(order.deliMan) { %>
+                <hr>
+                <b>DeliMan's Id:</b> <%= order.deliMan.id %><br>
+                <b>DeliMan's Name:</b> <%= order.deliMan.last_name + " " + order.deliMan.first_name %><br>
+                <b>DeliMan's Phone:</b> <%= order.deliMan.phone_number %>
+                <%}%>
             </div>
             <!-- /.col -->
         </div>
@@ -117,24 +137,10 @@
                     </tbody>
                 </table>
             </div>
-            <!-- /.col -->
         </div>
         <!-- /.row -->
-
-        <!-- this row will not appear when printing -->
-        <div class="row no-print">
-            <div class="col-xs-12">
-                <button type="button" class="btn btn-success pull-right confirmConfirmOrder" data-toggle='modal'
-                        data-id='<%= order.id %>' title='Confirm'>
-                    <i class="fa fa-check-square"></i> Confirm
-                </button>
-                <button type="button" class="btn btn-danger pull-right confirmCancelOrder" style="margin-right: 5px;"
-                        data-toggle='modal' data-id='<%= order.id %>' title='Cancel'>
-                    <i class="fa fa-minus-circle"></i> Cancel
-                </button>
-            </div>
-        </div>
     </section>
+    <div class="clearfix"></div>
 </div>
 
 <div class="modal fade" id="confirm-confirm-order" role="dialog">

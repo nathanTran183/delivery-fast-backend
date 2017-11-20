@@ -11,10 +11,14 @@ const router = express.Router();
 const expressJwt = require('express-jwt');
 const passport = require('../../middlewares/passport');
 const config = require('../../config/index');
+var schedule = require('node-schedule');
 
-router.get('/', (req, res) => res.status(200).send({
-    message: 'Welcome to the User API!',
-}));
+router.get('/', (req, res) => {
+    var j = schedule.scheduleJob('*/5 * * * * *', function(){
+    console.log('The answer to life, the universe, and everything!');
+    });
+});
+
 router.use('/users', usersRoute);
 router.use('/employees', employeeRoute);
 router.use('/stores', storeRoute);

@@ -85,8 +85,12 @@
                                        class='btn btn-warning btn-flat'><span class='fa fa-edit'
                                                                               aria-hidden='true'></span></a>
                                     <% } else if(order.status == "Confirmed") {%>
+                                    <a href='/orders/<%= order.id %>' title='View Detail'
+                                       class='btn btn-primary btn-flat'><span class='fa fa-search'
+                                                                              aria-hidden='true'></span></a>
+
                                     <a href='/orders/assigned/<%= order.id %>' title='Assign DeliMan'
-                                       class='btn btn-danger btn-flat'><span class='fa fa-user'
+                                       class='btn btn-warning btn-flat'><span class='fa fa-user'
                                                                               aria-hidden='true'></span></a>
                                     <%}%>
                                 </td>

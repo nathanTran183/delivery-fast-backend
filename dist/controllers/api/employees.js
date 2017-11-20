@@ -4,6 +4,8 @@
  * Created by nathan on 16/10/2017.
  */
 var Employee = require('../../models/index').Employee;
+var Order = require('../../models/index').Order;
+var Store = require('../../models/index').Store;
 var config = require('../../config/index');
 var httpStatus = require('http-status');
 var jwt = require('jsonwebtoken');
@@ -13,7 +15,7 @@ module.exports = {
     signIn: function signIn(req, res) {
         Employee.findOne({
             where: {
-                $or: [{ username: req.body.username }, { email: req.body.username }, { phone_number: req.body.phone_number }]
+                $or: [{ username: req.body.username }, { email: req.body.username }, { phone_number: req.body.username }]
             }
         }).then(function (account) {
             if (account != null) account.comparePassword(req.body.password, function (err, result) {

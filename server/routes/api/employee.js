@@ -15,4 +15,5 @@ router.post('/signIn', employeesController.signIn);
 router.get('/profile', [expressJwt({secret: config.jwtSecret}), passport.isDeliManAPI], employeesController.viewProfile);
 router.post('/updateInfo', [expressJwt({secret: config.jwtSecret}), passport.isDeliManAPI], employeesController.updateInfo);
 
+
 module.exports = router;

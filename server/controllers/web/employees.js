@@ -280,7 +280,7 @@ module.exports = {
         }
 
         let employee = Employee.build(req.body);
-        employee.password = "123456";
+        employee.password = "12345678";
         employee.status = "Active";
         employee
             .save()

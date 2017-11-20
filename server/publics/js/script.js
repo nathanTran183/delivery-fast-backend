@@ -65,6 +65,69 @@ $(document).ready(function () {
             });
         }
     });
+    $('#tableListOrderHistory').DataTable({
+        "ajax": {
+            url: '/orders/historyJSON',
+            type: 'GET',
+            dataSrc: 'data.orders'
+        },
+        "order": [],
+        "columns": [
+            {'data': 'id'},
+            {'data': 'user_name'},
+            {
+                'data': 'deliMan',
+                'render': function (data) {
+                    if(data== "" || data == null){
+                        return "";
+                    }
+                    else return data.first_name + " " + data.last_name;
+                }
+            },
+            {
+                "data": "order_date",
+                "render": function (data) {
+                    let date = new Date(data);
+                    return date.toLocaleString()
+                }
+            },
+            {
+                "data": "delivery_date",
+                "render": function (data) {
+                    let date = new Date(data);
+                    return date.toLocaleString()
+                }
+            },
+            {'data': 'ship_fee'},
+            {'data': 'total_amount'},
+            {
+                'data': 'status',
+                'render': function (data) {
+                    switch (data) {
+                        case "Cancelled":
+                            return '<span class="label label-danger">'+data+'</span>';
+                            // break;
+                        case "Delivered":
+                            return '<span class="label label-success">'+data+'</span>';
+                            // break;
+                        case "Picked":
+                            return '<span class="label label-info">'+data+'</span>';
+                            // break;
+                        case "Assigned":
+                            return '<span class="label label-warning">'+data+'</span>';
+                            // break;
+                    }
+                }
+            },
+            {
+                'data': 'id',
+                'render': function (data) {
+                    return "<a href='/orders/"+data+"' title='View Detail' class='btn btn-primary btn-flat'><span class='fa fa-search' aria-hidden='true'></span></a>";
+                },
+            },
+        ],
+    });
+
     $("#tableListDeliMans").DataTable({
         "ordering": false,
         "ajax": {

@@ -19,11 +19,6 @@ var status = [{
     msg: "Order is cancelled!",
     url: '/orders/submitted'
 }, {
-    former: 'Confirmed',
-    latter: 'Assigned',
-    msg: 'Order is assigned! Verify order successfully!!',
-    url: '/orders/submitted'
-}, {
     former: 'Assigned',
     latter: 'Picked',
     msg: 'Deliman picked the package!',

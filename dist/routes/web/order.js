@@ -14,8 +14,9 @@ router.get('/submittedJSON', ordersController.getSubmittedListJSON);
 router.get('/processing', ordersController.getProcessingList);
 router.get('/processing/:orderId', ordersController.getSubmitted);
 router.get('/assigned/:orderId', ordersController.getProcessing);
+router.get('/historyJSON', ordersController.getHistoryJSON);
+router.get('/history', ordersController.history);
 router.post('/:orderId', ordersController.update);
 router.get('/:orderId', ordersController.get);
-router.get('/history', ordersController.history);
 
 module.exports = router;

@@ -116,9 +116,8 @@ module.exports = {
             if (!order) {
                 return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND));
             }
-            var query = { status: req.body.status };
-            if (req.body.status == "Cancelled" || req.body.status == "Delivered") query = { status: req.body.status, delivery_date: new Date() };
-            order.update(query).then(function (savedOrder) {
+            if (req.body.status == "Cancelled" || req.body.status == "Delivered") req.body.delivery_date = new Date();
+            order.update(req.body).then(function (savedOrder) {
                 return res.json(Response.returnSuccess("Update order's status successfully!", { order: savedOrder }));
             }).catch(function (err) {
                 return res.json(Response.returnError(err.message, err.code));
@@ -145,6 +144,41 @@ module.exports = {
                 where: {
                     status: { $notIn: ["Delivered", "Cancelled", "Pending"] },
                     user_id: req.user.id
+                },
+                attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
+                order: [['updatedAt', 'DESC']],
+                include: [{
+                    model: Store,
+                    as: 'store',
+                    attributes: ['name', 'address']
+                }]
+            }).then(function (inComing) {
+                return res.json(Response.returnSuccess("Get order history successfully!", { history: orders, inComing: inComing }));
+            }).catch(function (err) {
+                return res.json(Response.returnError(err.message, err.code));
+            });
+        }).catch(function (err) {
+            return res.json(Response.returnError(err.message, err.code));
+        });
+    },
+    getOrderList: function getOrderList(req, res) {
+        Order.all({
+            where: {
+                status: { $in: ["Cancelled", "Delivered"] },
+                deliMan_id: req.user.id
+            },
+            attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
+            order: [['updatedAt', 'DESC']],
+            include: [{
+                model: Store,
+                as: 'store',
+                attributes: ['name', 'address']
+            }]
+        }).then(function (orders) {
+            Order.all({
+                where: {
+                    status: { $notIn: ["Delivered", "Cancelled", "Pending"] },
+                    deliMan_id: req.user.id
                 },
                 attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
                 order: [['updatedAt', 'DESC']],

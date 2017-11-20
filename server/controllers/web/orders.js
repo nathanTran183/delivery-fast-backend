@@ -55,7 +55,13 @@ module.exports = {
         Order
             .all({
                 where: {
-                    status: {$or: ["Processing","Confirmed"]},
+                    $or: [
+                        {status: "Processing"},
+                        {
+                            status: "Confirmed",
+                            deliMan_id: {$eq: null}
+                        }
+                    ],
                     employee_id: req.session.user.id
                 }
             })
@@ -86,6 +92,14 @@ module.exports = {
         if (req.body.status) {
             let statusObj = _.find(orderStatus, {latter: req.body.status});
             if (statusObj!= null && statusObj!= undefined) {
+                if(req.body.deliMan_id !="" && req.body.deliMan_id!= null){
+                    statusObj = {
+                        former: 'Confirmed',
+                        latter: 'Confirmed',
+                        msg: 'Order is assigned! Verify order successfully!!',
+                        url: '/orders/submitted',
+                    }
+                }
                 Order
                     .findById(req.params.orderId, {
                         where: {status: statusObj.former}
@@ -99,7 +113,7 @@ module.exports = {
                             .update(req.body)
                             .then(() => {
                                 req.flash('success', statusObj.msg);
-                                if(req.body.status == 'Processing' || req.body.status == 'Confirmed')
+                                if(req.body.status == 'Processing' || (req.body.status == 'Confirmed' && (req.body.deliMan_id == "" || req.body.deliMan_id == null) ))
                                     res.redirect(statusObj.url + req.params.orderId);
                                 else res.redirect(statusObj.url);
                             })
@@ -173,25 +187,27 @@ module.exports = {
 
     get(req, res) {
         Order
-            .findById(req.params.orderId,
-                associationObject
-            )
+            .findById(req.params.orderId, associationObject)
             .then(order => {
                 if (!order) {
                     req.flash('errors', {msg: "Order not found!"});
                     res.redirect('back');
                 }
+                res.render('orders/orderDetail', {order: order});
             })
-            .catch(err => Response.returnError(err.message, err.code))
+            .catch(err => {
+                req.flash('errors', {msg: err.message});
+                res.redirect('back');
+            })
     },
 
     list(req, res) {
         Order
             .all({
-                order: [['updatedAt', 'DESC']]
+                order: [['updatedAt', 'DESC']],
             })
             .then(orders => {
-                res.render('orders/submittedIndex', {orders: orders});
+                res.render('orders/orderIndex', {orders: orders});
             })
             .catch(err => {
                 req.flash('errors', {msg: err.message});
@@ -199,18 +215,27 @@ module.exports = {
             })
     },
 
-
-    history(req, res) {
+    getHistoryJSON(req, res) {
         Order
             .all({
                 where: {
-                    status: {$ne: "Pending"},
-                    user_id: req.user.id
-                }
+                    status: {$in: ["Cancelled", "Picked", "Assigned", "Delivered"]},
+                    employee_id: req.session.user.id
+                },
+                include: [
+                    {
+                        model: Employee,
+                        as: 'deliMan'
+                    }
+                ]
             })
             .then(orders => {
                 return res.json(Response.returnSuccess("Get order history successfully!", {orders: orders}));
             })
             .catch(err => res.json(Response.returnError(err.message, err.code)))
+    },
+
+    history(req, res) {
+        res.render('orders/orderHistory');
     }
 }

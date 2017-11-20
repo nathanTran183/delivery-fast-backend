@@ -2,6 +2,8 @@
  * Created by nathan on 16/10/2017.
  */
 const Employee = require('../../models/index').Employee;
+const Order = require('../../models/index').Order;
+const Store = require('../../models/index').Store;
 const config = require('../../config/index');
 const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
@@ -13,7 +15,7 @@ module.exports = {
         Employee
             .findOne({
                 where: {
-                    $or: [{username: req.body.username}, {email: req.body.username}, {phone_number: req.body.phone_number}]
+                    $or: [{username: req.body.username}, {email: req.body.username}, {phone_number: req.body.username}]
                 }
             })
             .then(account => {
@@ -74,5 +76,5 @@ module.exports = {
                 return res.json(Response.returnSuccess("Retrieve employee information successfully!", data));
             })
             .catch(err => res.json(Response.returnError(err.message, err.code)));
-    }
+    },
 }

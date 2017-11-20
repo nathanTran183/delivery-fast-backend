@@ -127,11 +127,10 @@ module.exports = {
                 if (!order) {
                     return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND))
                 }
-                let query = {status: req.body.status};
                 if(req.body.status == "Cancelled" || req.body.status == "Delivered")
-                    query = {status: req.body.status, delivery_date: new Date()}
+                    req.body.delivery_date = new Date();
                 order
-                    .update(query)
+                    .update(req.body)
                     .then(savedOrder => {
                         return res.json(Response.returnSuccess("Update order's status successfully!", {order: savedOrder}));
                     })
@@ -178,4 +177,42 @@ module.exports = {
             })
             .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
+
+    getOrderList(req, res) {
+        Order
+            .all({
+                where: {
+                    status: {$in: ["Cancelled", "Delivered"]},
+                    deliMan_id: req.user.id
+                },
+                attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
+                order: [['updatedAt', 'DESC']],
+                include: [{
+                    model: Store,
+                    as: 'store',
+                    attributes: ['name', 'address']
+                }]
+            })
+            .then(orders => {
+                Order
+                    .all({
+                        where: {
+                            status: {$notIn: ["Delivered", "Cancelled", "Pending"]},
+                            deliMan_id: req.user.id
+                        },
+                        attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
+                        order: [['updatedAt', 'DESC']],
+                        include: [{
+                            model: Store,
+                            as: 'store',
+                            attributes: ['name', 'address']
+                        }]
+                    })
+                    .then(inComing => {
+                        return res.json(Response.returnSuccess("Get order history successfully!", {history: orders, inComing: inComing}));
+                    })
+                    .catch(err => res.json(Response.returnError(err.message, err.code)))
+            })
+            .catch(err => res.json(Response.returnError(err.message, err.code)))
+    }
 }

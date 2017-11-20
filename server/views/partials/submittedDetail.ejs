@@ -39,7 +39,7 @@
             Process Order
         </h1>
         <ol class="breadcrumb">
-            <li><a href="/stores"><i class="fa fa-building"></i>Submitted Orders</a></li>
+            <li><a href="/submitted"><i class="fa fa-building"></i>Submitted Orders</a></li>
             <li class="active">Order Detail</li>
         </ol>
     </section>
@@ -124,10 +124,12 @@
         <!-- this row will not appear when printing -->
         <div class="row no-print">
             <div class="col-xs-12">
-                <button type="button" class="btn btn-success pull-right confirmConfirmOrder"  data-toggle='modal' data-id='<%= order.id%>' title='Confirm'>
+                <button type="button" class="btn btn-success pull-right confirmConfirmOrder" data-toggle='modal'
+                        data-id='<%= order.id %>' title='Confirm'>
                     <i class="fa fa-check-square"></i> Confirm
                 </button>
-                <button type="button" class="btn btn-danger pull-right confirmCancelOrder" style="margin-right: 5px;"  data-toggle='modal' data-id='<%= order.id%>' title='Cancel'>
+                <button type="button" class="btn btn-danger pull-right confirmCancelOrder" style="margin-right: 5px;"
+                        data-toggle='modal' data-id='<%= order.id %>' title='Cancel'>
                     <i class="fa fa-minus-circle"></i> Cancel
                 </button>
             </div>
@@ -136,7 +138,7 @@
 </div>
 
 <div class="modal fade" id="confirm-confirm-order" role="dialog">
-    <form method="POST" id="form-confirm-order" action="/orders/<%=order.id%>">
+    <form method="POST" id="form-confirm-order" action="/orders/<%= order.id %>">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -156,7 +158,7 @@
 </div>
 
 <div class="modal fade" id="confirm-cancel-order" role="dialog">
-    <form method="POST" id="form-cancel-order" action="/orders/<%= order.id%>">
+    <form method="POST" id="form-cancel-order" action="/orders/<%= order.id %>">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

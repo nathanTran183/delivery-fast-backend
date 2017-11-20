@@ -36,7 +36,7 @@
         %>
 
         <h1>
-            Assign DeliMan for order
+            Order History
         </h1>
         <br>
     </section>
@@ -46,12 +46,17 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-body">
-                        <table id="tableListDeliMans" class="table table-bordered table-striped dataTable">
+                        <table id="tableListOrderHistory" class="table table-bordered table-striped dataTable">
                             <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>DeliMan's Name</th>
-                                <th>DeliMan's Phone</th>
+                                <th>User Name</th>
+                                <th>Delivery Man</th>
+                                <th>Order Date</th>
+                                <th>Delivery Date</th>
+                                <th>Ship fee</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -63,28 +68,7 @@
                 </div>
                 <!-- /.box -->
             </div>
+
         </div>
     </section>
-</div>
-
-
-<div class="modal fade" id="confirm-assign-order" role="dialog">
-    <form method="POST" id="form-assign-order" action="/orders/<%= orderId%>">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Confirm to process order?</h3>
-                </div>
-                <div class="modal-body">
-                    <input type="text" name="status" id="status" value="Confirmed" hidden="true">
-                    <input type="text" name="deliMan_id" id="deliMan_id" hidden="true">
-                    Click on "Yes" to continue, "No" to cancel.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="exitModal" class="btn btn-danger" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-primary">Yes</button>
-                </div>
-            </div>
-        </div>
-    </form>
 </div>
