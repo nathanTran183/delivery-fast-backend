@@ -81,7 +81,7 @@ module.exports = {
         });
     },
     search: function search(req, res) {
-        var querySearch = req.query.text;
+        var querySearch = req.query.search;
         Store.all({
             include: [{
                 model: StoreType,
@@ -92,7 +92,10 @@ module.exports = {
                 model: Category,
                 as: 'categories',
                 include: [{ model: Product, as: 'products' }, { model: Addon, as: 'addons', include: [{ model: ProductAddon, as: 'productAddons' }] }]
-            }]
+            }],
+            where: {
+                $or: [{ name: { $ilike: '%' + querySearch + '%' } }, { '$storeTypes.type$': { $ilike: '%' + querySearch + '%' } }, { '$categories.name$': { $ilike: '%' + querySearch + '%' } }, { '$categories.products.name$': { $ilike: '%' + querySearch + '%' } }]
+            }
         }).then(function (stores) {
             res.json(stores);
         }).catch(function (err) {

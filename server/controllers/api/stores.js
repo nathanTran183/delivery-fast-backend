@@ -93,22 +93,31 @@ module.exports = {
     },
 
     search(req, res) {
-        let querySearch = req.query.text;
+        let querySearch = req.query.search;
         Store
             .all(
                 {
-                    include: [{
-                        model: StoreType,
-                        as: 'storeTypes',
-                        attributes: ['id', 'type'],
-                        through: {attributes: []}
-                    }, {
-                        model: Category,
-                        as: 'categories',
-                        include: [
-                            {model: Product, as: 'products'},
-                            {model: Addon, as: 'addons', include: [{model: ProductAddon, as: 'productAddons'}]}]
-                    }]
+                    include: [
+                        {
+                            model: StoreType,
+                            as: 'storeTypes',
+                            attributes: ['id', 'type'],
+                            through: {attributes: []}
+                        },
+                        {
+                            model: Category,
+                            as: 'categories',
+                            include: [
+                                {model: Product, as: 'products'},
+                                {model: Addon, as: 'addons', include: [{model: ProductAddon, as: 'productAddons'}]}]
+                        }],
+                    where: {
+                        $or: [{name: {$ilike: '%' + querySearch + '%'}},
+                            {'$storeTypes.type$': {$ilike: `%${querySearch}%`}},
+                            {'$categories.name$': {$ilike: `%${querySearch}%`}},
+                            {'$categories.products.name$': {$ilike: `%${querySearch}%`}},
+                        ]
+                    },
                 }
             )
             .then(stores => {
@@ -123,7 +132,7 @@ module.exports = {
         console.log('aaa');
         StoreType
             .all()
-            .then(storeType => res.json(Response.returnSuccess("okay",{stores: storeType})))
+            .then(storeType => res.json(Response.returnSuccess("okay", {stores: storeType})))
             .catch(err => res.json(err))
     }
 

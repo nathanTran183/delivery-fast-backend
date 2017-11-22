@@ -24,7 +24,7 @@ module.exports = {
     create: function create(req, res) {
         var storage = multer.diskStorage({
             destination: function destination(req, file, callback) {
-                callback(null, 'server/publics/uploads');
+                callback(null, path.join(__dirname, '../../publics/uploads/'));
             },
             filename: function filename(req, file, callback) {
                 callback(null, req.body.name.replace(/\s/g, '') + '-' + Date.now() + path.extname(file.originalname));
@@ -74,7 +74,7 @@ module.exports = {
     update: function update(req, res) {
         var storage = multer.diskStorage({
             destination: function destination(req, file, callback) {
-                callback(null, 'server/publics/uploads');
+                callback(null, path.join(__dirname, '../../publics/uploads/'));
             },
             filename: function filename(req, file, callback) {
                 callback(null, req.body.name.replace(/\s/g, '') + '-' + Date.now() + path.extname(file.originalname));
