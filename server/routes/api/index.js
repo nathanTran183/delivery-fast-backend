@@ -5,6 +5,7 @@ const usersRoute = require('./user');
 const employeeRoute = require('./employee');
 const storeRoute = require('./store');
 const orderRoute = require('./order');
+const socketRoute = require('./socket');
 const discountRoute = require('./discount');
 const express = require('express');
 const router = express.Router();
@@ -24,5 +25,6 @@ router.use('/employees', employeeRoute);
 router.use('/stores', storeRoute);
 router.use('/discounts', discountRoute);
 router.use('/orders', orderRoute);
+router.use('/socket', socketRoute);
 
 module.exports = router;
