@@ -121,10 +121,10 @@ module.exports = {
                 }
             )
             .then(stores => {
-                res.json(stores);
+                res.json(Response.returnSuccess("Search store successfully!", {stores: stores}));
             })
             .catch(err => {
-                res.json(err);
+                res.json(Response.returnError(err.message, err.code));
             })
     },
 

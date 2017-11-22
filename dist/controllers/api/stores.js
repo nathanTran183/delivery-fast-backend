@@ -97,9 +97,9 @@ module.exports = {
                 $or: [{ name: { $ilike: '%' + querySearch + '%' } }, { '$storeTypes.type$': { $ilike: '%' + querySearch + '%' } }, { '$categories.name$': { $ilike: '%' + querySearch + '%' } }, { '$categories.products.name$': { $ilike: '%' + querySearch + '%' } }]
             }
         }).then(function (stores) {
-            res.json(stores);
+            res.json(Response.returnSuccess("Search store successfully!", { stores: stores }));
         }).catch(function (err) {
-            res.json(err);
+            res.json(Response.returnError(err.message, err.code));
         });
     },
     testing: function testing(req, res) {
