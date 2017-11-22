@@ -1,21 +1,27 @@
 const http = require('http');
 const app = require('./config/express'); // The express app we just created
-const config = require('./config/index');
+const {port} = require('./config/index');
 
-const port = parseInt(config.port, 10) || 8000;
-app.set('port', port);
+import Redis from 'socket.io-redis';
+import Emitter from 'socket.io-emitter';
 
-const server = http.createServer(app);
-const io = require('socket.io')(server);
-global.io = io;
+const server = http.createServer(app).listen(port || 1000, () => {
+    console.log(`App listening on ${port}!`);
+});
 
-io.on('connection', function(socket) {
-    console.log('a user connected');
-    socket.on('chat message', function(msg){
-        console.log('message: ' + msg);
+const ios = require('socket.io')(server);
+ios.adapter(Redis({"host": "127.0.0.1", "port": 6379}));
+ios
+    .of('/delivery')
+    .on('connection', (socket) => {
+    console.log('Connected');
+    socket.on('disconnect', async () => {
+        console.log('Disconnected');
     });
 });
 
-server.listen(port,function(){
-    console.log('Server start on port ' + port);
+const emitter = new Emitter({
+    "host": "127.0.0.1",
+    "port": 6379
 });
+global.emitter = emitter.of('/delivery');

@@ -8,6 +8,7 @@ const employees = require('./employees');
 const stores = require('./stores');
 const orders = require('./orders');
 const discounts = require('./discounts');
+const socket = require('./socket');
 
 module.exports = {
     users,
@@ -16,5 +17,6 @@ module.exports = {
     employees,
     stores,
     orders,
-    discounts
+    discounts,
+    socket
 };
