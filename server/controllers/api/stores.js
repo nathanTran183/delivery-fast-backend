@@ -112,6 +112,7 @@ module.exports = {
                                 {model: Addon, as: 'addons', include: [{model: ProductAddon, as: 'productAddons'}]}]
                         }],
                     where: {
+                        status: true,
                         $or: [{name: {$ilike: '%' + querySearch + '%'}},
                             {'$storeTypes.type$': {$ilike: `%${querySearch}%`}},
                             {'$categories.name$': {$ilike: `%${querySearch}%`}},
@@ -121,6 +122,7 @@ module.exports = {
                 }
             )
             .then(stores => {
+                console.log(stores);
                 res.json(Response.returnSuccess("Search store successfully!", {stores: stores}));
             })
             .catch(err => {

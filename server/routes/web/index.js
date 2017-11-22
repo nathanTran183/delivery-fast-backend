@@ -17,7 +17,9 @@ const express = require('express');
 const passport = require('../../middlewares/passport');
 const router = express.Router();
 
-router.get('/', (req, res) => res.send(res.sendFile('/uploads/image1.jpg')));
+router.get('/', passport.notUserWeb, function (req, res) {
+    res.render('index');
+});
 router.use('/users', passport.notUserWeb, usersRoute);
 router.use('/employees', employeeRoute);
 router.use('/stores', passport.isAdminWeb, storeRoute);
