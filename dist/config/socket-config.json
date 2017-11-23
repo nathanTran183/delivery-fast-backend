@@ -1,0 +1,13 @@
+{
+  "development": {
+    "host": "127.0.0.1",
+    "port": "6379"
+  },
+  "test": {
+    "host": "127.0.0.1",
+    "port": "6379"
+  },
+  "production": {
+    "uri": "redis://h:pcd4001274e425e60dfd72145fd74aced5aab17cff3f805e7e31e38ebeb41a586@ec2-34-236-115-251.compute-1.amazonaws.com:43759"
+  }
+}
