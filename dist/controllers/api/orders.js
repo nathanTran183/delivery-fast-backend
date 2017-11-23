@@ -36,9 +36,7 @@ var associationObject = {
     }, {
         model: Employee,
         as: 'deliMan'
-    }], attributes: {
-        exclude: ['user_id', 'store_id', 'employee_id', 'deliMan_id']
-    }
+    }]
 };
 
 module.exports = {
@@ -99,6 +97,7 @@ module.exports = {
                 return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND));
             }
             if (req.body.status == "Cancelled" || req.body.status == "Delivered") req.body.delivery_date = new Date();
+            if (req.body.deliMan_id == "") req.body.deliMan_id = null;
             order.update(req.body).then(function (savedOrder) {
                 if (savedOrder.status == "Order Submitted") {
                     emitter.emit('reloadSubmittedOrder', { msg: 'Reload submitted order' });

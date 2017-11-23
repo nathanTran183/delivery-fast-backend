@@ -37,9 +37,7 @@ var associationObject = {
     }, {
         model: Employee,
         as: 'deliMan'
-    },], attributes: {
-        exclude: ['user_id', 'store_id', 'employee_id', 'deliMan_id']
-    }
+    },]
 };
 
 module.exports = {
@@ -113,6 +111,8 @@ module.exports = {
                 }
                 if (req.body.status == "Cancelled" || req.body.status == "Delivered")
                     req.body.delivery_date = new Date();
+                if (req.body.deliMan_id == "")
+                    req.body.deliMan_id = null;
                 order
                     .update(req.body)
                     .then(savedOrder => {

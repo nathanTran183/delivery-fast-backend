@@ -41,9 +41,7 @@ var associationObject = {
             model: Employee,
             as: 'deliMan'
         }
-    ], attributes: {
-        exclude: ['user_id', 'store_id', 'employee_id', 'deliMan_id']
-    }
+    ]
 };
 
 module.exports = {
@@ -52,25 +50,7 @@ module.exports = {
     },
 
     getProcessingList(req, res) {
-        Order
-            .all({
-                where: {
-                    $or: [
-                        {status: "Processing"},
-                        {
-                            status: "Confirmed",
-                        }
-                    ],
-                    employee_id: req.session.user.id
-                }
-            })
-            .then(orders => {
-                res.render('orders/processingIndex', {orders: orders});
-            })
-            .catch(err => {
-                req.flash('errors', {msg: err.message});
-                res.redirect('back');
-            })
+        res.render('orders/processingIndex');
     },
 
     getSubmittedListJSON(req, res){
@@ -87,11 +67,32 @@ module.exports = {
             .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
 
+    getProcessingListJSON(req, res){
+        Order
+            .all({
+                where: {
+                    $or: [
+                        {status: "Processing"},
+                        {
+                            status: "Confirmed",
+                        }
+                    ],
+                    employee_id: req.session.user.id
+                },
+                order: [['updatedAt']]
+
+            })
+            .then(orders => {
+                return res.json(Response.returnSuccess("Get submitted order list successfully!", {orders: orders}));
+            })
+            .catch(err => res.json(Response.returnError(err.message, err.code)))
+    },
+
     update(req, res) {
         if (req.body.status) {
             let statusObj = _.find(orderStatus, {latter: req.body.status});
-            if (statusObj!= null && statusObj!= undefined) {
-                if(req.body.deliMan_id !="" && req.body.deliMan_id!= null){
+            if (statusObj != null && statusObj != undefined) {
+                if (req.body.deliMan_id != "" && req.body.deliMan_id != null) {
                     statusObj = {
                         former: 'Confirmed',
                         latter: 'Confirmed',
@@ -112,7 +113,7 @@ module.exports = {
                             .update(req.body)
                             .then(() => {
                                 req.flash('success', statusObj.msg);
-                                if(req.body.status == 'Processing' || (req.body.status == 'Confirmed' && (req.body.deliMan_id == "" || req.body.deliMan_id == null) ))
+                                if (req.body.status == 'Processing' || (req.body.status == 'Confirmed' && (req.body.deliMan_id == "" || req.body.deliMan_id == null) ))
                                     res.redirect(statusObj.url + req.params.orderId);
                                 else res.redirect(statusObj.url);
                             })

@@ -38,9 +38,7 @@ var associationObject = {
     }, {
         model: Employee,
         as: 'deliMan'
-    }], attributes: {
-        exclude: ['user_id', 'store_id', 'employee_id', 'deliMan_id']
-    }
+    }]
 };
 
 module.exports = {
@@ -48,19 +46,7 @@ module.exports = {
         res.render('orders/submittedIndex');
     },
     getProcessingList: function getProcessingList(req, res) {
-        Order.all({
-            where: {
-                $or: [{ status: "Processing" }, {
-                    status: "Confirmed"
-                }],
-                employee_id: req.session.user.id
-            }
-        }).then(function (orders) {
-            res.render('orders/processingIndex', { orders: orders });
-        }).catch(function (err) {
-            req.flash('errors', { msg: err.message });
-            res.redirect('back');
-        });
+        res.render('orders/processingIndex');
     },
     getSubmittedListJSON: function getSubmittedListJSON(req, res) {
         Order.all({
@@ -68,6 +54,22 @@ module.exports = {
                 status: 'Order Submitted'
             },
             order: [['updatedAt']]
+        }).then(function (orders) {
+            return res.json(Response.returnSuccess("Get submitted order list successfully!", { orders: orders }));
+        }).catch(function (err) {
+            return res.json(Response.returnError(err.message, err.code));
+        });
+    },
+    getProcessingListJSON: function getProcessingListJSON(req, res) {
+        Order.all({
+            where: {
+                $or: [{ status: "Processing" }, {
+                    status: "Confirmed"
+                }],
+                employee_id: req.session.user.id
+            },
+            order: [['updatedAt']]
+
         }).then(function (orders) {
             return res.json(Response.returnSuccess("Get submitted order list successfully!", { orders: orders }));
         }).catch(function (err) {

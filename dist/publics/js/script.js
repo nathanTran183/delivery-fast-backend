@@ -110,6 +110,57 @@ $(document).ready(function () {
         }]
     });
 
+    var tableListProcessingOrders = $('#tableListProcessingOrders').DataTable({
+        "ajax": {
+            url: '/orders/processingJSON',
+            type: 'GET',
+            dataSrc: 'data.orders'
+        },
+        "order": [],
+        "columns": [{ 'data': 'id', 'orderable': false }, { 'data': 'user_name' }, { 'data': 'user_phone' }, { 'data': 'user_address' }, {
+            "data": "order_date",
+            "render": function render(data) {
+                var date = new Date(data);
+                return date.toLocaleString();
+            }
+        }, {
+            "data": "delivery_date",
+            "render": function render(data) {
+                var date = new Date(data);
+                return date.toLocaleString();
+            }
+        }, { 'data': 'ship_fee' }, { 'data': 'total_amount' }, {
+            'orderable': false,
+            'data': 'status',
+            'render': function render(data) {
+                switch (data) {
+                    case "Processing":
+                        return '<span class="label label-warning">' + data + '</span>';
+                    // break;
+                    case "Confirmed":
+                        return '<span class="label label-danger">' + data + '</span>';
+                    // break;
+                }
+            }
+        }, {
+            'data': function data(_data) {
+                return _data;
+            },
+            'orderable': false,
+            'render': function render(data) {
+                if (data.status == "Processing") {
+                    return '<a href="/orders/processing/' + data.id + '" title="Continue processing" class="btn btn-warning btn-flat">' + '<span class="fa fa-edit" aria-hidden="true"></span></a>';
+                } else if (data.status == "Confirmed") {
+                    if (data.deliMan_id == null || data.deliMan_id == "") {
+                        return '<a href="/orders/' + data.id + '" title="View Detail" class="btn btn-primary btn-flat">' + '<span class="fa fa-search" aria-hidden="true"></span></a> <a href="/orders/assigned/' + data.id + '" title="Assign DeliMan" class="btn btn-warning btn-flat">' + '<span class="fa fa-user" aria-hidden="true"></span></a>';
+                    } else {
+                        return '<a href="/orders/' + data.id + '" title="View Detail" class="btn btn-primary btn-flat">' + '<span class="fa fa-search" aria-hidden="true"></span></a>';
+                    }
+                }
+            }
+        }]
+    });
+
     var tableListDeliMans = $("#tableListDeliMans").DataTable({
         "ordering": false,
         "ajax": {
@@ -118,8 +169,8 @@ $(document).ready(function () {
             dataSrc: 'data.deliMans'
         },
         "columns": [{ 'data': 'id' }, {
-            'data': function data(_data) {
-                return _data.last_name + ' ' + _data.first_name;
+            'data': function data(_data2) {
+                return _data2.last_name + ' ' + _data2.first_name;
             },
             'render': function render(data) {
                 return data;
@@ -350,6 +401,7 @@ $(document).ready(function () {
 
     socket.on('reloadPendingOrder', function (data) {
         alert(data.msg);
+        tableListProcessingOrders.ajax.reload();
     });
 });
 

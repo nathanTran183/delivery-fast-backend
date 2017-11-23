@@ -55,13 +55,13 @@ $(document).ready(function () {
                 'data': 'id',
                 'orderable': false,
                 'render': function (data) {
-                    return "<a href='#' data-toggle='modal' data-id='"+data+"' title='Process' class='confirmProcessOrder btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    return "<a href='#' data-toggle='modal' data-id='" + data + "' title='Process' class='confirmProcessOrder btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>";
                 },
             },
         ],
-        "drawCallback": function(settings, json) {
+        "drawCallback": function (settings, json) {
             $('.confirmProcessOrder').click(function (event) {
-                $('#form-process-order').attr('action',  "/orders/" + $(this).data('id'));
+                $('#form-process-order').attr('action', "/orders/" + $(this).data('id'));
                 $('#confirm-process-order').modal();
             });
         }
@@ -74,12 +74,12 @@ $(document).ready(function () {
         },
         "order": [],
         "columns": [
-            {'data': 'id', 'orderable':false},
+            {'data': 'id', 'orderable': false},
             {'data': 'user_name'},
             {
                 'data': 'deliMan',
                 'render': function (data) {
-                    if(data== "" || data == null){
+                    if (data == "" || data == null) {
                         return "";
                     }
                     else return data.first_name + " " + data.last_name;
@@ -107,17 +107,17 @@ $(document).ready(function () {
                 'render': function (data) {
                     switch (data) {
                         case "Cancelled":
-                            return '<span class="label label-danger">'+data+'</span>';
-                            // break;
+                            return '<span class="label label-danger">' + data + '</span>';
+                        // break;
                         case "Delivered":
-                            return '<span class="label label-success">'+data+'</span>';
-                            // break;
+                            return '<span class="label label-success">' + data + '</span>';
+                        // break;
                         case "Picked":
-                            return '<span class="label label-info">'+data+'</span>';
-                            // break;
+                            return '<span class="label label-info">' + data + '</span>';
+                        // break;
                         case "Assigned":
-                            return '<span class="label label-warning">'+data+'</span>';
-                            // break;
+                            return '<span class="label label-warning">' + data + '</span>';
+                        // break;
                     }
                 }
             },
@@ -125,7 +125,74 @@ $(document).ready(function () {
                 'data': 'id',
                 'orderable': false,
                 'render': function (data) {
-                    return "<a href='/orders/"+data+"' title='View Detail' class='btn btn-primary btn-flat'><span class='fa fa-search' aria-hidden='true'></span></a>";
+                    return "<a href='/orders/" + data + "' title='View Detail' class='btn btn-primary btn-flat'><span class='fa fa-search' aria-hidden='true'></span></a>";
+                },
+            },
+        ],
+    });
+
+    var tableListProcessingOrders = $('#tableListProcessingOrders').DataTable({
+        "ajax": {
+            url: '/orders/processingJSON',
+            type: 'GET',
+            dataSrc: 'data.orders'
+        },
+        "order": [],
+        "columns": [
+            {'data': 'id', 'orderable': false},
+            {'data': 'user_name'},
+            {'data': 'user_phone'},
+            {'data': 'user_address'},
+            {
+                "data": "order_date",
+                "render": function (data) {
+                    let date = new Date(data);
+                    return date.toLocaleString()
+                }
+            },
+            {
+                "data": "delivery_date",
+                "render": function (data) {
+                    let date = new Date(data);
+                    return date.toLocaleString()
+                }
+            },
+            {'data': 'ship_fee'},
+            {'data': 'total_amount'},
+            {
+                'orderable': false,
+                'data': 'status',
+                'render': function (data) {
+                    switch (data) {
+                        case "Processing":
+                            return '<span class="label label-warning">' + data + '</span>';
+                        // break;
+                        case "Confirmed":
+                            return '<span class="label label-danger">' + data + '</span>';
+                        // break;
+                    }
+                }
+            },
+            {
+                'data': function (data) {
+                    return data;
+                },
+                'orderable': false,
+                'render': function (data) {
+                    if (data.status == "Processing") {
+                        return '<a href="/orders/processing/' + data.id + '" title="Continue processing" class="btn btn-warning btn-flat">' +
+                            '<span class="fa fa-edit" aria-hidden="true"></span></a>'
+                    } else if (data.status == "Confirmed") {
+                        if (data.deliMan_id == null || data.deliMan_id == "") {
+                            return '<a href="/orders/'+ data.id +'" title="View Detail" class="btn btn-primary btn-flat">' +
+                            '<span class="fa fa-search" aria-hidden="true"></span></a> <a href="/orders/assigned/'+ data.id +'" title="Assign DeliMan" class="btn btn-warning btn-flat">' +
+                                '<span class="fa fa-user" aria-hidden="true"></span></a>'
+                        }
+                        else {
+                            return '<a href="/orders/'+ data.id +'" title="View Detail" class="btn btn-primary btn-flat">' +
+                                '<span class="fa fa-search" aria-hidden="true"></span></a>';
+                        }
+                    }
                 },
             },
         ],
@@ -141,10 +208,10 @@ $(document).ready(function () {
         "columns": [
             {'data': 'id'},
             {
-                'data': function(data){
+                'data': function (data) {
                     return data.last_name + ' ' + data.first_name;
                 },
-                'render': function (data){
+                'render': function (data) {
                     return data;
                 }
             },
@@ -152,11 +219,11 @@ $(document).ready(function () {
             {
                 'data': 'id',
                 'render': function (data) {
-                    return "<a href='#' data-toggle='modal' data-id='"+data+"' title='Process' class='confirmAssignOrder btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    return "<a href='#' data-toggle='modal' data-id='" + data + "' title='Process' class='confirmAssignOrder btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>";
                 },
             },
         ],
-        "drawCallback": function(settings, json) {
+        "drawCallback": function (settings, json) {
             $('.confirmAssignOrder').click(function (event) {
                 $('#form-assign-order #deliMan_id').val($(this).data('id'));
                 $('#confirm-assign-order').modal();
@@ -333,7 +400,6 @@ $(document).ready(function () {
     });
 
 
-
     $('.confirmEditProductAddon').click(function (event) {
         $('#form-edit-productAddon #name').val($(this).data('name'));
         $('#form-edit-productAddon #price').val($(this).data('price'));
@@ -361,12 +427,12 @@ $(document).ready(function () {
     });
 
     $('.confirmCancelOrder').click(function (event) {
-        $('#form-cancel-order').attr('action',  "/orders/" + $(this).data('id'));
+        $('#form-cancel-order').attr('action', "/orders/" + $(this).data('id'));
         $('#confirm-cancel-order').modal();
     });
 
     // socket function
-    var socket = io($(location).attr('host')+'/delivery');
+    var socket = io($(location).attr('host') + '/delivery');
 
     socket.on('connect', function () {
         console.log('Client connected');
@@ -386,6 +452,7 @@ $(document).ready(function () {
 
     socket.on('reloadPendingOrder', function (data) {
         alert(data.msg);
+        tableListProcessingOrders.ajax.reload();
     });
 });
 
