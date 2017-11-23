@@ -15,6 +15,7 @@ module.exports = {
         Employee
             .findOne({
                 where: {
+                    role: "DeliMan",
                     $or: [{username: req.body.username}, {email: req.body.username}, {phone_number: req.body.username}]
                 }
             })
@@ -55,6 +56,25 @@ module.exports = {
                         let data = {
                             user: savedUser
                         }
+                        return res.json(Response.returnSuccess("Update information successfully", data));
+                    })
+                    .catch(err => res.json(Response.returnError(err.message, err.code)))
+            })
+            .catch(err => res.json(Response.returnError(err.message, err.code)));
+    },
+
+    updateStatus(req, res) {
+        let user = req.user;
+        Employee
+            .findById(user.id)
+            .then((deliMan) => {
+                deliMan
+                    .update(req.body)
+                    .then(savedUser => {
+                            emitter.emit('reloadActiveDeliMan', {msg: 'Reload deliman'});
+                        let data = {
+                            user: savedUser
+                        };
                         return res.json(Response.returnSuccess("Update information successfully", data));
                     })
                     .catch(err => res.json(Response.returnError(err.message, err.code)))

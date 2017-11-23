@@ -59,7 +59,6 @@ module.exports = {
                         {status: "Processing"},
                         {
                             status: "Confirmed",
-                            deliMan_id: {$eq: null}
                         }
                     ],
                     employee_id: req.session.user.id

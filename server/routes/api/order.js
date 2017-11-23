@@ -13,7 +13,7 @@ router.get('/history', [expressJwt({secret: config.jwtSecret}), passport.isUserA
 router.get('/deliMan', [expressJwt({secret: config.jwtSecret}), passport.isDeliManAPI], ordersController.getOrderList);
 router.put('/updateStatusEmp/:orderId', [expressJwt({secret: config.jwtSecret}), passport.isDeliManAPI], ordersController.updateStatus);
 router.put('/updateStatusUser/:orderId', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], ordersController.updateStatus);
-router.get('/:orderId', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], ordersController.get);
+router.get('/:orderId', [expressJwt({secret: config.jwtSecret}), passport.isAppAPI], ordersController.get);
 router.put('/:orderId', [expressJwt({secret: config.jwtSecret}), passport.isUserAPI], ordersController.updateClient);
 
 

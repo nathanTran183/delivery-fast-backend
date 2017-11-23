@@ -64,22 +64,6 @@ module.exports = {
             .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
 
-    // create(req, res) {
-    //     req.body.user_id = req.user.id;
-    //     Order
-    //         .create(req.body, {
-    //             include: [{
-    //                 model: OrderDetail,
-    //                 as: 'orderDetails'
-    //             }]
-    //         })
-    //         .then(order => {
-    //             res.json(order)
-    //         })
-    //         .catch(err => res.json(Response.returnError(err.message, err.code)))
-    //
-    // },
-
     updateClient(req, res) {
         Order
             .findById(req.params.orderId)
@@ -127,11 +111,17 @@ module.exports = {
                 if (!order) {
                     return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND))
                 }
-                if(req.body.status == "Cancelled" || req.body.status == "Delivered")
+                if (req.body.status == "Cancelled" || req.body.status == "Delivered")
                     req.body.delivery_date = new Date();
                 order
                     .update(req.body)
                     .then(savedOrder => {
+                        if (savedOrder.status == "Order Submitted") {
+                            emitter.emit('reloadSubmittedOrder', {msg: 'Reload submitted order'});
+                        }
+                        if (savedOrder.status == "Confirmed" && savedOrder.deliMan_id == null) {
+                            emitter.emit('reloadPendingOrder', {msg: 'DeliMan cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman'});
+                        }
                         return res.json(Response.returnSuccess("Update order's status successfully!", {order: savedOrder}));
                     })
                     .catch(err => res.json(Response.returnError(err.message, err.code)))
@@ -141,12 +131,22 @@ module.exports = {
     },
 
     history(req, res) {
+        let historyWhere = {
+            status: {$in: ["Cancelled", "Delivered"]},
+            user_id: req.user.id,
+        };
+        let inComingWhere = {
+            status: {$notIn: ["Delivered", "Cancelled", "Pending"]},
+            user_id: req.user.id
+        };
+        if (req.query.startDate && req.query.endDate) {
+            req.query.endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
+            historyWhere.delivery_date = {$gt: req.query.startDate, $lt: req.query.endDate};
+            inComingWhere.delivery_date = {$gt: req.query.startDate, $lt: req.query.endDate};
+        }
         Order
             .all({
-                where: {
-                    status: {$in: ["Cancelled", "Delivered"]},
-                    user_id: req.user.id
-                },
+                where: historyWhere,
                 attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
                 order: [['updatedAt', 'DESC']],
                 include: [{
@@ -158,10 +158,7 @@ module.exports = {
             .then(orders => {
                 Order
                     .all({
-                        where: {
-                            status: {$notIn: ["Delivered", "Cancelled", "Pending"]},
-                            user_id: req.user.id
-                        },
+                        where: inComingWhere,
                         attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
                         order: [['updatedAt', 'DESC']],
                         include: [{
@@ -171,7 +168,10 @@ module.exports = {
                         }]
                     })
                     .then(inComing => {
-                        return res.json(Response.returnSuccess("Get order history successfully!", {history: orders, inComing: inComing}));
+                        return res.json(Response.returnSuccess("Get order history successfully!", {
+                            history: orders,
+                            inComing: inComing
+                        }));
                     })
                     .catch(err => res.json(Response.returnError(err.message, err.code)))
             })
@@ -179,12 +179,22 @@ module.exports = {
     },
 
     getOrderList(req, res) {
+        let historyWhere = {
+            status: {$in: ["Cancelled", "Delivered"]},
+            deliMan_id: req.user.id,
+        };
+        let inComingWhere = {
+            status: {$notIn: ["Delivered", "Cancelled", "Pending"]},
+            deliMan_id: req.user.id
+        };
+        if (req.query.startDate && req.query.endDate) {
+            req.query.endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
+            historyWhere.delivery_date = {$gt: req.query.startDate, $lt: req.query.endDate};
+            inComingWhere.delivery_date = {$gt: req.query.startDate, $lt: req.query.endDate};
+        }
         Order
             .all({
-                where: {
-                    status: {$in: ["Cancelled", "Delivered"]},
-                    deliMan_id: req.user.id
-                },
+                where: historyWhere,
                 attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
                 order: [['updatedAt', 'DESC']],
                 include: [{
@@ -196,10 +206,7 @@ module.exports = {
             .then(orders => {
                 Order
                     .all({
-                        where: {
-                            status: {$notIn: ["Delivered", "Cancelled", "Pending"]},
-                            deliMan_id: req.user.id
-                        },
+                        where: inComingWhere,
                         attributes: ['id', 'status', 'order_date', 'delivery_date', 'total_amount'],
                         order: [['updatedAt', 'DESC']],
                         include: [{
@@ -209,7 +216,10 @@ module.exports = {
                         }]
                     })
                     .then(inComing => {
-                        return res.json(Response.returnSuccess("Get order history successfully!", {history: orders, inComing: inComing}));
+                        return res.json(Response.returnSuccess("Get order history successfully!", {
+                            history: orders,
+                            inComing: inComing
+                        }));
                     })
                     .catch(err => res.json(Response.returnError(err.message, err.code)))
             })

@@ -2,7 +2,7 @@
   "development": {
     "username": "postgres",
     "password": "postgres",
-    "database": "hearti-messaging-service-db-development",
+    "database": "delivery_fast_dev",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },

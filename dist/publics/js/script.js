@@ -23,14 +23,14 @@ $(document).ready(function () {
     $("#tableListProductAddons").DataTable();
     $("#tableListAddons").DataTable();
     $("#tableListDiscounts").DataTable();
-    $("#tableListSubmittedOrders").DataTable({
-        "ordering": false,
+    var tableListSubmittedOrders = $("#tableListSubmittedOrders").DataTable({
+        "order": [],
         "ajax": {
             url: '/orders/submittedJSON',
             type: 'GET',
             dataSrc: 'data.orders'
         },
-        "columns": [{ 'data': 'id' }, { 'data': 'user_name' }, { 'data': 'user_phone' }, { 'data': 'user_address' }, {
+        "columns": [{ 'data': 'id', 'orderable': false }, { 'data': 'user_name' }, { 'data': 'user_phone' }, { 'data': 'user_address' }, {
             "data": "order_date",
             "render": function render(data) {
                 var date = new Date(data);
@@ -44,6 +44,7 @@ $(document).ready(function () {
             }
         }, { 'data': 'ship_fee' }, { 'data': 'total_amount' }, {
             'data': 'id',
+            'orderable': false,
             'render': function render(data) {
                 return "<a href='#' data-toggle='modal' data-id='" + data + "' title='Process' class='confirmProcessOrder btn btn-primary btn-flat'><span class='fa fa-edit' aria-hidden='true'></span></a>";
             }
@@ -62,7 +63,7 @@ $(document).ready(function () {
             dataSrc: 'data.orders'
         },
         "order": [],
-        "columns": [{ 'data': 'id' }, { 'data': 'user_name' }, {
+        "columns": [{ 'data': 'id', 'orderable': false }, { 'data': 'user_name' }, {
             'data': 'deliMan',
             'render': function render(data) {
                 if (data == "" || data == null) {
@@ -82,6 +83,7 @@ $(document).ready(function () {
                 return date.toLocaleString();
             }
         }, { 'data': 'ship_fee' }, { 'data': 'total_amount' }, {
+            'orderable': false,
             'data': 'status',
             'render': function render(data) {
                 switch (data) {
@@ -101,13 +103,14 @@ $(document).ready(function () {
             }
         }, {
             'data': 'id',
+            'orderable': false,
             'render': function render(data) {
                 return "<a href='/orders/" + data + "' title='View Detail' class='btn btn-primary btn-flat'><span class='fa fa-search' aria-hidden='true'></span></a>";
             }
         }]
     });
 
-    $("#tableListDeliMans").DataTable({
+    var tableListDeliMans = $("#tableListDeliMans").DataTable({
         "ordering": false,
         "ajax": {
             url: '/employees/deliMansJSON',
@@ -324,6 +327,29 @@ $(document).ready(function () {
     $('.confirmCancelOrder').click(function (event) {
         $('#form-cancel-order').attr('action', "/orders/" + $(this).data('id'));
         $('#confirm-cancel-order').modal();
+    });
+
+    // socket function
+    var socket = io($(location).attr('host') + '/delivery');
+
+    socket.on('connect', function () {
+        console.log('Client connected');
+    });
+
+    socket.on('error', function (data) {
+        console.log(data || 'error');
+    });
+
+    socket.on('reloadActiveDeliMan', function (data) {
+        tableListDeliMans.ajax.reload();
+    });
+
+    socket.on('reloadSubmittedOrder', function (data) {
+        tableListSubmittedOrders.ajax.reload();
+    });
+
+    socket.on('reloadPendingOrder', function (data) {
+        alert(data.msg);
     });
 });
 

@@ -7,6 +7,7 @@ var usersRoute = require('./user');
 var employeeRoute = require('./employee');
 var storeRoute = require('./store');
 var orderRoute = require('./order');
+var socketRoute = require('./socket');
 var discountRoute = require('./discount');
 var express = require('express');
 var router = express.Router();
@@ -26,5 +27,6 @@ router.use('/employees', employeeRoute);
 router.use('/stores', storeRoute);
 router.use('/discounts', discountRoute);
 router.use('/orders', orderRoute);
+router.use('/socket', socketRoute);
 
 module.exports = router;

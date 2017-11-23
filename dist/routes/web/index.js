@@ -19,8 +19,8 @@ var express = require('express');
 var passport = require('../../middlewares/passport');
 var router = express.Router();
 
-router.get('/', function (req, res) {
-  return res.send(res.sendFile('/uploads/image1.jpg'));
+router.get('/', passport.notUserWeb, function (req, res) {
+  res.render('index');
 });
 router.use('/users', passport.notUserWeb, usersRoute);
 router.use('/employees', employeeRoute);

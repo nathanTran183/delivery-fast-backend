@@ -10,6 +10,7 @@ var employees = require('./employees');
 var stores = require('./stores');
 var orders = require('./orders');
 var discounts = require('./discounts');
+var socket = require('./socket');
 
 module.exports = {
     users: users,
@@ -18,5 +19,6 @@ module.exports = {
     employees: employees,
     stores: stores,
     orders: orders,
-    discounts: discounts
+    discounts: discounts,
+    socket: socket
 };

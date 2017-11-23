@@ -51,8 +51,7 @@ module.exports = {
         Order.all({
             where: {
                 $or: [{ status: "Processing" }, {
-                    status: "Confirmed",
-                    deliMan_id: { $eq: null }
+                    status: "Confirmed"
                 }],
                 employee_id: req.session.user.id
             }

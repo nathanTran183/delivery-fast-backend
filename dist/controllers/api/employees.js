@@ -15,6 +15,7 @@ module.exports = {
     signIn: function signIn(req, res) {
         Employee.findOne({
             where: {
+                role: "DeliMan",
                 $or: [{ username: req.body.username }, { email: req.body.username }, { phone_number: req.body.username }]
             }
         }).then(function (account) {
@@ -43,6 +44,22 @@ module.exports = {
         var user = req.user;
         Employee.findById(user.id).then(function (user) {
             user.update(req.body).then(function (savedUser) {
+                var data = {
+                    user: savedUser
+                };
+                return res.json(Response.returnSuccess("Update information successfully", data));
+            }).catch(function (err) {
+                return res.json(Response.returnError(err.message, err.code));
+            });
+        }).catch(function (err) {
+            return res.json(Response.returnError(err.message, err.code));
+        });
+    },
+    updateStatus: function updateStatus(req, res) {
+        var user = req.user;
+        Employee.findById(user.id).then(function (deliMan) {
+            deliMan.update(req.body).then(function (savedUser) {
+                emitter.emit('reloadActiveDeliMan', { msg: 'Reload deliman' });
                 var data = {
                     user: savedUser
                 };

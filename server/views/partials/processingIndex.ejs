@@ -88,11 +88,11 @@
                                     <a href='/orders/<%= order.id %>' title='View Detail'
                                        class='btn btn-primary btn-flat'><span class='fa fa-search'
                                                                               aria-hidden='true'></span></a>
-
+                                    <% if(order.deliMan_id == null || order.deliMan_id == ""){%>
                                     <a href='/orders/assigned/<%= order.id %>' title='Assign DeliMan'
                                        class='btn btn-warning btn-flat'><span class='fa fa-user'
                                                                               aria-hidden='true'></span></a>
-                                    <%}%>
+                                    <%}}%>
                                 </td>
                             </tr>
                             <% }) %>
