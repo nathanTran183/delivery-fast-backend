@@ -118,14 +118,13 @@ module.exports = {
                     .then(savedOrder => {
                         if (savedOrder.status == "Order Submitted") {
                             emitter.emit('reloadSubmittedOrder', {msg: 'Reload submitted order'});
+                        } else if (savedOrder.status == "Confirmed" && savedOrder.deliMan_id == null) {
+                            emitter.emit('reloadPendingOrder', {msg: 'DeliMan ' + req.body.deliMan.last_name + " " + req.body.deliMan.first_name + ' cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman'});
                         }
-                        if (savedOrder.status == "Confirmed" && savedOrder.deliMan_id == null) {
-                            emitter.emit('reloadPendingOrder', {msg: 'DeliMan cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman'});
-                        }
+                        //push notification
                         return res.json(Response.returnSuccess("Update order's status successfully!", {order: savedOrder}));
                     })
                     .catch(err => res.json(Response.returnError(err.message, err.code)))
-
             })
             .catch(err => res.json(Response.returnError(err.message, err.code)))
     },
