@@ -18,9 +18,7 @@ module.exports = {
     isUserAPI: async function isUserAPI(req, res, next) {
         if (req.user) {
             User.findById(req.user.id).then(function (user) {
-                if (!user) return res.json(Response.returnError('User not found!', HTTPStatus.NOT_FOUND));
-                if (user.status == false) return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                if (req.user.role === 'User') {
+                if (!user) return res.json(Response.returnError('User not found!', HTTPStatus.NOT_FOUND));else if (user.status == false) return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));else if (req.user.role === 'User') {
                     next();
                 } else {
                     return res.json(Response.returnError("Only users can access the route!", HTTPStatus.UNAUTHORIZED));
@@ -35,34 +33,30 @@ module.exports = {
             User.findById(req.user.id).then(function (user) {
                 if (!user) {
                     Employee.findById(req.user.id).then(function (employee) {
-                        if (!employee) return res.json(Response.returnError('DeliMan not found!', HTTPStatus.NOT_FOUND));
-                        if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                        if (req.user.role === 'DeliMan') {
+                        if (!employee) return res.json(Response.returnError('DeliMan not found!', HTTPStatus.NOT_FOUND));else if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));else if (req.user.role === 'DeliMan') {
                             next();
                         } else {
                             return res.json(Response.returnError("Users cannot access the route!", HTTPStatus.UNAUTHORIZED));
                         }
                     }).catch(function (err) {
+                        console.log(err);
                         return res.json(Response.returnError(err.message, err.code));
                     });
-                }
-                if (user.status == false) return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                if (req.user.role === 'User') {
+                } else if (user.status == false) return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));else if (req.user.role === 'User') {
                     next();
                 } else {
                     return res.json(Response.returnError("Only users can access the route!", HTTPStatus.UNAUTHORIZED));
                 }
             }).catch(function (err) {
-                return res.json(Response.returnError(err.message, err.code));
+                console.log(err);
+                res.json(Response.returnError(err.message, err.code));
             });
         } else return res.json(Response.returnError("Should login with user account!", HTTPStatus.UNAUTHORIZED));
     },
     isDeliManAPI: async function isDeliManAPI(req, res, next) {
         if (req.user) {
             Employee.findById(req.user.id).then(function (employee) {
-                if (!employee) return res.json(Response.returnError('DeliMan not found!', HTTPStatus.NOT_FOUND));
-                if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                if (req.user.role === 'DeliMan') {
+                if (!employee) return res.json(Response.returnError('DeliMan not found!', HTTPStatus.NOT_FOUND));else if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));else if (req.user.role === 'DeliMan') {
                     next();
                 } else {
                     return res.json(Response.returnError("Users cannot access the route!", HTTPStatus.UNAUTHORIZED));
@@ -75,9 +69,7 @@ module.exports = {
     notUserAPI: async function notUserAPI(req, res, next) {
         if (req.user) {
             Employee.findById(req.user.id).then(function (employee) {
-                if (!employee) return res.json(Response.returnError('User not found!', HTTPStatus.NOT_FOUND));
-                if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                if (req.user.role !== 'User' && req.user.role !== 'DeliMan') {
+                if (!employee) return res.json(Response.returnError('User not found!', HTTPStatus.NOT_FOUND));else if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));else if (req.user.role !== 'User' && req.user.role !== 'DeliMan') {
                     next();
                 } else {
                     return res.json(Response.returnError("Users cannot access the route!", HTTPStatus.UNAUTHORIZED));
@@ -94,8 +86,7 @@ module.exports = {
                 req.flash('reason_fail', "Your account has been deactivated!");
                 req.session.user = null;
                 res.redirect('/signIn');
-            }
-            if (employee.role == 'Admin') {
+            } else if (employee.role == 'Admin') {
                 next();
             } else {
                 req.flash('notAuthorized', "Users cannot access the route!");

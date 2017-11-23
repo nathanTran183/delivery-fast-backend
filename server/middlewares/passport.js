@@ -21,8 +21,8 @@ module.exports = {
                 .findById(req.user.id)
                 .then(user => {
                     if (!user) return res.json(Response.returnError('User not found!', HTTPStatus.NOT_FOUND));
-                    if (user.status == false) return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                    if (req.user.role === 'User') {
+                    else if (user.status == false) return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
+                    else if (req.user.role === 'User') {
                         next();
                     } else {
                         return res.json(Response.returnError("Only users can access the route!", HTTPStatus.UNAUTHORIZED));
@@ -43,23 +43,28 @@ module.exports = {
                             .findById(req.user.id)
                             .then(employee => {
                                 if (!employee) return res.json(Response.returnError('DeliMan not found!', HTTPStatus.NOT_FOUND));
-                                if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                                if (req.user.role === 'DeliMan') {
+                                else if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
+                                else if (req.user.role === 'DeliMan') {
                                     next();
                                 } else {
                                     return res.json(Response.returnError("Users cannot access the route!", HTTPStatus.UNAUTHORIZED));
                                 }
                             })
-                            .catch(err => res.json(Response.returnError(err.message, err.code)))
-                    }
-                    if (user.status == false) return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                    if (req.user.role === 'User') {
+                            .catch(err => {
+                                console.log(err)
+                                return res.json(Response.returnError(err.message, err.code))
+                            })
+                    } else if (user.status == false) return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
+                    else if (req.user.role === 'User') {
                         next();
                     } else {
                         return res.json(Response.returnError("Only users can access the route!", HTTPStatus.UNAUTHORIZED));
                     }
                 })
-                .catch(err => res.json(Response.returnError(err.message, err.code)))
+                .catch(err => {
+                    console.log(err)
+                    res.json(Response.returnError(err.message, err.code))
+                })
         }
         else return res.json(Response.returnError("Should login with user account!", HTTPStatus.UNAUTHORIZED))
     },
@@ -70,8 +75,8 @@ module.exports = {
                 .findById(req.user.id)
                 .then(employee => {
                     if (!employee) return res.json(Response.returnError('DeliMan not found!', HTTPStatus.NOT_FOUND));
-                    if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                    if (req.user.role === 'DeliMan') {
+                    else if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
+                    else if (req.user.role === 'DeliMan') {
                         next();
                     } else {
                         return res.json(Response.returnError("Users cannot access the route!", HTTPStatus.UNAUTHORIZED));
@@ -87,8 +92,8 @@ module.exports = {
                 .findById(req.user.id)
                 .then(employee => {
                     if (!employee) return res.json(Response.returnError('User not found!', HTTPStatus.NOT_FOUND));
-                    if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
-                    if (req.user.role !== 'User' && req.user.role !== 'DeliMan') {
+                    else if (employee.status == 'Deactivated') return res.json(Response.returnError('Your account has been deactivated!', HTTPStatus.UNAUTHORIZED));
+                    else if (req.user.role !== 'User' && req.user.role !== 'DeliMan') {
                         next();
                     } else {
                         return res.json(Response.returnError("Users cannot access the route!", HTTPStatus.UNAUTHORIZED));
@@ -106,7 +111,7 @@ module.exports = {
                 req.session.user = null;
                 res.redirect('/signIn');
             }
-            if (employee.role == 'Admin') {
+            else if (employee.role == 'Admin') {
                 next();
             } else {
                 req.flash('notAuthorized', "Users cannot access the route!");
