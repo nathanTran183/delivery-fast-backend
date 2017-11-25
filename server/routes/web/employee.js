@@ -7,6 +7,7 @@ const router = express.Router();
 const passport = require('../../middlewares/passport');
 
 router.get('/', passport.isAdminWeb, employeesController.list);
+router.get('/blackList', passport.isAdminWeb, employeesController.blackList);
 router.post('/', passport.isAdminWeb, employeesController.create);
 router.get('/deliMansJSON', passport.notUserWeb, employeesController.getDeliMansJSON);
 router.post('/changeStatus/:employeeId', passport.isAdminWeb, employeesController.changeStatus);

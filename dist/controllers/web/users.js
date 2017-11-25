@@ -19,6 +19,15 @@ module.exports = {
             return res.json(error);
         });
     },
+    blackList: function blackList(req, res) {
+        User.all({
+            where: { status: false }
+        }).then(function (users) {
+            return res.render('user/blackList', { users: users });
+        }).catch(function (error) {
+            return res.json(error);
+        });
+    },
     get: function get(req, res) {
         return User.findById(req.params.userId, {
             include: [{

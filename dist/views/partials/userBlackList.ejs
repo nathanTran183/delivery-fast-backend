@@ -1,0 +1,134 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <%
+        // message the validation
+        if (messages.errors) {
+        for (i = 0; i < messages.errors.length; i++) {
+        %>
+        <div class="alert alert-warning">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Fail !</strong> <%= messages.errors[i].msg %>
+        </div>
+        <%
+        }
+        }
+
+        // message the reason change password fail
+        if (messages.reason_fail) {
+        %>
+        <div class="alert alert-warning">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.reason_fail %>
+        </div>
+        <%
+        }
+
+        // message if success
+        if (messages.success) {
+        %>
+        <div class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= messages.success %>
+        </div>
+        <%
+        }
+        %>
+
+        <h1>
+            User List
+        </h1>
+    </section>
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">User Information</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="tableListUsers" class="table table-bordered table-striped dataTable">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Full name</th>
+                                <th>Gender</th>
+                                <th>Date of birth</th>
+                                <th>Point</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% users.forEach(function(user) { %>
+                            <tr>
+                                <td><%= user.id %></td>
+                                <td><%= user.username %></td>
+                                <td><%= user.email %></td>
+                                <td><%= user.first_name %> <%= user.last_name %></td>
+                                <td>
+                                    <% if(user.gender == true) { %>
+                                    Male
+                                    <% } else { %>
+                                    Female
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <%
+                                    if(user.date_of_birth != null && user.date_of_birth != ''){
+                                        let date = new Date(user.date_of_birth);
+                                    %>
+                                    <%= date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear() %>
+                                    <%
+                                    }
+                                    %>
+                                </td>
+                                <td><%= user.point %></td>
+                                <td>
+                                    <span class="label label-danger">Deactivated</span>
+                                </td>
+                                <td>
+                                    <a href="/users/<%= user.id %>" title="View Detail" class="btn btn-default btn-flat"><span
+                                                class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                                    <a href="#" data-toggle="modal" data-id="<%= user.id %>" title="Activate"
+                                       class="confirmChangeUserStatus btn btn-success btn-flat"><span
+                                                class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                </td>
+                            </tr>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+        </div>
+    </section>
+</div>
+
+
+<div class="modal fade" id="confirm-deactive" role="dialog">
+    <form method="POST" id="form-change-user-status" action="users/id">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirm to <b>Activate</b> user status?</h3>
+                </div>
+                <div class="modal-body">
+                    Click on "Yes" to continue, "No" to cancel.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="exitModal" class="btn btn-default btn-flat" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary btn-flat">Yes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

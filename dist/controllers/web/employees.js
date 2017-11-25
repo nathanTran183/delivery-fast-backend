@@ -202,6 +202,20 @@ module.exports = {
             res.json(error);
         });
     },
+    blackList: function blackList(req, res) {
+        Employee.all({
+            where: {
+                role: {
+                    $ne: 'Admin'
+                },
+                status: "Deactivated"
+            }
+        }).then(function (employees) {
+            return res.render('employees/blackList', { employees: employees });
+        }).catch(function (error) {
+            res.json(error);
+        });
+    },
     getDeliMansJSON: function getDeliMansJSON(req, res) {
         Employee.all({
             where: {

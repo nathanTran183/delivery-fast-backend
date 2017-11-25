@@ -22,6 +22,19 @@ module.exports = {
             });
     },
 
+    blackList(req, res) {
+        User
+            .all({
+                where: {status: false}
+            })
+            .then(users => {
+                return res.render('user/blackList', {users: users});
+            })
+            .catch(error => {
+                return res.json(error);
+            });
+    },
+
     get(req, res) {
         return User
             .findById(req.params.userId, {
