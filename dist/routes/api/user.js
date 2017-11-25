@@ -15,9 +15,10 @@ var config = require('../../config/index');
 //Basic information
 router.post('/signUp', usersController.signUp);
 router.post('/signIn', usersController.signIn);
+router.post('/forgotPassword', usersController.forgotPassword);
 router.put('/updateInfo', [expressJwt({ secret: config.jwtSecret }), passport.isUserAPI], usersController.updateInfo);
 router.get('/profile', [expressJwt({ secret: config.jwtSecret }), passport.isUserAPI], usersController.viewProfile);
-
+router.put('/changePass', [expressJwt({ secret: config.jwtSecret }), passport.isUserAPI], usersController.changePassword);
 //Phone number
 router.get('/phoneNumber', [expressJwt({ secret: config.jwtSecret }), passport.isUserAPI], userPhonesController.list);
 router.post('/phoneNumber', [expressJwt({ secret: config.jwtSecret }), passport.isUserAPI], userPhonesController.add);

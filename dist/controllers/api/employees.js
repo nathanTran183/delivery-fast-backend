@@ -84,5 +84,56 @@ module.exports = {
         }).catch(function (err) {
             return res.json(Response.returnError(err.message, err.code));
         });
+    },
+    changePassword: function changePassword(req, res) {
+        if (req.body.old_password && req.body.new_password) {
+            Employee.findById(req.user.id).then(function (user) {
+                if (!user) {
+                    res.json(Response.returnError("DeliMan not found!", httpStatus.NOT_FOUND));
+                } else {
+                    user.comparePassword(req.body.old_password, function (err, result) {
+                        if (err) return res.json(Response.returnError(err.message, err.code));
+                        if (result == true) {
+                            user.update({ password: req.body.new_password }).then(function () {
+                                return res.json(Response.returnSuccess("Change password successfully!", {}));
+                            }).catch(function (err) {
+                                return res.json(Response.returnError(err.message, err.code));
+                            });
+                        } else {
+                            return res.json(Response.returnError('Old password is not correct!', httpStatus.BAD_REQUEST));
+                        }
+                    });
+                }
+            }).catch(function (err) {
+                return res.json(Response.returnError(err.message, err.code));
+            });
+        } else return res.json(Response.returnError("Require new password and old password!", httpStatus.BAD_REQUEST));
+    },
+    forgotPassword: function forgotPassword(req, res) {
+        if (req.body.email) {
+            Employee.find({
+                where: { email: req.body.email }
+            }).then(function (user) {
+                if (!user) res.json(Response.returnError("DeliMan not found!", httpStatus.NOT_FOUND));else {
+                    var newPass = randomize('A0', 8);
+                    user.update({ password: newPass }).then(function () {
+                        var mailOptions = {
+                            to: user.email,
+                            from: '"DELIVERY FAST 👥" <support@deliveryfast.vn>',
+                            subject: 'DeliveryFast DeliMan Password Reset',
+                            text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' + 'Your password has been reset:  ' + newPass + '\n\n' + 'If this is not your request! Please contact our customer service through this number: <b>+842363827698</b> for more information \n'
+                        };
+                        EmailService.sendNodeMailer(mailOptions, function (err) {
+                            if (err) {
+                                return res.json(Response.returnError(err.message, err.code));
+                            }
+                            res.json(Response.returnSuccess("An e-mail has been sent to " + user.email + " with further instructions!", {}));
+                        });
+                    }).catch(function (err) {
+                        return res.json(Response.returnError(err.message, err.code));
+                    });
+                }
+            });
+        }
     }
 };

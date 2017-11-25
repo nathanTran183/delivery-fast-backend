@@ -70,6 +70,9 @@ module.exports = {
                 }).then(function () {
                     if (req.body.orderDetails && req.body.orderDetails.length > 0) {
                         OrderDetail.bulkCreate(req.body.orderDetails).then(function (orderDetails) {
+                            if (savedOrder.status == "Order Submitted") {
+                                emitter.emit('reloadSubmittedOrder', { msg: 'Reload submitted order' });
+                            }
                             return res.json(Response.returnSuccess("Update order successfully!", {
                                 order: savedOrder,
                                 orderDetails: orderDetails
@@ -99,9 +102,7 @@ module.exports = {
             if (req.body.status == "Cancelled" || req.body.status == "Delivered") req.body.delivery_date = new Date();
             if (req.body.deliMan_id == "") req.body.deliMan_id = null;
             order.update(req.body).then(function (savedOrder) {
-                if (savedOrder.status == "Order Submitted") {
-                    emitter.emit('reloadSubmittedOrder', { msg: 'Reload submitted order' });
-                } else if (savedOrder.status == "Confirmed" && savedOrder.deliMan_id == null) {
+                if (savedOrder.status == "Confirmed" && savedOrder.deliMan_id == null) {
                     emitter.emit('reloadPendingOrder', { msg: 'DeliMan ' + req.body.deliMan.last_name + " " + req.body.deliMan.first_name + ' cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman' });
                 }
                 //push notification

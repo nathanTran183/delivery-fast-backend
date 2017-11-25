@@ -10,6 +10,8 @@ const passport = require('../../middlewares/passport');
 
 //DeliMans' routers
 router.post('/signIn', employeesController.signIn);
+router.post('/forgotPassword', employeesController.forgotPassword);
+router.put('/changePass', [expressJwt({secret: config.jwtSecret}), passport.isDeliManAPI], employeesController.changePassword);
 
 //All employees' routers
 router.get('/profile', [expressJwt({secret: config.jwtSecret}), passport.isDeliManAPI], employeesController.viewProfile);

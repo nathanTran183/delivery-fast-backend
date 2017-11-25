@@ -83,6 +83,9 @@ module.exports = {
                                     OrderDetail
                                         .bulkCreate(req.body.orderDetails)
                                         .then((orderDetails) => {
+                                            if (savedOrder.status == "Order Submitted") {
+                                                emitter.emit('reloadSubmittedOrder', {msg: 'Reload submitted order'});
+                                            }
                                             return res.json(Response.returnSuccess("Update order successfully!", {
                                                 order: savedOrder,
                                                 orderDetails: orderDetails
@@ -116,9 +119,7 @@ module.exports = {
                 order
                     .update(req.body)
                     .then(savedOrder => {
-                        if (savedOrder.status == "Order Submitted") {
-                            emitter.emit('reloadSubmittedOrder', {msg: 'Reload submitted order'});
-                        } else if (savedOrder.status == "Confirmed" && savedOrder.deliMan_id == null) {
+                        if (savedOrder.status == "Confirmed" && savedOrder.deliMan_id == null) {
                             emitter.emit('reloadPendingOrder', {msg: 'DeliMan ' + req.body.deliMan.last_name + " " + req.body.deliMan.first_name + ' cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman'});
                         }
                         //push notification
