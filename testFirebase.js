@@ -12,7 +12,7 @@ var defaultAuth = admin.auth();
 var defaultDatabase = admin.database();
 
 // var registrationToken = "f7NgmTPv4Os:APA91bFM8e4jjombV3dLctTCVfrQGgM6__tfPM1Ft0oVwMbWimlNVve3gheGh_lzU9IXHqK-58nEb5cb8wkg0WSYnj4iuiWpj6nDo8H9977YbKrdoK6B2XedBwfcqW5OG58dwoFcoHTw";
-var registrationToken = "f7g8nN-dDq8:APA91bEEIEiqkWfNl4mOf6WZXy8Eie3KQvqwBq5-NV06xG-xk4SAkRWAs9D5u1QFD6eH9AUgn_ljwJmnf3MDew6z-kyUREnp5IKJTtAvhozI4TC-ts22U0eIkDmnKw2doACn1YsX48E8";
+var registrationToken = "f7g8nN-dDq8:APA91bEEIEiqkWfNl4mOf6WZXy8Eie3KQvqwBq5-NV06xG-xk4SAkRWAs9D5u1QFD6eH9AUgn_ljwJmnf3MDew6z-kyUREnp5IKJTtAvhozI4TC-ts22U0eIkDmnKw2doACn1YsX48E81";
 // See the "Defining the message payload" section below for details
 // on how to define a message payload.
 var payload = {

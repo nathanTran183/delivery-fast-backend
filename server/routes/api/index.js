@@ -7,6 +7,7 @@ const storeRoute = require('./store');
 const orderRoute = require('./order');
 const socketRoute = require('./socket');
 const discountRoute = require('./discount');
+const notificationRoute = require('./notification');
 const express = require('express');
 const router = express.Router();
 const expressJwt = require('express-jwt');
@@ -26,5 +27,6 @@ router.use('/stores', storeRoute);
 router.use('/discounts', discountRoute);
 router.use('/orders', orderRoute);
 router.use('/socket', socketRoute);
+router.use('/notifications', notificationRoute);
 
 module.exports = router;

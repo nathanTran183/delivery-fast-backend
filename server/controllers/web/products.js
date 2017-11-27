@@ -3,7 +3,7 @@
  */
 const Category = require('../../models/index').Category;
 const Product = require('../../models/index').Product;
-const validate = require('../../helpers/validate');
+const validate = require('../../helpers/Validate');
 const multer = require('multer');
 const path = require('path');
 module.exports = {

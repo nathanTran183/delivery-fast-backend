@@ -4,7 +4,7 @@
 const UserAddress = require('../../models/index').UserAddress;
 const httpStatus = require('http-status');
 const config = require('../../config/index');
-const Response = require('../../helpers/response');
+const Response = require('../../helpers/Response');
 module.exports = {
     list(req, res) {
         let user = req.user;

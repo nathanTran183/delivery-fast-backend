@@ -5,7 +5,7 @@
  */
 var Category = require('../../models/index').Category;
 var Product = require('../../models/index').Product;
-var validate = require('../../helpers/validate');
+var validate = require('../../helpers/Validate');
 var multer = require('multer');
 var path = require('path');
 module.exports = {

@@ -9,7 +9,7 @@ var Store = require('../../models/index').Store;
 var config = require('../../config/index');
 var httpStatus = require('http-status');
 var jwt = require('jsonwebtoken');
-var Response = require('../../helpers/response');
+var Response = require('../../helpers/Response');
 
 module.exports = {
     signIn: function signIn(req, res) {

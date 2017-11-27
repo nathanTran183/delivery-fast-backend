@@ -5,7 +5,7 @@
  */
 var Store = require('../../models/index').Store;
 var Addon = require('../../models/index').Addon;
-var validate = require('../../helpers/validate');
+var validate = require('../../helpers/Validate');
 
 module.exports = {
     list: function list(req, res) {

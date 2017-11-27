@@ -6,7 +6,7 @@
 var UserAddress = require('../../models/index').UserAddress;
 var httpStatus = require('http-status');
 var config = require('../../config/index');
-var Response = require('../../helpers/response');
+var Response = require('../../helpers/Response');
 module.exports = {
     list: function list(req, res) {
         var user = req.user;

@@ -8,7 +8,7 @@ var UserPhone = require('../../models/index').UserPhone;
 var UserAddress = require('../../models/index').UserAddress;
 var jwt = require('jsonwebtoken');
 var httpStatus = require('http-status');
-var Response = require('../../helpers/response');
+var Response = require('../../helpers/Response');
 var config = require('../../config/index');
 
 module.exports = {

@@ -3,7 +3,7 @@
 /**
  * Created by nathan on 08/11/2017.
  */
-var Response = require('../../helpers/response');
+var Response = require('../../helpers/Response');
 var httpStatus = require('http-status');
 var Order = require('../../models/index').Order;
 var OrderDetail = require('../../models/index').OrderDetail;
@@ -12,8 +12,10 @@ var UserPhone = require('../../models/index').UserPhone;
 var UserAddress = require('../../models/index').UserAddress;
 var Employee = require('../../models/index').Employee;
 var Store = require('../../models/index').Store;
+var Notification = require('../../models/index').Notification;
 var _ = require('lodash');
-var orderStatus = require('../../helpers/orderStatus');
+var orderStatus = require('../../helpers/OrderStatus');
+var FirebaseService = require('../../helpers/FirebaseService');
 
 var associationObject = {
     include: [{
@@ -89,7 +91,17 @@ module.exports = {
                     };
                 }
                 Order.findById(req.params.orderId, {
-                    where: { status: statusObj.former }
+                    where: { status: statusObj.former },
+                    include: [{
+                        model: User,
+                        as: 'user'
+                    }, {
+                        model: Store,
+                        as: 'store'
+                    }, {
+                        model: Employee,
+                        as: 'deliMan'
+                    }]
                 }).then(function (order) {
                     if (!order) {
                         req.flash('errors', { msg: "Order not found!" });
@@ -97,6 +109,50 @@ module.exports = {
                     }
                     order.update(req.body).then(function () {
                         req.flash('success', statusObj.msg);
+                        if (req.body.status == 'Confirmed' && req.body.deliMan_id !== "" && req.body.deliMan_id) {
+                            console.log("12345: " + order.id);
+                            Notification.create({
+                                order_id: order.id,
+                                title: "Order is assigned",
+                                body: "<i style='color: lawngreen;'>[Assign]</i> You has been assigned to a new order! Please confirm immediately!",
+                                user_id: order.deliMan_id,
+                                image_url: order.store.image_url
+                            }).then(function (notification) {
+                                console.log("----");
+                                console.log("create assigned notification successfully");
+                                // Send notification
+                                var notiContent = {
+                                    notification: {
+                                        title: "New order waiting for Assignment Confirmation",
+                                        body: "A new order is assigned to you. Please response immediately!"
+                                    }
+                                };
+
+                                FirebaseService.pushNotification(notiContent, false).then(function (result) {
+                                    console.log(result);
+                                    req.flash('success', statusObj.msg + " - Send notification successfully");
+                                }).catch(function (err) {
+                                    req.flash('errors', { msg: err.message });
+                                    res.redirect('back');
+                                });
+                            }).catch(function (err) {
+                                return res.json(Response.returnError(err.message, err.code));
+                            });
+                        }
+                        if (req.body.status == 'Cancelled') {
+                            Notification.create({
+                                order_id: req.params.orderId,
+                                title: "Order is 'Cancelled'",
+                                body: "<i style='color:red'>[Cancelled]</i> Your order is cancelled by 'Delivery Fast' at <b>" + order.store.name + "</b>. Thank you for using our service!",
+                                image_url: order.store.image_url,
+                                user_id: order.user_id
+                            }).then(function (notification) {
+                                console.log("----");
+                                console.log("create Cancelled notification successfully");
+                            }).catch(function (err) {
+                                return res.json(Response.returnError(err.message, err.code));
+                            });
+                        }
                         if (req.body.status == 'Processing' || req.body.status == 'Confirmed' && (req.body.deliMan_id == "" || req.body.deliMan_id == null)) res.redirect(statusObj.url + req.params.orderId);else res.redirect(statusObj.url);
                     }).catch(function (err) {
                         req.flash('errors', { msg: err.message });

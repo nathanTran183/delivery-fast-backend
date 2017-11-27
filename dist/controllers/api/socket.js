@@ -3,7 +3,7 @@
 /**
  * Created by nathan on 08/11/2017.
  */
-var Response = require('../../helpers/response');
+var Response = require('../../helpers/Response');
 var httpStatus = require('http-status');
 
 module.exports = {

@@ -7,7 +7,7 @@ const Store = require('../../models/index').Store;
 const config = require('../../config/index');
 const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
-const Response = require('../../helpers/response');
+const Response = require('../../helpers/Response');
 
 module.exports = {
 

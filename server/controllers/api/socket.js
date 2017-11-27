@@ -1,7 +1,7 @@
 /**
  * Created by nathan on 08/11/2017.
  */
-const Response = require('../../helpers/response');
+const Response = require('../../helpers/Response');
 const httpStatus = require('http-status');
 
 module.exports = {

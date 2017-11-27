@@ -5,7 +5,7 @@ const Discount = require('../../models/index').Discount;
 const Store = require('../../models/index').Store;
 const config = require('../../config/index');
 const randomize = require('randomatic');
-const validate = require('../../helpers/validate');
+const validate = require('../../helpers/Validate');
 module.exports = {
     list(req, res) {
         Discount

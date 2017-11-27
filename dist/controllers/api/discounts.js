@@ -9,7 +9,7 @@
 var Discount = require('../../models/index').Discount;
 var httpStatus = require('http-status');
 var config = require('../../config/index');
-var Response = require('../../helpers/response');
+var Response = require('../../helpers/Response');
 module.exports = {
     check: function check(req, res) {
         var storeId = req.query.storeId;

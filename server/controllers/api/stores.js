@@ -11,7 +11,7 @@ const Order = require('../../models/index').Order;
 const OrderDetail = require('../../models/index').OrderDetail;
 const UserPhone = require('../../models/index').UserPhone;
 const UserAddress = require('../../models/index').UserAddress;
-const Response = require('../../helpers/response');
+const Response = require('../../helpers/Response');
 const httpStatus = require('http-status');
 
 var associationObject = {

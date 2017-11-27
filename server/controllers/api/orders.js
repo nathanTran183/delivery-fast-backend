@@ -1,7 +1,7 @@
 /**
  * Created by nathan on 08/11/2017.
  */
-const Response = require('../../helpers/response');
+const Response = require('../../helpers/Response');
 const httpStatus = require('http-status');
 const Order = require('../../models/index').Order;
 const OrderDetail = require('../../models/index').OrderDetail;
@@ -10,6 +10,7 @@ const UserPhone = require('../../models/index').UserPhone;
 const UserAddress = require('../../models/index').UserAddress;
 const Employee = require('../../models/index').Employee;
 const Store = require('../../models/index').Store;
+const Notification = require('../../models/index').Notification;
 
 var associationObject = {
     include: [{
@@ -107,7 +108,21 @@ module.exports = {
 
     updateStatus(req, res) {
         Order
-            .findById(req.params.orderId)
+            .findById(req.params.orderId,
+                {
+                    include: [
+                        {
+                            model: User,
+                            as: 'user',
+                        }, {
+                            model: Store,
+                            as: 'store'
+                        }, {
+                            model: Employee,
+                            as: 'deliMan'
+                        }
+                    ]
+                })
             .then(order => {
                 if (!order) {
                     return res.json(Response.returnError("Order not found!", httpStatus.NOT_FOUND))
@@ -120,9 +135,27 @@ module.exports = {
                     .update(req.body)
                     .then(savedOrder => {
                         if (savedOrder.status == "Confirmed" && savedOrder.deliMan_id == null) {
-                            emitter.emit('reloadPendingOrder', {msg: 'DeliMan ' + req.body.deliMan.last_name + " " + req.body.deliMan.first_name + ' cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman'});
+                            emitter.emit('reloadPendingOrder', {
+                                msg: 'DeliMan ' + req.body.deliMan.last_name + " " + req.body.deliMan.first_name
+                                + ' cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman'
+                            });
                         }
-                        //push notification
+                        if (savedOrder.status == "Delivered") {
+                            Notification
+                                .create({
+                                    order_id: order.id,
+                                    title: "Order is completed",
+                                    body: "<i style='color: lawngreen'>[Completed]</i>" + order.deliMan.first_name + " "
+                                    + order.deliMan.last_name + " has delivered your order at <b>" + order.store.name + "</b>. Thank you for using our service!",
+                                    user_id: order.user_id,
+                                    image_url: order.store.image_url
+                                })
+                                .then(notification => {
+                                    console.log("----");
+                                    console.log("create delivered notification successfully");
+                                })
+                                .catch(err => res.json(Response.returnError(err.message, err.code)))
+                        }
                         return res.json(Response.returnSuccess("Update order's status successfully!", {order: savedOrder}));
                     })
                     .catch(err => res.json(Response.returnError(err.message, err.code)))

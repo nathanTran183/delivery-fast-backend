@@ -4,8 +4,8 @@
  * Created by nathan on 16/10/2017.
  */
 var Employee = require('../../models/index').Employee;
-var validate = require('../../helpers/validate');
-var Response = require('../../helpers/response');
+var validate = require('../../helpers/Validate');
+var Response = require('../../helpers/Response');
 module.exports = {
     signIn: function signIn(req, res, next) {
         return res.render('user/signIn');

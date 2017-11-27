@@ -7,7 +7,7 @@ const StoreType_Store = require('../../models/index').StoreType_Store;
 const Category = require('../../models/index').Category;
 const multer = require('multer');
 const path = require('path');
-const validate = require('../../helpers/validate');
+const validate = require('../../helpers/Validate');
 
 module.exports = {
     get(req, res) {

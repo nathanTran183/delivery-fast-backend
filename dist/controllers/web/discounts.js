@@ -7,7 +7,7 @@ var Discount = require('../../models/index').Discount;
 var Store = require('../../models/index').Store;
 var config = require('../../config/index');
 var randomize = require('randomatic');
-var validate = require('../../helpers/validate');
+var validate = require('../../helpers/Validate');
 module.exports = {
     list: function list(req, res) {
         Discount.all({

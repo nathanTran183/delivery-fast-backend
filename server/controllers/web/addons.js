@@ -3,7 +3,7 @@
  */
 const Store = require('../../models/index').Store;
 const Addon = require('../../models/index').Addon;
-const validate = require('../../helpers/validate');
+const validate = require('../../helpers/Validate');
 
 module.exports = {
     list(req, res) {

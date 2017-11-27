@@ -9,7 +9,7 @@ var StoreType_Store = require('../../models/index').StoreType_Store;
 var Category = require('../../models/index').Category;
 var multer = require('multer');
 var path = require('path');
-var validate = require('../../helpers/validate');
+var validate = require('../../helpers/Validate');
 
 module.exports = {
     get: function get(req, res) {

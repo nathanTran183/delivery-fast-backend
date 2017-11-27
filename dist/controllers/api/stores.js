@@ -13,7 +13,7 @@ var Order = require('../../models/index').Order;
 var OrderDetail = require('../../models/index').OrderDetail;
 var UserPhone = require('../../models/index').UserPhone;
 var UserAddress = require('../../models/index').UserAddress;
-var Response = require('../../helpers/response');
+var Response = require('../../helpers/Response');
 var httpStatus = require('http-status');
 
 var associationObject = {

@@ -3,7 +3,7 @@
  */
 const UserPhone = require('../../models/index').UserPhone;
 const httpStatus = require('http-status');
-const Response = require('../../helpers/response');
+const Response = require('../../helpers/Response');
 const config = require('../../config/index');
 
 module.exports = {

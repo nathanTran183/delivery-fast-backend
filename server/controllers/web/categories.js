@@ -5,7 +5,7 @@ const Category = require('../../models/index').Category;
 const Product = require('../../models/index').Product;
 const Addon = require('../../models/index').Addon;
 const ProductAddon = require('../../models/index').ProductAddon;
-const validate = require('../../helpers/validate');
+const validate = require('../../helpers/Validate');
 
 module.exports = {
     list(req, res) {

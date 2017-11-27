@@ -11,6 +11,7 @@ var stores = require('./stores');
 var orders = require('./orders');
 var discounts = require('./discounts');
 var socket = require('./socket');
+var notifications = require('./notifications');
 
 module.exports = {
     users: users,
@@ -20,5 +21,6 @@ module.exports = {
     stores: stores,
     orders: orders,
     discounts: discounts,
-    socket: socket
+    socket: socket,
+    notifications: notifications
 };

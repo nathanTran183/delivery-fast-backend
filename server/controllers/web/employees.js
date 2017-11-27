@@ -2,8 +2,8 @@
  * Created by nathan on 16/10/2017.
  */
 const Employee = require('../../models/index').Employee;
-const validate = require('../../helpers/validate');
-const Response = require('../../helpers/response');
+const validate = require('../../helpers/Validate');
+const Response = require('../../helpers/Response');
 module.exports = {
 
     signIn (req, res, next) {

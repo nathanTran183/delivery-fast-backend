@@ -1,6 +1,6 @@
 'use strict';
 
-var Response = require('../helpers/response');
+var Response = require('../helpers/Response');
 var HTTPStatus = require('http-status');
 var User = require('../models').User;
 var Employee = require('../models').Employee;

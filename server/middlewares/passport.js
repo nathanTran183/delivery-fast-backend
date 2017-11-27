@@ -1,4 +1,4 @@
-const Response = require('../helpers/response');
+const Response = require('../helpers/Response');
 const HTTPStatus = require('http-status');
 const User = require('../models').User;
 const Employee = require('../models').Employee;

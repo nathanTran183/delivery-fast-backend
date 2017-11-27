@@ -7,7 +7,7 @@
 const Discount = require('../../models/index').Discount;
 const httpStatus = require('http-status');
 const config = require('../../config/index');
-const Response = require('../../helpers/response');
+const Response = require('../../helpers/Response');
 module.exports = {
     check(req, res) {
         let storeId = req.query.storeId;

@@ -7,7 +7,7 @@ var Category = require('../../models/index').Category;
 var Product = require('../../models/index').Product;
 var Addon = require('../../models/index').Addon;
 var ProductAddon = require('../../models/index').ProductAddon;
-var validate = require('../../helpers/validate');
+var validate = require('../../helpers/Validate');
 
 module.exports = {
     list: function list(req, res) {
