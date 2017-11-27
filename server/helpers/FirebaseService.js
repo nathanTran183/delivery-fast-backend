@@ -25,7 +25,7 @@ var payload = {
 
 module.exports = {
     pushNotification(notiPayload, boolean) {
-        let token = (boolean) ? userRegistrationToken: userRegistrationToken
+        let token = (boolean) ? userRegistrationToken: userRegistrationToken;
         return new Promise((resolve, reject) => {
             admin.messaging().sendToDevice(token, notiPayload, options)
                 .then(function(response) {

@@ -127,8 +127,7 @@ module.exports = {
                             .update(req.body)
                             .then(() => {
                                 req.flash('success', statusObj.msg);
-                                if(req.body.status == 'Confirmed' && (req.body.deliMan_id !== "" && req.body.deliMan_id)) {
-                                    console.log("12345: " + order.id)
+                                if(req.body.status == 'Confirmed' && (req.body.deliMan_id!= undefined && req.body.deliMan_id !== null && req.body.deliMan_id != "")) {
                                     Notification
                                         .create({
                                             order_id: order.id,
@@ -138,7 +137,6 @@ module.exports = {
                                             image_url: order.store.image_url
                                         })
                                         .then(notification => {
-                                            console.log("----");
                                             console.log("create assigned notification successfully");
                                             // Send notification
                                             let notiContent = {
@@ -151,6 +149,7 @@ module.exports = {
                                             FirebaseService
                                                 .pushNotification(notiContent, false)
                                                 .then(result => {
+                                                    console.log("----");
                                                     console.log(result);
                                                     req.flash('success', statusObj.msg + " - Send notification successfully");
                                                 })
