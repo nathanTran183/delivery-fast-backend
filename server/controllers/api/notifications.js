@@ -15,7 +15,7 @@ module.exports = {
                 where: {user_id: req.user.id}
             })
             .then(notifications => {
-                return res.json(Response.returnSuccess("Get list discounts successfully!", notifications))
+                return res.json(Response.returnSuccess("Get list discounts successfully!", {notifications: notifications}))
             })
             .catch(error => {
                 res.json(Response.returnError(error.message, error.code));
