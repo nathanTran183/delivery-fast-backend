@@ -11,7 +11,6 @@ const router = express.Router();
 const config = require('../../config/index');
 const passport = require('../../middlewares/passport');
 
-//All employees' routers
 router.get('/', [expressJwt({secret: config.jwtSecret}), passport.isAppAPI], notificationsController.list);
 
 module.exports = router;

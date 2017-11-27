@@ -13,7 +13,6 @@ var router = express.Router();
 var config = require('../../config/index');
 var passport = require('../../middlewares/passport');
 
-//All employees' routers
 router.get('/', [expressJwt({ secret: config.jwtSecret }), passport.isAppAPI], notificationsController.list);
 
 module.exports = router;
