@@ -85,7 +85,7 @@ v2.3.3
 - Merge pull request #825 from gabel/update_select2
 - Updated copyright to 2016
 - Update to bootstrap-colorpicker version 2.3.0
-- update moment.js cdn links to version 2.10.6
+- update moment.min.js cdn links to version 2.10.6
 - Update to select2 version 4.0.1
 - Duplicate attribute type button
 - Changing the img paths in the css files
