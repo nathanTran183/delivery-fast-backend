@@ -107,6 +107,7 @@ module.exports = {
     },
 
     updateStatus(req, res) {
+        let message = "";
         Order
             .findById(req.params.orderId,
                 {
@@ -140,6 +141,21 @@ module.exports = {
                                 + ' cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman'
                             });
                         }
+                        if(savedOrder.status == "Assigned") {
+                            Employee
+                                .findById(req.user.id, {
+                                    where: {role: "DeliMan"}
+                                })
+                                .then(deliMan => {
+                                    deliMan
+                                        .update({status: "Busy"})
+                                        .then(() => {
+                                            message+= "User's status changes to Busy! ";
+                                        })
+                                        .catch(err => res.json(Response.returnError(err.message, err.code)))
+                                })
+                                .catch(err => res.json(Response.returnError(err.message, err.code)))
+                        }
                         if (savedOrder.status == "Delivered") {
                             Notification
                                 .create({
@@ -151,12 +167,24 @@ module.exports = {
                                     image_url: order.store.image_url
                                 })
                                 .then(notification => {
-                                    console.log("----");
-                                    console.log("create delivered notification successfully");
+                                    message+= "Create delivered notification successfully! ";
+                                    Employee
+                                        .findById(req.user.id, {
+                                            where: {role: "DeliMan"}
+                                        })
+                                        .then(deliMan => {
+                                            deliMan
+                                                .update({status: "Active"})
+                                                .then(() => {
+                                                    message+= "User's status changes to Active! ";
+                                                })
+                                                .catch(err => res.json(Response.returnError(err.message, err.code)))
+                                        })
+                                        .catch(err => res.json(Response.returnError(err.message, err.code)))
                                 })
                                 .catch(err => res.json(Response.returnError(err.message, err.code)))
                         }
-                        return res.json(Response.returnSuccess("Update order's status successfully!", {order: savedOrder}));
+                        return res.json(Response.returnSuccess("Update order's status successfully! " + message, {order: savedOrder}));
                     })
                     .catch(err => res.json(Response.returnError(err.message, err.code)))
             })

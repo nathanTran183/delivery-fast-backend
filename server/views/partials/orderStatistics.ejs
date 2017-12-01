@@ -36,7 +36,7 @@
         %>
 
         <h1>
-            Submitted Order List
+            Statistics
         </h1>
         <br>
     </section>
@@ -45,13 +45,26 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Choose Date Range</h3>
+                        <hr>
+                        <div class="form-group">
+                            <label>Date range:</label>
+                            <div class="input-group col-md-5">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="text" class="form-control pull-right" id="reservation">
+                            </div>
+                            <!-- /.input group -->
+                        </div>
+                    </div>
                     <div class="box-body">
-                        <table id="tableListSubmittedOrders" class="table table-bordered table-striped" width="100%">
+                        <table id="tableListStatisticsOrders" class="table table-bordered table-striped dataTable">
                             <thead>
                             <tr>
                                 <th>Id</th>
                                 <th>User Name</th>
-                                <th>User Phone</th>
                                 <th>User Address</th>
                                 <th>Order Date</th>
                                 <th>Delivery Date</th>
@@ -72,26 +85,4 @@
 
         </div>
     </section>
-</div>
-
-
-<div class="modal fade" id="confirm-process-order" role="dialog">
-    <form method="POST" id="form-process-order">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Confirm to process order?</h3>
-                </div>
-                <div class="modal-body">
-                    <input type="text" name="status" id="status" value="Processing" hidden="true">
-                    <input type="text" name="employee_id" id="employee_id" hidden="true" value="<%= session.user.id%>">
-                    Click on "Yes" to continue, "No" to cancel.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="exitModal" class="btn btn-danger" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-primary">Yes</button>
-                </div>
-            </div>
-        </div>
-    </form>
 </div>

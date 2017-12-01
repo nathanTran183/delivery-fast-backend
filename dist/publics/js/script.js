@@ -189,12 +189,51 @@ $(document).ready(function () {
         }
     });
 
+    var tableListStatisticsOrders = $("#tableListStatisticsOrders").DataTable({
+        "ajax": {
+            url: '/orders/statisticsJSON',
+            type: 'GET',
+            dataSrc: 'data.orders'
+        },
+        "order": [],
+        "columns": [{ 'data': 'id', 'orderable': false }, { 'data': 'user_name' }, { 'data': 'user_address' }, {
+            "data": "order_date",
+            "render": function render(data) {
+                var date = new Date(data);
+                return date.toLocaleString();
+            }
+        }, {
+            "data": "delivery_date",
+            "render": function render(data) {
+                var date = new Date(data);
+                return date.toLocaleString();
+            }
+        }, { 'data': 'ship_fee' }, { 'data': 'total_amount' }, {
+            'data': 'id',
+            'orderable': false,
+            'render': function render(data) {
+                return "<a href='/orders/" + data + "' title='View Detail' class='btn btn-primary btn-flat'><span class='fa fa-search' aria-hidden='true'></span></a>";
+            }
+        }]
+    });
+    $('#reservation').daterangepicker({
+        locale: {
+            format: 'YYYY/MM/DD'
+        },
+        startDate: new Date().toISOString(),
+        endDate: new Date().toISOString()
+    }, function (start, end, label) {
+        console.log('aaa');
+        tableListStatisticsOrders.ajax.url('/orders/statisticsJSON?startDate=' + start.format('YYYY-MM-DD') + '&endDate=' + end.format('YYYY-MM-DD')).load();
+    });
+
     var tableListStores = $('#tableListStores').DataTable({
         "drawCallback": function drawCallback() {
             loadManyMaps();
         }
     });
 
+    // Handling modal
     $('.confirmChangeUserStatus').click(function (event) {
         $('#form-change-user-status').attr('action', '/users/' + $(this).data('id'));
         $('#confirm-deactive').modal();

@@ -17,6 +17,8 @@ router.get('/processing/:orderId', ordersController.getSubmitted);
 router.get('/assigned/:orderId', ordersController.getProcessing);
 router.get('/historyJSON', ordersController.getHistoryJSON);
 router.get('/history', ordersController.history);
+router.get('/statistics', ordersController.statistics);
+router.get('/statisticsJSON', ordersController.getStatisticsJSON);
 router.post('/:orderId', ordersController.update);
 router.get('/:orderId', ordersController.get);
 

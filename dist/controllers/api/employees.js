@@ -43,6 +43,7 @@ module.exports = {
     updateInfo: function updateInfo(req, res) {
         var user = req.user;
         Employee.findById(user.id).then(function (user) {
+            if (!user) res.json(Response.returnError("DeliMan Not Found!", httpStatus.NOT_FOUND));
             user.update(req.body).then(function (savedUser) {
                 var data = {
                     user: savedUser
@@ -58,12 +59,28 @@ module.exports = {
     updateStatus: function updateStatus(req, res) {
         var user = req.user;
         Employee.findById(user.id).then(function (deliMan) {
-            deliMan.update(req.body).then(function (savedUser) {
-                emitter.emit('reloadActiveDeliMan', { msg: 'Reload deliman' });
-                var data = {
-                    user: savedUser
-                };
-                return res.json(Response.returnSuccess("Update information successfully", data));
+            if (!deliMan) {
+                res.json(Response.returnError("DeliMan Not Found!", httpStatus.NOT_FOUND));
+            }
+            Order.all({
+                where: {
+                    deliMan_id: req.user.id,
+                    status: { $ne: "Delivered" }
+                }
+            }).then(function (orders) {
+                if (orders.length > 0) {
+                    res.json(Response.returnError("Cannot change status because you have a pending order to process!", httpStatus.NOT_ACCEPTABLE));
+                } else {
+                    deliMan.update(req.body).then(function (savedUser) {
+                        emitter.emit('reloadActiveDeliMan', { msg: 'Reload deliman' });
+                        var data = {
+                            user: savedUser
+                        };
+                        return res.json(Response.returnSuccess("Update information successfully", data));
+                    }).catch(function (err) {
+                        return res.json(Response.returnError(err.message, err.code));
+                    });
+                }
             }).catch(function (err) {
                 return res.json(Response.returnError(err.message, err.code));
             });

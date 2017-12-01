@@ -10,7 +10,7 @@ var initialize = admin.initializeApp({
 });
 
 var userRegistrationToken = "f7g8nN-dDq8:APA91bEEIEiqkWfNl4mOf6WZXy8Eie3KQvqwBq5-NV06xG-xk4SAkRWAs9D5u1QFD6eH9AUgn_ljwJmnf3MDew6z-kyUREnp5IKJTtAvhozI4TC-ts22U0eIkDmnKw2doACn1YsX48E8";
-
+var deliManRegistrationToken = "f7RnFZcsv1Q:APA91bEM9lyi286FdHcl0k03sj6jBDr7MX_wKAWOWxlvrMOOvd110XvVE9Kf_7OBi5SNFxV0b-s56rzJfddR1R786r5KwugdV5m2BmP0dRlTZkw0oRqJUhysRyhvRgmdHywl9XGAaBSS";
 var options = {
     priority: "high",
     timeToLive: 60 * 60 * 24
@@ -25,7 +25,7 @@ var payload = {
 
 module.exports = {
     pushNotification(notiPayload, boolean) {
-        let token = (boolean) ? userRegistrationToken: userRegistrationToken;
+        let token = (boolean) ? userRegistrationToken: deliManRegistrationToken;
         return new Promise((resolve, reject) => {
             admin.messaging().sendToDevice(token, notiPayload, options)
                 .then(function(response) {

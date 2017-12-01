@@ -125,7 +125,6 @@ module.exports = {
                                         body: "A new order is assigned to you. Please response immediately!"
                                     }
                                 };
-
                                 FirebaseService.pushNotification(notiContent, false).then(function (result) {
                                     console.log("----");
                                     console.log(result);
@@ -237,7 +236,8 @@ module.exports = {
             include: [{
                 model: Employee,
                 as: 'deliMan'
-            }]
+            }],
+            order: [['updatedAt']]
         }).then(function (orders) {
             return res.json(Response.returnSuccess("Get order history successfully!", { orders: orders }));
         }).catch(function (err) {
@@ -246,5 +246,31 @@ module.exports = {
     },
     history: function history(req, res) {
         res.render('orders/orderHistory');
+    },
+    statistics: function statistics(req, res) {
+        res.render('orders/statistics');
+    },
+    getStatisticsJSON: function getStatisticsJSON(req, res) {
+        var conditionWhere = {
+            status: "Delivered",
+            delivery_date: { $gt: new Date().setDate(new Date().getDate() - 30), $lt: new Date() }
+        };
+        if (req.query.startDate && req.query.endDate) {
+            var startDate = new Date(req.query.startDate);
+            var endDate = new Date(req.query.endDate);
+            if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                endDate = endDate.setHours(23, 59, 59, 999);
+                conditionWhere.delivery_date = { $gt: startDate, $lt: endDate };
+            }
+        }
+        Order.all({
+            where: conditionWhere,
+            order: [['delivery_date', 'DESC']]
+        }).then(function (orders) {
+            console.log('here');
+            return res.json(Response.returnSuccess("Get statistics successfully!", { orders: orders }));
+        }).catch(function (err) {
+            return res.json(Response.returnError(err.message, err.code));
+        });
     }
 };

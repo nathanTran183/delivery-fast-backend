@@ -127,7 +127,7 @@ module.exports = {
                             .update(req.body)
                             .then(() => {
                                 req.flash('success', statusObj.msg);
-                                if(req.body.status == 'Confirmed' && (req.body.deliMan_id!= undefined && req.body.deliMan_id !== null && req.body.deliMan_id != "")) {
+                                if (req.body.status == 'Confirmed' && (req.body.deliMan_id != undefined && req.body.deliMan_id !== null && req.body.deliMan_id != "")) {
                                     Notification
                                         .create({
                                             order_id: order.id,
@@ -145,7 +145,6 @@ module.exports = {
                                                     body: "A new order is assigned to you. Please response immediately!"
                                                 }
                                             };
-
                                             FirebaseService
                                                 .pushNotification(notiContent, false)
                                                 .then(result => {
@@ -160,12 +159,12 @@ module.exports = {
                                         })
                                         .catch(err => res.json(Response.returnError(err.message, err.code)))
                                 }
-                                if(req.body.status == 'Cancelled') {
+                                if (req.body.status == 'Cancelled') {
                                     Notification
                                         .create({
                                             order_id: req.params.orderId,
                                             title: "Order is 'Cancelled'",
-                                            body: "<i style='color:red'>[Cancelled]</i> Your order is cancelled by 'Delivery Fast' at <b>" +order.store.name + "</b>. Thank you for using our service!",
+                                            body: "<i style='color:red'>[Cancelled]</i> Your order is cancelled by 'Delivery Fast' at <b>" + order.store.name + "</b>. Thank you for using our service!",
                                             image_url: order.store.image_url,
                                             user_id: order.user_id
                                         })
@@ -289,7 +288,8 @@ module.exports = {
                         model: Employee,
                         as: 'deliMan'
                     }
-                ]
+                ],
+                order: [['updatedAt']]
             })
             .then(orders => {
                 return res.json(Response.returnSuccess("Get order history successfully!", {orders: orders}));
@@ -299,5 +299,34 @@ module.exports = {
 
     history(req, res) {
         res.render('orders/orderHistory');
+    },
+
+    statistics(req, res) {
+        res.render('orders/statistics');
+    },
+
+    getStatisticsJSON(req, res) {
+        let conditionWhere = {
+            status: "Delivered",
+            delivery_date: {$gt: new Date().setDate(new Date().getDate() - 30), $lt: new Date()}
+        };
+        if (req.query.startDate && req.query.endDate) {
+            let startDate = new Date(req.query.startDate);
+            let endDate = new Date(req.query.endDate);
+            if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                endDate = endDate.setHours(23, 59, 59, 999);
+                conditionWhere.delivery_date = {$gt: startDate, $lt: endDate}
+            }
+        }
+        Order
+            .all({
+                where: conditionWhere,
+                order: [['delivery_date', 'DESC']]
+            })
+            .then(orders => {
+                console.log('here')
+                return res.json(Response.returnSuccess("Get statistics successfully!", {orders: orders}));
+            })
+            .catch(err => res.json(Response.returnError(err.message, err.code)))
     }
 }

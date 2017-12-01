@@ -96,6 +96,7 @@ module.exports = {
         });
     },
     updateStatus: function updateStatus(req, res) {
+        var message = "";
         Order.findById(req.params.orderId, {
             include: [{
                 model: User,
@@ -119,6 +120,19 @@ module.exports = {
                         msg: 'DeliMan ' + req.body.deliMan.last_name + " " + req.body.deliMan.first_name + ' cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman'
                     });
                 }
+                if (savedOrder.status == "Assigned") {
+                    Employee.findById(req.user.id, {
+                        where: { role: "DeliMan" }
+                    }).then(function (deliMan) {
+                        deliMan.update({ status: "Busy" }).then(function () {
+                            message += "User's status changes to Busy! ";
+                        }).catch(function (err) {
+                            return res.json(Response.returnError(err.message, err.code));
+                        });
+                    }).catch(function (err) {
+                        return res.json(Response.returnError(err.message, err.code));
+                    });
+                }
                 if (savedOrder.status == "Delivered") {
                     Notification.create({
                         order_id: order.id,
@@ -127,13 +141,23 @@ module.exports = {
                         user_id: order.user_id,
                         image_url: order.store.image_url
                     }).then(function (notification) {
-                        console.log("----");
-                        console.log("create delivered notification successfully");
+                        message += "Create delivered notification successfully! ";
+                        Employee.findById(req.user.id, {
+                            where: { role: "DeliMan" }
+                        }).then(function (deliMan) {
+                            deliMan.update({ status: "Active" }).then(function () {
+                                message += "User's status changes to Active! ";
+                            }).catch(function (err) {
+                                return res.json(Response.returnError(err.message, err.code));
+                            });
+                        }).catch(function (err) {
+                            return res.json(Response.returnError(err.message, err.code));
+                        });
                     }).catch(function (err) {
                         return res.json(Response.returnError(err.message, err.code));
                     });
                 }
-                return res.json(Response.returnSuccess("Update order's status successfully!", { order: savedOrder }));
+                return res.json(Response.returnSuccess("Update order's status successfully! " + message, { order: savedOrder }));
             }).catch(function (err) {
                 return res.json(Response.returnError(err.message, err.code));
             });

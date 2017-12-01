@@ -50,6 +50,7 @@ module.exports = {
         Employee
             .findById(user.id)
             .then((user) => {
+                if (!user) res.json(Response.returnError("DeliMan Not Found!", httpStatus.NOT_FOUND));
                 user
                     .update(req.body)
                     .then(savedUser => {
@@ -67,22 +68,40 @@ module.exports = {
         let user = req.user;
         Employee
             .findById(user.id)
-            .then((deliMan) => {
-                deliMan
-                    .update(req.body)
-                    .then(savedUser => {
-                            emitter.emit('reloadActiveDeliMan', {msg: 'Reload deliman'});
-                        let data = {
-                            user: savedUser
-                        };
-                        return res.json(Response.returnSuccess("Update information successfully", data));
+            .then(deliMan => {
+                if (!deliMan) {
+                    res.json(Response.returnError("DeliMan Not Found!", httpStatus.NOT_FOUND));
+                }
+                Order
+                    .all({
+                        where: {
+                            deliMan_id: req.user.id,
+                            status: {$ne: "Delivered"}
+                        }
                     })
-                    .catch(err => res.json(Response.returnError(err.message, err.code)))
+                    .then(orders => {
+                        if (orders.length > 0) {
+                            res.json(Response.returnError("Cannot change status because you have a pending order to process!", httpStatus.NOT_ACCEPTABLE));
+                        } else {
+                            deliMan
+                                .update(req.body)
+                                .then(savedUser => {
+                                    emitter.emit('reloadActiveDeliMan', {msg: 'Reload deliman'});
+                                    let data = {
+                                        user: savedUser
+                                    };
+                                    return res.json(Response.returnSuccess("Update information successfully", data));
+                                })
+                                .catch(err => res.json(Response.returnError(err.message, err.code)))
+                        }
+                    })
+                    .catch(err => res.json(Response.returnError(err.message, err.code)));
             })
             .catch(err => res.json(Response.returnError(err.message, err.code)));
     },
 
-    viewProfile(req, res) {
+    viewProfile(req, res)
+    {
         let employee = req.user;
         Employee
             .findById(employee.id)
@@ -96,9 +115,11 @@ module.exports = {
                 return res.json(Response.returnSuccess("Retrieve employee information successfully!", data));
             })
             .catch(err => res.json(Response.returnError(err.message, err.code)));
-    },
+    }
+    ,
 
-    changePassword(req, res) {
+    changePassword(req, res)
+    {
         if (req.body.old_password && req.body.new_password) {
             Employee
                 .findById(req.user.id)
@@ -123,9 +144,11 @@ module.exports = {
                 })
                 .catch(err => res.json(Response.returnError(err.message, err.code)));
         } else return res.json(Response.returnError("Require new password and old password!", httpStatus.BAD_REQUEST));
-    },
+    }
+    ,
 
-    forgotPassword(req, res) {
+    forgotPassword(req, res)
+    {
         if (req.body.email) {
             Employee
                 .find({
