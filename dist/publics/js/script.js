@@ -56,7 +56,7 @@ $(document).ready(function () {
             });
         }
     });
-    $('#tableListOrderHistory').DataTable({
+    var tableListOrderHistory = $('#tableListOrderHistory').DataTable({
         "ajax": {
             url: '/orders/historyJSON',
             type: 'GET',
@@ -227,11 +227,7 @@ $(document).ready(function () {
         tableListStatisticsOrders.ajax.url('/orders/statisticsJSON?startDate=' + start.format('YYYY-MM-DD') + '&endDate=' + end.format('YYYY-MM-DD')).load();
     });
 
-    var tableListStores = $('#tableListStores').DataTable({
-        "drawCallback": function drawCallback() {
-            loadManyMaps();
-        }
-    });
+    var tableListStores = $('#tableListStores').DataTable();
 
     // Handling modal
     $('.confirmChangeUserStatus').click(function (event) {
@@ -419,6 +415,11 @@ $(document).ready(function () {
         $('#confirm-cancel-order').modal();
     });
 
+    $('.confirmChangeStoreStatus').click(function (event) {
+        $('#form-change-store-status').attr('action', "/stores/updateStatus/" + $(this).data('id'));
+        $('#confirm-change-store-status').modal();
+    });
+
     // socket function
     var socket = io($(location).attr('host') + '/delivery');
 
@@ -433,11 +434,12 @@ $(document).ready(function () {
     socket.on('reloadActiveDeliMan', function (data) {
         tableListDeliMans.ajax.reload();
     });
-
     socket.on('reloadSubmittedOrder', function (data) {
         tableListSubmittedOrders.ajax.reload();
     });
-
+    socket.on('reloadHistoryOrder', function (data) {
+        tableListOrderHistory.ajax.reload();
+    });
     socket.on('reloadPendingOrder', function (data) {
         alert(data.msg);
         tableListProcessingOrders.ajax.reload();

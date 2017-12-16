@@ -141,21 +141,6 @@ module.exports = {
                                 + ' cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman'
                             });
                         }
-                        if(savedOrder.status == "Assigned") {
-                            Employee
-                                .findById(req.user.id, {
-                                    where: {role: "DeliMan"}
-                                })
-                                .then(deliMan => {
-                                    deliMan
-                                        .update({status: "Busy"})
-                                        .then(() => {
-                                            message+= "User's status changes to Busy! ";
-                                        })
-                                        .catch(err => res.json(Response.returnError(err.message, err.code)))
-                                })
-                                .catch(err => res.json(Response.returnError(err.message, err.code)))
-                        }
                         if (savedOrder.status == "Delivered") {
                             Notification
                                 .create({
@@ -168,21 +153,11 @@ module.exports = {
                                 })
                                 .then(notification => {
                                     message+= "Create delivered notification successfully! ";
-                                    Employee
-                                        .findById(req.user.id, {
-                                            where: {role: "DeliMan"}
-                                        })
-                                        .then(deliMan => {
-                                            deliMan
-                                                .update({status: "Active"})
-                                                .then(() => {
-                                                    message+= "User's status changes to Active! ";
-                                                })
-                                                .catch(err => res.json(Response.returnError(err.message, err.code)))
-                                        })
-                                        .catch(err => res.json(Response.returnError(err.message, err.code)))
                                 })
                                 .catch(err => res.json(Response.returnError(err.message, err.code)))
+                        }
+                        if(savedOrder.status == "Assigned" || savedOrder.status == "Picked" || savedOrder.status == "Delivered"){
+                            emitter.emit('reloadHistoryOrder', {msg: 'Reload history orders'});
                         }
                         return res.json(Response.returnSuccess("Update order's status successfully! " + message, {order: savedOrder}));
                     })

@@ -61,7 +61,7 @@
                                 <th>Phone number</th>
                                 <th>Opening time</th>
                                 <th>Closing time</th>
-                                <th>Location</th>
+                                <th>Status</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -75,13 +75,10 @@
                                 <td><%= store.opening_time %></td>
                                 <td><%= store.closing_time %></td>
                                 <td>
-                                    <% if((store.latitude != "" && store.longitude != "") && (store.latitude != null && store.longitude != null)) { %>
-                                    <div class="googleMap" style="width:300px;height:200px;">
-                                        <input type="text" hidden class="location"
-                                               value="<%= store.latitude + "," + store.longitude %>"/>
-                                    </div>
+                                    <% if(store.status == true) { %>
+                                    <span class="label label-success">Active</span>
                                     <% } else { %>
-                                    <h3 class="label label-danger">No location</h3>
+                                    <span class="label label-danger">Disabled</span>
                                     <% } %>
                                 </td>
                                 <td>
@@ -90,7 +87,7 @@
                                                 class="fa fa-search" aria-hidden="true"></span>
                                     </a>
                                     <a href="#" data-toggle="modal" data-id="<%= store.id %>" title="Delete"
-                                       class="confirmDelstore btn btn-danger"><span
+                                       class="confirmChangeStoreStatus btn btn-danger"><span
                                                 class="fa fa-trash" aria-hidden="true"></span>
                                     </a>
                                 </td>
@@ -110,20 +107,20 @@
 
 
 
-<div class="modal fade" id="confirm-del-store" role="dialog">
-    <form method="POST" id="form-delete-store">
+<div class="modal fade" id="confirm-change-store-status" role="dialog">
+    <form method="POST" id="form-change-store-status">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Confirm to delete store type?</h3>
+                    <h3>Confirm to change store status?</h3>
                 </div>
                 <div class="modal-body">
                     <input type="text" name="status" id="status" value="Deactivated" hidden="true">
                     Click on "Yes" to continue, "No" to cancel.
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="exitModal" class="btn btn-default" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-danger">Yes</button>
+                    <button type="button" id="exitModal" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
                 </div>
             </div>
         </div>

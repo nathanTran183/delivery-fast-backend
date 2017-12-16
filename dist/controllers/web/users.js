@@ -15,8 +15,9 @@ module.exports = {
     list: function list(req, res) {
         User.all().then(function (users) {
             return res.render('user/index', { users: users });
-        }).catch(function (error) {
-            return res.json(error);
+        }).catch(function (err) {
+            req.flash('errors', { msg: err.message });
+            res.redirect('back');
         });
     },
     blackList: function blackList(req, res) {
@@ -24,8 +25,9 @@ module.exports = {
             where: { status: false }
         }).then(function (users) {
             return res.render('user/blackList', { users: users });
-        }).catch(function (error) {
-            return res.json(error);
+        }).catch(function (err) {
+            req.flash('errors', { msg: err.message });
+            res.redirect('back');
         });
     },
     get: function get(req, res) {
@@ -43,8 +45,9 @@ module.exports = {
                 res.redirect('back');
             }
             return res.render('user/detail', { user: user });
-        }).catch(function (error) {
-            return res.send(Response.returnError(error.message, error.code));
+        }).catch(function (err) {
+            req.flash('errors', { msg: err.message });
+            res.redirect('back');
         });
     },
     update: function update(req, res) {
@@ -60,8 +63,9 @@ module.exports = {
             }).catch(function (err) {
                 return res.json(Response.returnError(err.message, err.code));
             });
-        }).catch(function (error) {
-            return res.json(Response.returnError(error.message, error.code));
+        }).catch(function (err) {
+            req.flash('errors', { msg: err.message });
+            res.redirect('back');
         });
     }
 };

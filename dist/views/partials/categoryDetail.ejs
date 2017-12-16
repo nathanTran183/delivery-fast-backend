@@ -104,10 +104,7 @@
                         <div class="tab-pane active" id="products">
                             <div class="box-header">
                                 <p>Create new product here</p>
-                                <button type="button" class="btn bg-navy btn-flat" data-toggle="collapse"
-                                        data-target="#panel-insert-product">Create product
-                                </button>
-                                <div id="panel-insert-product" class="collapse clearfix">
+                                <div id="panel-insert-product" class="clearfix">
                                     <br>
                                     <form enctype="multipart/form-data"
                                           action="/stores/<%= category.store_id %>/categories/<%= category.id %>/products"
@@ -196,10 +193,7 @@
                         <div class="tab-pane" id="addons">
                             <div class="box-header">
                                 <p>Create new addon here</p>
-                                <button type="button" class="btn bg-navy btn-flat" data-toggle="collapse"
-                                        data-target="#panel-create-addon">Create addon
-                                </button>
-                                <div id="panel-create-addon" class="collapse clearfix">
+                                <div id="panel-create-addon" class=" clearfix">
                                     <br>
                                     <form action="/stores/<%= category.store_id %>/categories/<%= category.id %>/addons"
                                           method="post" class="form-horizontal">
@@ -269,10 +263,7 @@
                         <div class="tab-pane" id="productAddons">
                             <div class="box-header">
                                 <p>Create new product addon here</p>
-                                <button type="button" class="btn bg-navy btn-flat" data-toggle="collapse"
-                                        data-target="#panel-create-productAddon">Create product addon
-                                </button>
-                                <div id="panel-create-productAddon" class="collapse clearfix">
+                                <div id="panel-create-productAddon" class="clearfix">
                                     <br>
                                     <form action="/stores/<%= category.store_id %>/categories/<%= category.id %>/productAddons/"
                                           method="post" class="form-horizontal">

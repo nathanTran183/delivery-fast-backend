@@ -130,7 +130,6 @@ module.exports = {
     },
 
     update(req, res) {
-        console.log(__dirname);
         let storage = multer.diskStorage({
             destination: function (req, file, callback) {
                 callback(null, path.join(__dirname, '../../publics/uploads/'))
@@ -239,7 +238,33 @@ module.exports = {
                 return res.render('stores/create', {storeTypes: storeTypes});
             })
             .catch(err => {
-                req.flash('errors', {msg: err.message})
+                req.flash('errors', {msg: err.message});
+                res.redirect('back');
+            })
+    },
+
+    updateStatus(req, res) {
+        Store
+            .findById(req.params.storeId)
+            .then(store => {
+                if(!store) {
+                    req.flash('errors', {msg: "Store not found!"});
+                    res.redirect('back');
+                }
+                store.status = store.status == true ? false : true;
+                store
+                    .save()
+                    .then(() => {
+                        req.flash('success', 'Store status has been change!');
+                        res.redirect('back');
+                    })
+                    .catch(err => {
+                        req.flash('errors', {msg: err.message});
+                        res.redirect('back');
+                    })
+            })
+            .catch(err => {
+                req.flash('errors', {msg: err.message});
                 res.redirect('back');
             })
     }

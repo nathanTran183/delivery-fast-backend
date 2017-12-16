@@ -17,9 +17,10 @@ module.exports = {
             .then(users => {
                 return res.render('user/index', {users: users});
             })
-            .catch(error => {
-                return res.json(error);
-            });
+            .catch(err => {
+                req.flash('errors', {msg: err.message})
+                res.redirect('back');
+            })
     },
 
     blackList(req, res) {
@@ -30,9 +31,10 @@ module.exports = {
             .then(users => {
                 return res.render('user/blackList', {users: users});
             })
-            .catch(error => {
-                return res.json(error);
-            });
+            .catch(err => {
+                req.flash('errors', {msg: err.message})
+                res.redirect('back');
+            })
     },
 
     get(req, res) {
@@ -55,7 +57,10 @@ module.exports = {
                 }
                 return res.render('user/detail', {user: user});
             })
-            .catch(error => res.send(Response.returnError(error.message, error.code)));
+            .catch(err => {
+                req.flash('errors', {msg: err.message})
+                res.redirect('back');
+            })
     },
 
     update(req, res) {
@@ -75,7 +80,10 @@ module.exports = {
                     })
                     .catch(err => res.json(Response.returnError(err.message, err.code)))
             })
-            .catch(error => res.json(Response.returnError(error.message, error.code)));
+            .catch(err => {
+                req.flash('errors', {msg: err.message})
+                res.redirect('back');
+            })
     },
 
 

@@ -52,7 +52,6 @@
                         <button type="button" class="btn bg-navy btn-flat" data-toggle="collapse"
                                 data-target="#panel-create-employee">Create Employee
                         </button>
-                        <button type="button" class="btn bg-teal btn-flat pull-right">Upload data</button>
 
                         <div id="panel-create-employee" class="collapse clearfix">
                             <br>
@@ -200,7 +199,7 @@
                                     <% if(user.status == "Active" || user.status == "Busy") { %>
                                     <a href="#" data-toggle="modal" data-id="<%= user.id %>" title="Deactive"
                                        class="confirmChangeEmployeeStatus btn btn-danger"><span
-                                                class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                                class="fa fa-trash" aria-hidden="true"></span></a>
                                     <% } %>
                                 </td>
                             </tr>

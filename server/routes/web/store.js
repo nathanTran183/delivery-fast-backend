@@ -9,7 +9,8 @@ const passport = require('../../middlewares/passport');
 
 router.get('/', storesController.list);
 router.post('/', storesController.create);
-router.get('/create', storesController.add)
+router.get('/create', storesController.add);
+router.post('/updateStatus/:storeId', storesController.updateStatus);
 router.post('/:storeId', storesController.update);
 router.get('/:storeId', storesController.get);
 

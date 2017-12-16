@@ -120,19 +120,6 @@ module.exports = {
                         msg: 'DeliMan ' + req.body.deliMan.last_name + " " + req.body.deliMan.first_name + ' cancelled the assignment of order ' + savedOrder.id + '! Please assign another deliman'
                     });
                 }
-                if (savedOrder.status == "Assigned") {
-                    Employee.findById(req.user.id, {
-                        where: { role: "DeliMan" }
-                    }).then(function (deliMan) {
-                        deliMan.update({ status: "Busy" }).then(function () {
-                            message += "User's status changes to Busy! ";
-                        }).catch(function (err) {
-                            return res.json(Response.returnError(err.message, err.code));
-                        });
-                    }).catch(function (err) {
-                        return res.json(Response.returnError(err.message, err.code));
-                    });
-                }
                 if (savedOrder.status == "Delivered") {
                     Notification.create({
                         order_id: order.id,
@@ -142,20 +129,12 @@ module.exports = {
                         image_url: order.store.image_url
                     }).then(function (notification) {
                         message += "Create delivered notification successfully! ";
-                        Employee.findById(req.user.id, {
-                            where: { role: "DeliMan" }
-                        }).then(function (deliMan) {
-                            deliMan.update({ status: "Active" }).then(function () {
-                                message += "User's status changes to Active! ";
-                            }).catch(function (err) {
-                                return res.json(Response.returnError(err.message, err.code));
-                            });
-                        }).catch(function (err) {
-                            return res.json(Response.returnError(err.message, err.code));
-                        });
                     }).catch(function (err) {
                         return res.json(Response.returnError(err.message, err.code));
                     });
+                }
+                if (savedOrder.status == "Assigned" || savedOrder.status == "Picked" || savedOrder.status == "Delivered") {
+                    emitter.emit('reloadHistoryOrder', { msg: 'Reload history orders' });
                 }
                 return res.json(Response.returnSuccess("Update order's status successfully! " + message, { order: savedOrder }));
             }).catch(function (err) {

@@ -289,7 +289,7 @@ module.exports = {
                         as: 'deliMan'
                     }
                 ],
-                order: [['updatedAt']]
+                order: [['updatedAt', 'DESC']]
             })
             .then(orders => {
                 return res.json(Response.returnSuccess("Get order history successfully!", {orders: orders}));

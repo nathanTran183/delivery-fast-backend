@@ -113,7 +113,6 @@ module.exports = {
         });
     },
     update: function update(req, res) {
-        console.log(__dirname);
         var storage = multer.diskStorage({
             destination: function destination(req, file, callback) {
                 callback(null, path.join(__dirname, '../../publics/uploads/'));
@@ -206,6 +205,25 @@ module.exports = {
     add: function add(req, res) {
         StoreType.all().then(function (storeTypes) {
             return res.render('stores/create', { storeTypes: storeTypes });
+        }).catch(function (err) {
+            req.flash('errors', { msg: err.message });
+            res.redirect('back');
+        });
+    },
+    updateStatus: function updateStatus(req, res) {
+        Store.findById(req.params.storeId).then(function (store) {
+            if (!store) {
+                req.flash('errors', { msg: "Store not found!" });
+                res.redirect('back');
+            }
+            store.status = store.status == true ? false : true;
+            store.save().then(function () {
+                req.flash('success', 'Store status has been change!');
+                res.redirect('back');
+            }).catch(function (err) {
+                req.flash('errors', { msg: err.message });
+                res.redirect('back');
+            });
         }).catch(function (err) {
             req.flash('errors', { msg: err.message });
             res.redirect('back');

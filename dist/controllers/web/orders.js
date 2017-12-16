@@ -237,7 +237,7 @@ module.exports = {
                 model: Employee,
                 as: 'deliMan'
             }],
-            order: [['updatedAt']]
+            order: [['updatedAt', 'DESC']]
         }).then(function (orders) {
             return res.json(Response.returnSuccess("Get order history successfully!", { orders: orders }));
         }).catch(function (err) {

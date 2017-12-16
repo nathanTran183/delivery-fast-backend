@@ -21,6 +21,7 @@ $(function() {
 
         google.maps.event.addListener(autocomplete, 'place_changed', function() {
             var place = autocomplete.getPlace().geometry.location;
+            $('#address').val(autocomplete.getPlace().formatted_address)
             placeMarker(place);
         });
 
